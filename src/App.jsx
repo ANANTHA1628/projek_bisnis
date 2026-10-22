@@ -12,8 +12,11 @@ import PaymentModal from './components/modals/PaymentModal';
 import ReceiptModal from './components/modals/ReceiptModal';
 import OpenBillsModal from './components/modals/OpenBillsModal';
 import CloseCashierModal from './components/modals/CloseCashierModal';
+import OpenShiftModal from './components/modals/OpenShiftModal';
+import AdminPinModal from './components/modals/AdminPinModal';
 import MaterialModal from './components/modals/MaterialModal';
 import RestockModal from './components/modals/RestockModal';
+import OpnameWasteModal from './components/modals/OpnameWasteModal';
 import WhatsAppModal from './components/modals/WhatsAppModal';
 
 function PosAppContent() {
@@ -30,14 +33,17 @@ function PosAppContent() {
       {activeTab === 'stok' && <StokView />}
       {activeTab === 'laporan' && <LaporanView />}
 
-      {/* Modals & Overlays */}
+      {/* Modals & Overlays per PRD posa v3.0 */}
       <CustomizeModal />
       <PaymentModal />
       <ReceiptModal />
       <OpenBillsModal />
       <CloseCashierModal />
+      <OpenShiftModal />
+      <AdminPinModal />
       <MaterialModal />
       <RestockModal />
+      <OpnameWasteModal />
       <WhatsAppModal />
 
       {/* Global Toast Notification */}

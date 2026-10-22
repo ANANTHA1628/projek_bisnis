@@ -1,89 +1,77 @@
-# posa - Sistem Kasir (POS) & Manajemen Bisnis Kafe / Resto
+# posa - POS & F&B Inventory System (v3.0)
 
-Projek sistem Point of Sale (POS), Manajemen Inventori Stok Bahan Baku, Dashboard Analitik Bisnis, dan Laporan Keuangan berbasis web modern dengan tampilan dark mode elegan sesuai referensi desain.
+Sistem operasional Point of Sale (POS) & Manajemen Inventori Bahan Baku terintegrasi penuh untuk coffee shop / resto modern sesuai spesifikasi **PRD posa v3.0**.
 
----
-
-## 🚀 Fitur Utama
-
-### 1. ☕ Kasir (POS)
-- **Katalog Menu Interaktif**: Filter kategori (*Semua*, *Makanan*, *Non-Kopi*, *Kopi*) & pencarian menu instan.
-- **Badge Indikator Keranjang**: Menampilkan jumlah item yang sudah masuk keranjang di pojok kartu produk.
-- **Panel Pesanan Saat Ini**:
-  - Tipe pesanan: *Makan di sini*, *Bawa pulang*, *GoFood*, *GrabFood*.
-  - Pengaturan jumlah (+ / -) dan tombol **"Sesuaikan"** untuk preferensi es, gula, extra shot espresso, dan catatan khusus.
-  - Dropdown **Pilih Meja** (Meja 01, Meja 02, Meja 03, Meja 04, VIP 1, Outdoor 01) & input **No. HP** pelanggan.
-  - Perhitungan otomatis: Subtotal, PB1 (10%), dan Total tagihan.
-  - Pilihan metode bayar: *Tunai*, *QRIS*, *Kartu debit*, *Bayar nanti*.
-  - Tombol aksi bayar cepat dengan kalkulator kembalian uang tunai.
-- **Tagihan Terbuka (Open Bills)**: Simpan pesanan meja yang belum selesai dan buka kembali kapan saja.
-- **Tutup Kasir (Shift Closing)**: Rekapitulasi modal awal, penjualan tunai, non-tunai, dan cetak laporan tutup kasir.
-- **Struk Thermal Pembayaran**: Cetak struk printer thermal langsung ke printer atau PDF.
-
-### 2. 📊 Dashboard Admin (Dasbor)
-- **Kartu Metrik KPI Bisnis**:
-  - Penjualan Hari Ini: `Rp 676.500` (16 pesanan · laba Rp 409.220)
-  - Total Penjualan Bulan Ini: `Rp 676.500`
-  - Barang Stok Rendah: `2` (Gula aren cair, Roti tawar)
-  - Habis dalam 14 Hari: `3` (Roti tawar: 3 hari)
-- **Tabel Kecepatan Pemakaian Stok (*Velocity Table*)**:
-  - Kolom: Item, Stok, Terpakai per hari, Sisa hari dengan indikator warna urgensi (merah, kuning/oranye).
-- **Peringatan Stok Rendah**: Indikator rasio sisa stok terhadap batas minimum + tombol aksi cepat *Buka Restock*.
-- **Laporan Harian ke WhatsApp**: Format pesan otomatis siap kirim atau salin ke WhatsApp manajemen.
-
-### 3. 📦 Pengaturan Bahan Baku (Stok)
-- **Tabel Bahan Baku Lengkap**:
-  - Biji kopi arabika, Bubuk cokelat, Bubuk matcha, Croissant beku, Cup plastik 16oz, Es batu, Gula aren cair, Roti tawar, Susu segar, Teh melati.
-  - Satuan terkalibrasi: gram, ml, pcs.
-  - Harga rata-rata & kalkulasi otomatis total nilai aset stok (`Nilai stok: Rp 1.779.600`).
-- **Filter Cepat**: *Semua (10)* dan *Hampir habis (2)*.
-- **Manajemen CRUD**: Tambah Bahan Baku Baru, Edit data bahan, dan Hapus bahan.
-- **Integrasi Resep**: Transaksi penjualan di Kasir otomatis memotong stok bahan baku terkait!
-
-### 4. 📈 Laporan Pendapatan (Laporan)
-- **Filter Periode Laporan**:
-  - Pilihan tanggal kustom (*Dari* & *Sampai*) + Tombol *Buat Laporan*.
-  - Preset cepat: *Hari Ini*, *Kemarin*, *Minggu Ini*, *Bulan Ini*, *Bulan lalu*.
-- **Ekspor Data Real**:
-  - *Excel (Laporan lengkap)*
-  - *CSV (Satu baris per transaksi)*
-  - *CSV (Satu baris per item terjual)*
-- **Ringkasan Pendapatan**:
-  - Total diterima: `Rp 1.421.200`
-  - Penjualan bersih: `Rp 1.292.000`
-  - Laba kotor: `Rp 871.850` (Margin 67%)
-  - Transaksi: `36` pesanan
-- **Visualisasi Grafik**:
-  - **Tren Pendapatan**: Grafik batang interaktif per hari/jam tersibuk.
-  - **Metode Pembayaran**: Distribusi pembayaran (*Tunai 45%*, *QRIS 40%*, *Kartu Debit 10%*, *Bayar Nanti 5%*).
+Dibangun dengan arsitektur **Laravel 11 / 13 (PHP 8.3+) + SQLite (Mode WAL & Foreign Keys)** untuk backend, serta **React + Vite** untuk frontend dark mode responsif berkinerja tinggi.
 
 ---
 
-## 💻 Cara Menjalankan Aplikasi
+## 🎯 Ringkasan Penyelarasan dengan PRD posa v3.0
 
-1. **Pastikan Node.js terinstall**:
-   ```bash
-   node -v
-   npm -v
-   ```
-
-2. **Jalankan Development Server**:
-   ```bash
-   npm run dev
-   ```
-
-3. **Buka di Browser**:
-   Buka browser Anda di:
-   [http://localhost:5173/](http://localhost:5173/)
-
-4. **Build untuk Produksi**:
-   ```bash
-   npm run build
-   ```
+| # | Persyaratan PRD v3.0 | Status Implementasi | Catatan Teknis |
+|---|---|:---:|---|
+| **1** | **20 Tabel Database Lengkap** | ✅ Selesai | `users`, `categories`, `products`, `product_channel_prices`, `modifiers`, `raw_materials`, `suppliers`, `recipes`, `recipe_items`, `stock_movements`, `restocks`, `restock_items`, `cash_sessions`, `orders`, `order_items`, `order_item_modifiers`, `payments`, `expenses`, `audit_logs`, `settings`. |
+| **2** | **Uang Disimpan sebagai Integer Rupiah** | ✅ Selesai | Menghindari galat pembulatan desimal di semua kolom uang & kalkulasi. |
+| **3** | **Aturan Pajak PB1 10% & Diskon** | ✅ Selesai | PB1 10% dihitung dari subtotal setelah diskon: `round(subtotal_setelah_diskon * 0.10)`. Mode default eksklusif, opsi pembulatan tunai ke Rp100. |
+| **4** | **Harga per Kanal (GoFood/GrabFood)** | ✅ Selesai | Harga override otomatis per kanal (`dine_in`, `takeaway`, `gofood`, `grabfood`) + pencatatan komisi platform ojol 20%. |
+| **5** | **Buku Besar Stok (`stock_movements`)** | ✅ Selesai | *Single source of truth* via `StockService`. Setiap perubahan stok (restock, sale, waste, opname, production, void_return) dicatat kekal dan diaudit. |
+| **6** | **HPP & Moving Average Restock** | ✅ Selesai | Valuasi stok rata-rata bergerak terhitung otomatis saat restock. Peringatan Food Cost % jika melewati batas 35%. |
+| **7** | **Simulator HPP (INV-12)** | ✅ Selesai | Alat uji R&D live untuk mencoba takaran gramasi kopi/susu/sirup tanpa merusak resep aktif. |
+| **8** | **Sesi Kasir / Shift (PRD 5.2)** | ✅ Selesai | Alur Buka Kasir (modal awal), Tutup Kasir (hitung fisik, selisih kas, dan blokir jika ada tagihan terbuka / open bills). |
+| **9** | **Keamanan & Otorisasi PIN Admin** | ✅ Selesai | Void, refund, dan diskon manual wajib otorisasi PIN Admin (Default: `1234`) dan mencatat alasan ke `audit_logs`. |
+| **10** | **Laporan Lengkap (RPT-01 s/d RPT-06)** | ✅ Selesai | Pendapatan, Laba Rugi, Penjualan Item, Pergerakan Stok, Rekap Shift, dan Peringkat Menu Margin Tertinggi. |
+| **11** | **Struk Thermal 58mm / 80mm** | ✅ Selesai | Pilihan format cetak thermal 58mm atau 80mm (D6). |
+| **12** | **Uji Otomatis PHPUnit** | ✅ 100% Passed | 7 Feature/Unit Tests dengan 42 assertions memvalidasi 10 skenario PB1, HPP, pemotongan stok, void, dan shift closing. |
 
 ---
 
-## 🎨 Palet Warna & Desain
-- Tema: Dark Mode Minimalis & Modern (Sesuai referensi gambar UI)
-- Font: *Plus Jakarta Sans* & *JetBrains Mono*
-- Navigasi: Navigasi Pill Bar di bagian atas (`Kasir`, `Dasbor`, `Stok`, `Laporan`) untuk berpindah antar halaman secara mulus dan responsif.
+## 🛠️ Keputusan Terbuka (D1 - D8) yang Diterapkan
+
+- **D1 (PB1)**: Eksklusif (ditambahkan di atas harga menu, dapat dikonfigurasi inklusif).
+- **D2 (Valuasi HPP)**: Rata-rata bergerak (*Moving Average*), diperbarui otomatis setiap restock.
+- **D3 (Pengurangan Stok)**: Saat pesanan berstatus **Lunas** (*paid*).
+- **D4 (Biaya Kemasan)**: Masuk ke dalam HPP menu (cup, lid, straw).
+- **D5 (Perangkat Kasir)**: 1 perangkat utama (SQLite WAL mode sangat cepat & efisien).
+- **D6 (Printer Struk)**: Opsi fleksibel 58mm & 80mm.
+- **D7 (Diskon Awal)**: Diskon manual terlindungi dengan PIN Admin & audit log.
+- **D8 (Komisi Ojol)**: Global 20% di pengaturan, tersimpan per transaksi untuk akurasi laba rugi.
+
+---
+
+## 💻 Panduan Menjalankan Sistem
+
+### 1. Jalankan Backend Laravel (API, SQLite, Ekspor Excel & PDF)
+Buka terminal dan jalankan:
+```bash
+npm run backend
+```
+Atau manual dari folder `backend`:
+```bash
+cd backend
+php artisan migrate --seed
+php -S 0.0.0.0:8000 -t public
+```
+*API berjalan di `http://localhost:8000` dengan database SQLite di `backend/database/database.sqlite`.*
+
+### 2. Jalankan Automated Tests (PHPUnit)
+Untuk memverifikasi semua aturan bisnis dan skenario uji:
+```bash
+cd backend
+php artisan test
+```
+
+### 3. Jalankan Frontend React (Web & Tablet POS)
+Buka terminal kedua dan jalankan:
+```bash
+npm run dev
+```
+Akses di browser:
+- **Komputer/Tablet:** [http://localhost:5173/](http://localhost:5173/)
+- **Smartphone (Wi-Fi Lokal):** `http://[IP-Komputer]:5173` (bisa di-*Add to Home Screen*).
+
+---
+
+## 🔑 Kredensial & PIN Akses Default
+
+- **Owner / Admin**: Rina (`owner@posa.local`) — PIN: **`1234`**
+- **Kasir / Barista**: Budi (`kasir@posa.local`) — PIN: **`0000`**

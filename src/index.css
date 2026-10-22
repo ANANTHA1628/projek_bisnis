@@ -1394,6 +1394,11 @@ input:focus, select:focus, textarea:focus {
   color: #60a5fa;
 }
 
+.export-icon-box.pdf {
+  background-color: rgba(239, 68, 68, 0.15);
+  color: #ef4444;
+}
+
 .export-card-title {
   font-size: 13px;
   font-weight: 700;
@@ -1582,4 +1587,149 @@ input:focus, select:focus, textarea:focus {
 .receipt-divider {
   border-top: 1px dashed #9ca3af;
   margin: 8px 0;
+}
+
+/* ========================================================================= */
+/* MOBILE & TABLET RESPONSIVE STYLES (Mobile Web Friendly)                  */
+/* ========================================================================= */
+
+@media (max-width: 960px) {
+  .view-main-container {
+    flex-direction: column !important;
+    height: auto !important;
+    min-height: calc(100vh - 52px);
+    overflow-y: auto !important;
+  }
+
+  .admin-sidebar {
+    width: 100% !important;
+    min-width: 100% !important;
+    border-right: none !important;
+    border-bottom: 1px solid var(--border-subtle) !important;
+    padding: 10px 14px !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    overflow-x: auto !important;
+  }
+
+  .sidebar-brand-box {
+    display: none !important;
+  }
+
+  .sidebar-nav-group {
+    flex-direction: row !important;
+    gap: 8px !important;
+    overflow-x: auto !important;
+    width: 100% !important;
+  }
+
+  .sidebar-nav-item {
+    white-space: nowrap !important;
+    padding: 8px 12px !important;
+  }
+
+  .sidebar-subnav-list {
+    display: none !important;
+  }
+
+  .admin-content-area {
+    padding: 16px !important;
+    overflow-y: visible !important;
+  }
+
+  .laporan-cards-row {
+    grid-template-columns: 1fr !important;
+  }
+
+  .stat-cards-row {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+
+  .charts-grid-row {
+    grid-template-columns: 1fr !important;
+  }
+
+  .kasir-container {
+    flex-direction: column !important;
+    height: auto !important;
+    overflow-y: auto !important;
+  }
+
+  .kasir-left-section {
+    padding: 14px !important;
+    overflow-y: visible !important;
+    border-right: none !important;
+    border-bottom: 1px solid var(--border-subtle) !important;
+  }
+
+  .kasir-cart-panel {
+    width: 100% !important;
+    min-width: 100% !important;
+    height: auto !important;
+    border-left: none !important;
+  }
+
+  .products-grid {
+    grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)) !important;
+    gap: 10px !important;
+  }
+}
+
+@media (max-width: 640px) {
+  .window-dots {
+    display: none !important;
+  }
+
+  .top-header-bar {
+    padding: 8px 12px !important;
+  }
+
+  .nav-pill-container {
+    width: 100% !important;
+    justify-content: space-around !important;
+  }
+
+  .nav-pill-btn {
+    padding: 6px 10px !important;
+    font-size: 12px !important;
+  }
+
+  .stat-cards-row {
+    grid-template-columns: 1fr !important;
+  }
+
+  .export-buttons-group {
+    flex-direction: column !important;
+  }
+
+  .period-inputs-row {
+    flex-direction: column !important;
+    align-items: stretch !important;
+  }
+
+  .period-inputs-row .buat-laporan-btn {
+    width: 100% !important;
+    justify-content: center !important;
+  }
+
+  .preset-pills-row {
+    overflow-x: auto !important;
+    padding-bottom: 4px !important;
+  }
+
+  .products-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+
+  .kasir-header-row {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 12px !important;
+  }
+
+  .kasir-header-actions {
+    width: 100% !important;
+    overflow-x: auto !important;
+    justify-content: flex-start !important;
+  }
 }

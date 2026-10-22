@@ -18,10 +18,21 @@ import {
   ChevronDown
 } from 'lucide-react';
 
-export default function Sidebar({ currentSubmenu = '' }) {
-  const { activeTab, setActiveTab, showToast } = usePos();
-  const [stokExpanded, setStokExpanded] = useState(activeTab === 'stok' || activeTab === 'laporan');
-  const [laporanExpanded, setLaporanExpanded] = useState(activeTab === 'laporan');
+export default function Sidebar() {
+  const {
+    activeTab,
+    setActiveTab,
+    stokSubTab,
+    setStokSubTab,
+    laporanSubTab,
+    setLaporanSubTab,
+    setShowRestockModal,
+    setShowOpnameModal,
+    showToast
+  } = usePos();
+
+  const [stokExpanded, setStokExpanded] = useState(true);
+  const [laporanExpanded, setLaporanExpanded] = useState(true);
 
   return (
     <aside className="admin-sidebar">
@@ -56,7 +67,7 @@ export default function Sidebar({ currentSubmenu = '' }) {
             >
               <span style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                 <Boxes size={17} />
-                <span>STOK</span>
+                <span>STOK & HPP</span>
               </span>
               {stokExpanded ? <ChevronDown size={14} /> : <ChevronRight size={14} />}
             </button>
@@ -64,34 +75,52 @@ export default function Sidebar({ currentSubmenu = '' }) {
             {stokExpanded && (
               <div className="sidebar-subnav-list">
                 <button
-                  className={`sidebar-subnav-item ${activeTab === 'stok' ? 'active' : ''}`}
-                  onClick={() => setActiveTab('stok')}
+                  className={`sidebar-subnav-item ${activeTab === 'stok' && stokSubTab === 'bahan' ? 'active' : ''}`}
+                  onClick={() => {
+                    setActiveTab('stok');
+                    setStokSubTab('bahan');
+                  }}
                 >
                   Bahan Baku
                 </button>
                 <button
-                  className="sidebar-subnav-item"
-                  onClick={() => showToast('Modul Bahan Setengah Jadi')}
+                  className={`sidebar-subnav-item ${activeTab === 'stok' && stokSubTab === 'resep' ? 'active' : ''}`}
+                  onClick={() => {
+                    setActiveTab('stok');
+                    setStokSubTab('resep');
+                  }}
                 >
-                  Bahan Setengah Jadi
+                  Resep & HPP Menu
+                </button>
+                <button
+                  className={`sidebar-subnav-item ${activeTab === 'stok' && stokSubTab === 'simulator' ? 'active' : ''}`}
+                  onClick={() => {
+                    setActiveTab('stok');
+                    setStokSubTab('simulator');
+                  }}
+                >
+                  Simulator HPP (R&D)
                 </button>
                 <button
                   className="sidebar-subnav-item"
-                  onClick={() => showToast('Membuka formulir Restock')}
+                  onClick={() => setShowRestockModal(true)}
                 >
                   Restock
                 </button>
                 <button
                   className="sidebar-subnav-item"
-                  onClick={() => showToast('Modul Stok Opname & Buang')}
+                  onClick={() => setShowOpnameModal(true)}
                 >
                   Stok opname & buang
                 </button>
                 <button
-                  className="sidebar-subnav-item"
-                  onClick={() => showToast('Daftar Pemasok Bahan')}
+                  className={`sidebar-subnav-item ${activeTab === 'stok' && stokSubTab === 'ledger' ? 'active' : ''}`}
+                  onClick={() => {
+                    setActiveTab('stok');
+                    setStokSubTab('ledger');
+                  }}
                 >
-                  Pemasok
+                  Buku Besar Mutasi
                 </button>
               </div>
             )}
@@ -100,11 +129,14 @@ export default function Sidebar({ currentSubmenu = '' }) {
           {/* MENU */}
           <button
             className="sidebar-nav-item"
-            onClick={() => showToast('Pengaturan Menu & Resep')}
+            onClick={() => {
+              setActiveTab('stok');
+              setStokSubTab('resep');
+            }}
           >
             <span style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
               <UtensilsCrossed size={17} />
-              <span>MENU</span>
+              <span>MENU & RESEP</span>
             </span>
             <ChevronRight size={14} />
           </button>
@@ -112,11 +144,11 @@ export default function Sidebar({ currentSubmenu = '' }) {
           {/* STAF */}
           <button
             className="sidebar-nav-item"
-            onClick={() => showToast('Manajemen Staf & Hak Akses')}
+            onClick={() => showToast('Role: Owner (Rina - PIN 1234) & Kasir (Budi - PIN 0000)')}
           >
             <span style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
               <Users size={17} />
-              <span>STAF</span>
+              <span>STAF & ROLE</span>
             </span>
             <ChevronRight size={14} />
           </button>
@@ -124,7 +156,7 @@ export default function Sidebar({ currentSubmenu = '' }) {
           {/* PELANGGAN */}
           <button
             className="sidebar-nav-item"
-            onClick={() => showToast('Data Pelanggan & Loyalty')}
+            onClick={() => showToast('Data Pelanggan & Riwayat Pesanan')}
           >
             <span style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
               <UserCheck size={17} />
@@ -136,11 +168,14 @@ export default function Sidebar({ currentSubmenu = '' }) {
           {/* OPERASIONAL */}
           <button
             className="sidebar-nav-item"
-            onClick={() => showToast('Operasional & Meja')}
+            onClick={() => {
+              setActiveTab('laporan');
+              setLaporanSubTab('biaya');
+            }}
           >
             <span style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
               <Briefcase size={17} />
-              <span>OPERASIONAL</span>
+              <span>BIAYA OPERASIONAL</span>
             </span>
             <ChevronRight size={14} />
           </button>
@@ -164,22 +199,49 @@ export default function Sidebar({ currentSubmenu = '' }) {
             {laporanExpanded && (
               <div className="sidebar-subnav-list">
                 <button
-                  className={`sidebar-subnav-item ${activeTab === 'laporan' ? 'active' : ''}`}
-                  onClick={() => setActiveTab('laporan')}
+                  className={`sidebar-subnav-item ${activeTab === 'laporan' && laporanSubTab === 'pendapatan' ? 'active' : ''}`}
+                  onClick={() => {
+                    setActiveTab('laporan');
+                    setLaporanSubTab('pendapatan');
+                  }}
                 >
-                  Laporan Pendapatan
+                  RPT-01 Pendapatan
                 </button>
                 <button
-                  className="sidebar-subnav-item"
-                  onClick={() => showToast('Laporan Penjualan Item')}
+                  className={`sidebar-subnav-item ${activeTab === 'laporan' && laporanSubTab === 'labarugi' ? 'active' : ''}`}
+                  onClick={() => {
+                    setActiveTab('laporan');
+                    setLaporanSubTab('labarugi');
+                  }}
                 >
-                  Penjualan per Item
+                  RPT-03 Laba Rugi
                 </button>
                 <button
-                  className="sidebar-subnav-item"
-                  onClick={() => showToast('Laporan Laba Rugi')}
+                  className={`sidebar-subnav-item ${activeTab === 'laporan' && laporanSubTab === 'item' ? 'active' : ''}`}
+                  onClick={() => {
+                    setActiveTab('laporan');
+                    setLaporanSubTab('item');
+                  }}
                 >
-                  Laba Rugi
+                  RPT-02 & 06 Item & Margin
+                </button>
+                <button
+                  className={`sidebar-subnav-item ${activeTab === 'laporan' && laporanSubTab === 'biaya' ? 'active' : ''}`}
+                  onClick={() => {
+                    setActiveTab('laporan');
+                    setLaporanSubTab('biaya');
+                  }}
+                >
+                  Biaya Operasional
+                </button>
+                <button
+                  className={`sidebar-subnav-item ${activeTab === 'laporan' && laporanSubTab === 'riwayat' ? 'active' : ''}`}
+                  onClick={() => {
+                    setActiveTab('laporan');
+                    setLaporanSubTab('riwayat');
+                  }}
+                >
+                  Riwayat & Void (PIN Admin)
                 </button>
               </div>
             )}
@@ -190,7 +252,7 @@ export default function Sidebar({ currentSubmenu = '' }) {
         <div className="sidebar-secondary-links">
           <button
             className="sidebar-link"
-            onClick={() => showToast('Pengaturan Tema & Tampilan')}
+            onClick={() => showToast('Tema Dark Mode Elegan (CSS Variables)')}
           >
             <span style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
               <Palette size={16} />
@@ -199,7 +261,7 @@ export default function Sidebar({ currentSubmenu = '' }) {
           </button>
           <button
             className="sidebar-link"
-            onClick={() => showToast('Pengaturan Toko & Outlet')}
+            onClick={() => showToast('Pengaturan Toko, Pajak PB1 (10%), Komisi Ojol (20%)')}
           >
             <span style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
               <Settings size={16} />
@@ -208,11 +270,11 @@ export default function Sidebar({ currentSubmenu = '' }) {
           </button>
           <button
             className="sidebar-link"
-            onClick={() => showToast('Pusat Bantuan & Panduan')}
+            onClick={() => showToast('PRD posa v3.0 - Panduan Sistem')}
           >
             <span style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
               <HelpCircle size={16} />
-              <span>Bantuan</span>
+              <span>Bantuan PRD v3.0</span>
             </span>
           </button>
         </div>
@@ -223,7 +285,7 @@ export default function Sidebar({ currentSubmenu = '' }) {
         <button className="buka-kiosk-btn" onClick={() => setActiveTab('kasir')}>
           <span style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
             <Store size={16} />
-            <span>Buka POS Kiosk</span>
+            <span>Buka Kasir POS</span>
           </span>
           <ChevronRight size={16} />
         </button>
@@ -231,8 +293,8 @@ export default function Sidebar({ currentSubmenu = '' }) {
         <div className="pro-badge-card">
           <Crown size={18} color="#fbbf24" />
           <div>
-            <div className="pro-badge-text">Pro</div>
-            <div className="pro-subtext">sisa 26 hari</div>
+            <div className="pro-badge-text">posa v3.0 Pro</div>
+            <div className="pro-subtext">Fase 1 & 2 Aktif</div>
           </div>
         </div>
 
@@ -240,7 +302,7 @@ export default function Sidebar({ currentSubmenu = '' }) {
           className="logout-btn"
           onClick={() => {
             if (window.confirm('Yakin ingin keluar (logout)?')) {
-              showToast('Sesi telah ditutup');
+              showToast('Sesi kasir diamankan');
             }
           }}
         >

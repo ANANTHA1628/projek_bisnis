@@ -11,12 +11,12 @@ import {
   Plus,
   Minus,
   ShoppingCart,
-  MapPin,
-  Phone,
   Banknote,
   QrCode,
   CreditCard,
-  Clock
+  Clock,
+  Tag,
+  AlertCircle
 } from 'lucide-react';
 
 export default function KasirView() {
@@ -28,6 +28,7 @@ export default function KasirView() {
     updateQuantity,
     orderType,
     setOrderType,
+    getProductPrice,
     selectedTable,
     setSelectedTable,
     customerPhone,
@@ -39,12 +40,16 @@ export default function KasirView() {
     activeCategory,
     setActiveCategory,
     subtotal,
+    discount,
+    subtotalAfterDiscount,
     taxPb1,
     total,
+    currentShift,
+    setShowOpenShiftModal,
+    setShowCloseCashierModal,
     setCustomizingItem,
     setShowPaymentModal,
     setShowOpenBillsModal,
-    setShowCloseCashierModal,
     openBills,
     toggleFullscreen,
     showToast
@@ -69,8 +74,10 @@ export default function KasirView() {
   };
 
   const formatRupiah = (num) => {
-    return 'Rp ' + Number(num).toLocaleString('id-ID');
+    return 'Rp ' + Number(num || 0).toLocaleString('id-ID');
   };
+
+  const isOjolChannel = orderType === 'GoFood' || orderType === 'GrabFood';
 
   return (
     <div className="kasir-container">
@@ -114,8 +121,8 @@ export default function KasirView() {
 
             <button
               className="tool-icon-btn"
-              onClick={() => showToast('Printer Thermal Siap (Epson TM-T82X)')}
-              title="Cetak Tes Printer"
+              onClick={() => showToast('Printer Thermal Siap (Format 58/80mm)')}
+              title="Status Printer Thermal"
             >
               <Printer size={16} />
             </button>
@@ -133,14 +140,54 @@ export default function KasirView() {
               <span className="user-profile-role">Owner</span>
             </div>
 
-            <button
-              className="tutup-kasir-btn"
-              onClick={() => setShowCloseCashierModal(true)}
-            >
-              Tutup kasir
-            </button>
+            {currentShift.isOpen ? (
+              <button
+                className="tutup-kasir-btn"
+                onClick={() => setShowCloseCashierModal(true)}
+              >
+                Tutup kasir
+              </button>
+            ) : (
+              <button
+                className="buat-laporan-btn"
+                style={{ padding: '7px 14px', fontSize: '12px' }}
+                onClick={() => setShowOpenShiftModal(true)}
+              >
+                Buka Kasir
+              </button>
+            )}
           </div>
         </div>
+
+        {/* Shift banner alert if shift is not opened */}
+        {!currentShift.isOpen && (
+          <div
+            style={{
+              padding: '10px 14px',
+              backgroundColor: 'rgba(239, 68, 68, 0.15)',
+              border: '1px solid rgba(239, 68, 68, 0.3)',
+              borderRadius: '8px',
+              marginBottom: '12px',
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              fontSize: '12.5px',
+              color: '#f87171'
+            }}
+          >
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <AlertCircle size={16} />
+              <span>Sesi kasir saat ini sedang <strong>Tutup</strong>. Buka sesi untuk mencatat uang modal awal.</span>
+            </div>
+            <button
+              className="buat-laporan-btn"
+              style={{ padding: '4px 10px', fontSize: '11.5px' }}
+              onClick={() => setShowOpenShiftModal(true)}
+            >
+              Buka Shift
+            </button>
+          </div>
+        )}
 
         {/* Search Bar */}
         <div className="kasir-search-bar">
@@ -167,10 +214,29 @@ export default function KasirView() {
           ))}
         </div>
 
+        {/* Channel Pricing Notice Banner */}
+        {isOjolChannel && (
+          <div
+            style={{
+              padding: '6px 12px',
+              backgroundColor: 'rgba(37, 99, 235, 0.1)',
+              border: '1px solid rgba(37, 99, 235, 0.25)',
+              borderRadius: '6px',
+              fontSize: '11.5px',
+              color: '#60a5fa',
+              marginBottom: '10px'
+            }}
+          >
+            Kanal {orderType} aktif: Menampilkan harga kanal khusus ojol (komisi platform 20% otomatis).
+          </div>
+        )}
+
         {/* Menu Cards Grid */}
         <div className="menu-grid">
           {filteredProducts.map((product) => {
             const qtyInCart = getItemQtyInCart(product.id);
+            const currentPrice = getProductPrice(product, orderType);
+
             return (
               <div
                 key={product.id}
@@ -187,7 +253,7 @@ export default function KasirView() {
 
                 <div className="product-name">{product.name}</div>
                 <div className="product-category">{product.category}</div>
-                <div className="product-price">{formatRupiah(product.price)}</div>
+                <div className="product-price">{formatRupiah(currentPrice)}</div>
               </div>
             );
           })}
@@ -204,7 +270,7 @@ export default function KasirView() {
           <span className="cart-item-count-badge">{cartItemCount} item</span>
         </div>
 
-        {/* Order Type Tabs */}
+        {/* Order Type Tabs (Kanal Penjualan POS-01 & 4.2) */}
         <div className="order-type-tabs">
           {['Makan di sini', 'Bawa pulang', 'GoFood', 'GrabFood'].map((type) => (
             <button
@@ -310,12 +376,18 @@ export default function KasirView() {
             </div>
           </div>
 
-          {/* Subtotal, PB1, Total */}
+          {/* Subtotal, Diskon, PB1, Total */}
           <div className="cart-summary-breakdown">
             <div className="summary-row">
               <span>Subtotal</span>
               <span>{formatRupiah(subtotal)}</span>
             </div>
+            {discount > 0 && (
+              <div className="summary-row" style={{ color: '#ef4444' }}>
+                <span>Diskon</span>
+                <span>-{formatRupiah(discount)}</span>
+              </div>
+            )}
             <div className="summary-row">
               <span>PB1 (10%)</span>
               <span>{formatRupiah(taxPb1)}</span>

@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "backend": "php -S 0.0.0.0:8000 -t backend/public",
     "build": "vite build",
     "lint": "oxlint",
     "preview": "vite preview"

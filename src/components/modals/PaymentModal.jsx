@@ -1,17 +1,23 @@
 import React, { useState } from 'react';
 import { usePos } from '../../context/PosContext';
-import { X, CheckCircle, Banknote, QrCode, CreditCard, Clock } from 'lucide-react';
+import { X, CheckCircle, Banknote, QrCode, CreditCard, Clock, Tag } from 'lucide-react';
 
 export default function PaymentModal() {
   const {
     showPaymentModal,
     setShowPaymentModal,
+    subtotal,
+    discount,
+    setDiscount,
+    taxPb1,
     total,
     paymentMethod,
     setPaymentMethod,
     completePayment,
     selectedTable,
     orderType,
+    setShowAdminPinModal,
+    setAdminPinConfig,
     showToast
   } = usePos();
 
@@ -19,17 +25,17 @@ export default function PaymentModal() {
 
   if (!showPaymentModal) return null;
 
-  const formatRupiah = (num) => 'Rp ' + Number(num).toLocaleString('id-ID');
+  const formatRupiah = (num) => 'Rp ' + Number(num || 0).toLocaleString('id-ID');
 
   const change = Math.max(0, cashGiven - total);
 
   const quickCashOptions = [
     { label: 'Uang Pas', value: total },
-    { label: 'Rp 110.000', value: 110000 },
-    { label: 'Rp 120.000', value: 120000 },
-    { label: 'Rp 150.000', value: 150000 },
+    { label: formatRupiah(Math.ceil(total / 10000) * 10000), value: Math.ceil(total / 10000) * 10000 },
+    { label: formatRupiah(Math.ceil(total / 50000) * 50000), value: Math.ceil(total / 50000) * 50000 },
+    { label: 'Rp 100.000', value: 100000 },
     { label: 'Rp 200.000', value: 200000 }
-  ];
+  ].filter((opt, idx, arr) => opt.value >= total && arr.findIndex((x) => x.value === opt.value) === idx);
 
   const handlePay = () => {
     if (paymentMethod === 'tunai' && cashGiven < total) {
@@ -37,6 +43,21 @@ export default function PaymentModal() {
       return;
     }
     completePayment(paymentMethod === 'tunai' ? cashGiven : total);
+  };
+
+  const handleAddDiscount = () => {
+    setAdminPinConfig({
+      title: 'Otorisasi Diskon Manual (Admin)',
+      requireReason: true,
+      onSuccess: ({ reason }) => {
+        const discInput = prompt('Masukkan nominal diskon (Rp):', '5000');
+        if (discInput && Number(discInput) > 0) {
+          setDiscount(Number(discInput));
+          showToast(`Diskon Rp ${Number(discInput).toLocaleString('id-ID')} diterapkan (${reason})`);
+        }
+      }
+    });
+    setShowAdminPinModal(true);
   };
 
   return (
@@ -74,6 +95,35 @@ export default function PaymentModal() {
             </div>
             <div style={{ fontSize: '20px', fontWeight: 800, color: '#60a5fa' }}>
               {formatRupiah(total)}
+            </div>
+          </div>
+
+          {/* Breakdown & Diskon button */}
+          <div style={{ padding: '8px 12px', backgroundColor: '#0e1624', borderRadius: '8px', border: '1px solid var(--border-subtle)' }}>
+            <div className="summary-row" style={{ fontSize: '12px' }}>
+              <span>Subtotal</span>
+              <span>{formatRupiah(subtotal)}</span>
+            </div>
+            {discount > 0 && (
+              <div className="summary-row" style={{ fontSize: '12px', color: '#ef4444' }}>
+                <span>Diskon Manual</span>
+                <span>-{formatRupiah(discount)}</span>
+              </div>
+            )}
+            <div className="summary-row" style={{ fontSize: '12px' }}>
+              <span>PB1 (10%)</span>
+              <span>{formatRupiah(taxPb1)}</span>
+            </div>
+            <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '6px' }}>
+              <button
+                type="button"
+                className="tambah-bahan-btn"
+                style={{ fontSize: '11px', padding: '4px 10px' }}
+                onClick={handleAddDiscount}
+              >
+                <Tag size={12} />
+                <span>{discount > 0 ? 'Ubah Diskon (PIN Admin)' : 'Beri Diskon (PIN Admin)'}</span>
+              </button>
             </div>
           </div>
 
@@ -195,7 +245,6 @@ export default function PaymentModal() {
                 NMID: ID1029384756382
               </div>
 
-              {/* Stylized QR Code */}
               <div
                 style={{
                   width: '160px',
