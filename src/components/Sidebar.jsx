@@ -143,8 +143,8 @@ export default function Sidebar() {
 
           {/* STAF */}
           <button
-            className="sidebar-nav-item"
-            onClick={() => showToast('Role: Owner (Rina - PIN 1234) & Kasir (Budi - PIN 0000)')}
+            className={`sidebar-nav-item ${activeTab === 'staf' ? 'active' : ''}`}
+            onClick={() => setActiveTab('staf')}
           >
             <span style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
               <Users size={17} />
@@ -155,8 +155,8 @@ export default function Sidebar() {
 
           {/* PELANGGAN */}
           <button
-            className="sidebar-nav-item"
-            onClick={() => showToast('Data Pelanggan & Riwayat Pesanan')}
+            className={`sidebar-nav-item ${activeTab === 'pelanggan' ? 'active' : ''}`}
+            onClick={() => setActiveTab('pelanggan')}
           >
             <span style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
               <UserCheck size={17} />

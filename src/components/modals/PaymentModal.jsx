@@ -238,46 +238,24 @@ export default function PaymentModal() {
                 textAlign: 'center'
               }}
             >
-              <div style={{ fontWeight: 800, fontSize: '14px', marginBottom: '4px' }}>
-                QRIS POSA COFFEE
+              <div style={{ fontWeight: 800, fontSize: '15px', marginBottom: '4px' }}>
+                QRIS NAMA TOKO ANDA
               </div>
               <div style={{ fontSize: '11px', color: '#6b7280', marginBottom: '12px' }}>
-                NMID: ID1029384756382
+                NMID: ID1234567890123
               </div>
 
-              <div
+              {/* Tampilkan gambar QRIS Anda */}
+              <img
+                src="/QRIS.jpeg"
+                alt="QRIS Pembayaran"
                 style={{
-                  width: '160px',
-                  height: '160px',
-                  backgroundColor: '#000',
-                  padding: '10px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
+                  width: '200px',
+                  height: '200px',
+                  objectFit: 'contain',
                   borderRadius: '8px'
                 }}
-              >
-                <div
-                  style={{
-                    width: '100%',
-                    height: '100%',
-                    backgroundColor: '#fff',
-                    display: 'grid',
-                    gridTemplateColumns: 'repeat(7, 1fr)',
-                    gap: '4px',
-                    padding: '6px'
-                  }}
-                >
-                  {Array.from({ length: 49 }).map((_, i) => (
-                    <div
-                      key={i}
-                      style={{
-                        backgroundColor: (i % 2 === 0 || i % 5 === 0) ? '#000' : '#fff'
-                      }}
-                    />
-                  ))}
-                </div>
-              </div>
+              />
 
               <div style={{ marginTop: '12px', fontSize: '12px', color: '#374151' }}>
                 Scan dengan GoPay, OVO, Dana, BCA, atau Livin Mandiri

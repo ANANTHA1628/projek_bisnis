@@ -40,6 +40,18 @@ export default function TopNav() {
         >
           Laporan
         </button>
+        <button
+          className={`nav-pill-btn ${activeTab === 'staf' ? 'active' : ''}`}
+          onClick={() => setActiveTab('staf')}
+        >
+          Staf
+        </button>
+        <button
+          className={`nav-pill-btn ${activeTab === 'pelanggan' ? 'active' : ''}`}
+          onClick={() => setActiveTab('pelanggan')}
+        >
+          Pelanggan
+        </button>
       </nav>
 
       {/* Right Tools */}

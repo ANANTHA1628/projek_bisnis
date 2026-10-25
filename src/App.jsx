@@ -5,6 +5,8 @@ import KasirView from './views/KasirView';
 import DasborView from './views/DasborView';
 import StokView from './views/StokView';
 import LaporanView from './views/LaporanView';
+import StafView from './views/StafView';
+import PelangganView from './views/PelangganView';
 
 // Modals
 import CustomizeModal from './components/modals/CustomizeModal';
@@ -32,6 +34,8 @@ function PosAppContent() {
       {activeTab === 'dasbor' && <DasborView />}
       {activeTab === 'stok' && <StokView />}
       {activeTab === 'laporan' && <LaporanView />}
+      {activeTab === 'staf' && <StafView />}
+      {activeTab === 'pelanggan' && <PelangganView />}
 
       {/* Modals & Overlays per PRD posa v3.0 */}
       <CustomizeModal />
