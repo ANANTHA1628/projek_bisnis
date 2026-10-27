@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { usePos } from '../context/PosContext';
+import { useAuth } from '../context/AuthContext';
 import {
   LayoutDashboard,
   Boxes,
@@ -13,9 +14,12 @@ import {
   HelpCircle,
   Store,
   Crown,
+  Shield,
+  Coffee,
   LogOut,
   ChevronRight,
-  ChevronDown
+  ChevronDown,
+  Clock
 } from 'lucide-react';
 
 export default function Sidebar() {
@@ -31,8 +35,17 @@ export default function Sidebar() {
     showToast
   } = usePos();
 
+  const { user, logout, canViewLaporan, canViewAbsensiAll } = useAuth();
+
   const [stokExpanded, setStokExpanded] = useState(true);
   const [laporanExpanded, setLaporanExpanded] = useState(true);
+
+  const handleLogout = () => {
+    if (window.confirm('Yakin ingin keluar (logout)?')) {
+      logout();
+      showToast('Sesi kasir berhasil diamankan & logout.');
+    }
+  };
 
   return (
     <aside className="admin-sidebar">
@@ -40,7 +53,9 @@ export default function Sidebar() {
         {/* Sidebar Brand */}
         <div className="sidebar-brand-box">
           <span className="posa-brand">posa</span>
-          <span className="posa-brand-sub">ADMIN</span>
+          <span className="posa-brand-sub">
+            {user?.role?.toUpperCase() || 'POS'}
+          </span>
         </div>
 
         {/* Main Nav Group */}
@@ -54,6 +69,20 @@ export default function Sidebar() {
               <LayoutDashboard size={17} />
               <span>Dasbor</span>
             </span>
+          </button>
+
+          {/* ABSENSI - New dedicated nav item */}
+          <button
+            className={`sidebar-nav-item ${activeTab === 'absensi' ? 'active' : ''}`}
+            onClick={() => setActiveTab('absensi')}
+          >
+            <span style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+              <Clock size={17} />
+              <span>
+                {canViewAbsensiAll ? 'Absensi Karyawan' : 'Absensi Saya'}
+              </span>
+            </span>
+            <ChevronRight size={14} />
           </button>
 
           {/* STOK with Dropdown */}
@@ -141,17 +170,19 @@ export default function Sidebar() {
             <ChevronRight size={14} />
           </button>
 
-          {/* STAF */}
-          <button
-            className="sidebar-nav-item"
-            onClick={() => showToast('Role: Owner (Rina - PIN 1234) & Kasir (Budi - PIN 0000)')}
-          >
-            <span style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-              <Users size={17} />
-              <span>STAF & ROLE</span>
-            </span>
-            <ChevronRight size={14} />
-          </button>
+          {/* STAF (Owner / Admin only) */}
+          {canViewAbsensiAll && (
+            <button
+              className="sidebar-nav-item"
+              onClick={() => setActiveTab('absensi')}
+            >
+              <span style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                <Users size={17} />
+                <span>STAF & ABSENSI</span>
+              </span>
+              <ChevronRight size={14} />
+            </button>
+          )}
 
           {/* PELANGGAN */}
           <button
@@ -165,94 +196,98 @@ export default function Sidebar() {
             <ChevronRight size={14} />
           </button>
 
-          {/* OPERASIONAL */}
-          <button
-            className="sidebar-nav-item"
-            onClick={() => {
-              setActiveTab('laporan');
-              setLaporanSubTab('biaya');
-            }}
-          >
-            <span style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-              <Briefcase size={17} />
-              <span>BIAYA OPERASIONAL</span>
-            </span>
-            <ChevronRight size={14} />
-          </button>
-
-          {/* LAPORAN */}
-          <div>
+          {/* OPERASIONAL (Only Owner / Admin) */}
+          {canViewLaporan && (
             <button
-              className={`sidebar-nav-item ${activeTab === 'laporan' ? 'active' : ''}`}
+              className="sidebar-nav-item"
               onClick={() => {
                 setActiveTab('laporan');
-                setLaporanExpanded(!laporanExpanded);
+                setLaporanSubTab('biaya');
               }}
             >
               <span style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                <FileText size={17} />
-                <span>LAPORAN</span>
+                <Briefcase size={17} />
+                <span>BIAYA OPERASIONAL</span>
               </span>
-              {laporanExpanded ? <ChevronDown size={14} /> : <ChevronRight size={14} />}
+              <ChevronRight size={14} />
             </button>
+          )}
 
-            {laporanExpanded && (
-              <div className="sidebar-subnav-list">
-                <button
-                  className={`sidebar-subnav-item ${activeTab === 'laporan' && laporanSubTab === 'pendapatan' ? 'active' : ''}`}
-                  onClick={() => {
-                    setActiveTab('laporan');
-                    setLaporanSubTab('pendapatan');
-                  }}
-                >
-                  RPT-01 Pendapatan
-                </button>
-                <button
-                  className={`sidebar-subnav-item ${activeTab === 'laporan' && laporanSubTab === 'labarugi' ? 'active' : ''}`}
-                  onClick={() => {
-                    setActiveTab('laporan');
-                    setLaporanSubTab('labarugi');
-                  }}
-                >
-                  RPT-03 Laba Rugi
-                </button>
-                <button
-                  className={`sidebar-subnav-item ${activeTab === 'laporan' && laporanSubTab === 'item' ? 'active' : ''}`}
-                  onClick={() => {
-                    setActiveTab('laporan');
-                    setLaporanSubTab('item');
-                  }}
-                >
-                  RPT-02 & 06 Item & Margin
-                </button>
-                <button
-                  className={`sidebar-subnav-item ${activeTab === 'laporan' && laporanSubTab === 'biaya' ? 'active' : ''}`}
-                  onClick={() => {
-                    setActiveTab('laporan');
-                    setLaporanSubTab('biaya');
-                  }}
-                >
-                  Biaya Operasional
-                </button>
-                <button
-                  className={`sidebar-subnav-item ${activeTab === 'laporan' && laporanSubTab === 'riwayat' ? 'active' : ''}`}
-                  onClick={() => {
-                    setActiveTab('laporan');
-                    setLaporanSubTab('riwayat');
-                  }}
-                >
-                  Riwayat & Void (PIN Admin)
-                </button>
-              </div>
-            )}
-          </div>
+          {/* LAPORAN (Strictly Owner & Admin only!) */}
+          {canViewLaporan && (
+            <div>
+              <button
+                className={`sidebar-nav-item ${activeTab === 'laporan' ? 'active' : ''}`}
+                onClick={() => {
+                  setActiveTab('laporan');
+                  setLaporanExpanded(!laporanExpanded);
+                }}
+              >
+                <span style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                  <FileText size={17} />
+                  <span>LAPORAN</span>
+                </span>
+                {laporanExpanded ? <ChevronDown size={14} /> : <ChevronRight size={14} />}
+              </button>
+
+              {laporanExpanded && (
+                <div className="sidebar-subnav-list">
+                  <button
+                    className={`sidebar-subnav-item ${activeTab === 'laporan' && laporanSubTab === 'pendapatan' ? 'active' : ''}`}
+                    onClick={() => {
+                      setActiveTab('laporan');
+                      setLaporanSubTab('pendapatan');
+                    }}
+                  >
+                    RPT-01 Pendapatan
+                  </button>
+                  <button
+                    className={`sidebar-subnav-item ${activeTab === 'laporan' && laporanSubTab === 'labarugi' ? 'active' : ''}`}
+                    onClick={() => {
+                      setActiveTab('laporan');
+                      setLaporanSubTab('labarugi');
+                    }}
+                  >
+                    RPT-03 Laba Rugi
+                  </button>
+                  <button
+                    className={`sidebar-subnav-item ${activeTab === 'laporan' && laporanSubTab === 'item' ? 'active' : ''}`}
+                    onClick={() => {
+                      setActiveTab('laporan');
+                      setLaporanSubTab('item');
+                    }}
+                  >
+                    RPT-02 & 06 Item & Margin
+                  </button>
+                  <button
+                    className={`sidebar-subnav-item ${activeTab === 'laporan' && laporanSubTab === 'biaya' ? 'active' : ''}`}
+                    onClick={() => {
+                      setActiveTab('laporan');
+                      setLaporanSubTab('biaya');
+                    }}
+                  >
+                    Biaya Operasional
+                  </button>
+                  <button
+                    className={`sidebar-subnav-item ${activeTab === 'laporan' && laporanSubTab === 'riwayat' ? 'active' : ''}`}
+                    onClick={() => {
+                      setActiveTab('laporan');
+                      setLaporanSubTab('riwayat');
+                    }}
+                  >
+                    Riwayat & Void (PIN Admin)
+                  </button>
+                </div>
+              )}
+            </div>
+          )}
         </nav>
 
         {/* Secondary Navigation */}
         <div className="sidebar-secondary-links">
           <button
             className="sidebar-link"
-            onClick={() => showToast('Tema Dark Mode Elegan (CSS Variables)')}
+            onClick={() => showToast('Tema Dark Mode Elegan (Aktif)')}
           >
             <span style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
               <Palette size={16} />
@@ -270,11 +305,11 @@ export default function Sidebar() {
           </button>
           <button
             className="sidebar-link"
-            onClick={() => showToast('PRD posa v3.0 - Panduan Sistem')}
+            onClick={() => showToast('PRD posa v3.0 - Panduan Akses Multi-Role')}
           >
             <span style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
               <HelpCircle size={16} />
-              <span>Bantuan PRD v3.0</span>
+              <span>Bantuan Role</span>
             </span>
           </button>
         </div>
@@ -291,21 +326,20 @@ export default function Sidebar() {
         </button>
 
         <div className="pro-badge-card">
-          <Crown size={18} color="#fbbf24" />
+          {user?.role === 'owner' ? (
+            <Crown size={18} color="#fbbf24" />
+          ) : user?.role === 'admin' ? (
+            <Shield size={18} color="#60a5fa" />
+          ) : (
+            <Coffee size={18} color="#34d399" />
+          )}
           <div>
-            <div className="pro-badge-text">posa v3.0 Pro</div>
-            <div className="pro-subtext">Fase 1 & 2 Aktif</div>
+            <div className="pro-badge-text">{user?.name || 'User POS'}</div>
+            <div className="pro-subtext">Role: {user?.role?.toUpperCase()}</div>
           </div>
         </div>
 
-        <button
-          className="logout-btn"
-          onClick={() => {
-            if (window.confirm('Yakin ingin keluar (logout)?')) {
-              showToast('Sesi kasir diamankan');
-            }
-          }}
-        >
+        <button className="logout-btn" onClick={handleLogout}>
           <LogOut size={15} />
           <span>Keluar (Logout)</span>
         </button>

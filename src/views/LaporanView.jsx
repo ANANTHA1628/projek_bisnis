@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { usePos } from '../context/PosContext';
+import { useAuth } from '../context/AuthContext';
 import Sidebar from '../components/Sidebar';
 import {
   FileSpreadsheet,
@@ -16,7 +17,8 @@ import {
   PieChart,
   ShieldAlert,
   Plus,
-  Trash2
+  Trash2,
+  AlertOctagon
 } from 'lucide-react';
 
 export default function LaporanView() {
@@ -37,8 +39,11 @@ export default function LaporanView() {
     setLaporanSubTab,
     voidTransaction,
     setShowAdminPinModal,
-    setAdminPinConfig
+    setAdminPinConfig,
+    setActiveTab
   } = usePos();
+
+  const { canViewLaporan, user } = useAuth();
 
   const [startDate, setStartDate] = useState('28 Sep 2026');
   const [endDate, setEndDate] = useState('01 Okt 2026');
@@ -50,6 +55,31 @@ export default function LaporanView() {
   const [newExpCategory, setNewExpCategory] = useState('Listrik & Air');
   const [newExpAmount, setNewExpAmount] = useState(50000);
   const [newExpNote, setNewExpNote] = useState('');
+
+  // If a non-authorized role (like karyawan) accesses Laporan, show restricted notice
+  if (!canViewLaporan) {
+    return (
+      <div className="admin-layout-container">
+        <Sidebar />
+        <main className="admin-main-content" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <div style={{ textAlign: 'center', maxWidth: '420px', padding: '30px', background: '#1e293b', borderRadius: '16px', border: '1px solid #ef4444' }}>
+            <AlertOctagon size={48} color="#ef4444" style={{ marginBottom: '14px' }} />
+            <h2 style={{ fontSize: '18px', color: '#f3f4f6', marginBottom: '8px' }}>Akses Dibatasi</h2>
+            <p style={{ fontSize: '13px', color: '#9ca3af', lineHeight: '1.5', marginBottom: '16px' }}>
+              Akun <strong>{user?.name}</strong> dengan role <strong>{user?.role}</strong> tidak memiliki izin untuk melihat laporan keuangan dan laba rugi. Menu laporan hanya untuk <strong>Owner</strong> dan <strong>Admin</strong>.
+            </p>
+            <button
+              className="modal-primary-btn"
+              onClick={() => setActiveTab('kasir')}
+              style={{ width: '100%', justifyContent: 'center' }}
+            >
+              Kembali ke Menu Kasir
+            </button>
+          </div>
+        </main>
+      </div>
+    );
+  }
 
   const presets = ['Hari Ini', 'Kemarin', 'Minggu Ini', 'Bulan Ini', 'Bulan lalu'];
 

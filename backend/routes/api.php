@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\AttendanceController;
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\PosApiController;
 use App\Http\Controllers\ReportController;
 use Illuminate\Support\Facades\Route;
@@ -7,6 +9,24 @@ use Illuminate\Support\Facades\Route;
 // Health & Settings
 Route::get('/health', [PosApiController::class, 'health']);
 Route::get('/settings', [PosApiController::class, 'getSettings']);
+
+// Auth Endpoints (Public)
+Route::post('/auth/register', [AuthController::class, 'register']);
+Route::post('/auth/login', [AuthController::class, 'login']);
+
+// Protected Auth Endpoints
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/auth/me', [AuthController::class, 'me']);
+    Route::post('/auth/logout', [AuthController::class, 'logout']);
+    Route::get('/staff', [AuthController::class, 'staffList']);
+
+    // Attendance Endpoints
+    Route::get('/attendances', [AttendanceController::class, 'index']);
+    Route::get('/attendance/today', [AttendanceController::class, 'todayStatus']);
+    Route::post('/attendance/clock-in', [AttendanceController::class, 'clockIn']);
+    Route::post('/attendance/clock-out', [AttendanceController::class, 'clockOut']);
+    Route::post('/attendance/leave', [AttendanceController::class, 'submitLeave']);
+});
 
 // Master Catalog & Modifiers
 Route::get('/categories', [PosApiController::class, 'getCategories']);
