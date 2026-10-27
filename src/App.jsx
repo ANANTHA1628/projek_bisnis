@@ -6,8 +6,13 @@ import KasirView from './views/KasirView';
 import DasborView from './views/DasborView';
 import StokView from './views/StokView';
 import LaporanView from './views/LaporanView';
+<<<<<<< HEAD
 import AbsensiView from './views/AbsensiView';
 import AuthView from './views/AuthView';
+=======
+import StafView from './views/StafView';
+import PelangganView from './views/PelangganView';
+>>>>>>> d7928819821c03363cb4223931f44273315b1f15
 
 // Modals
 import CustomizeModal from './components/modals/CustomizeModal';
@@ -53,12 +58,22 @@ function PosAppContent() {
       {/* Top Application Bar with Navigation Pills */}
       <TopNav />
 
+<<<<<<< HEAD
       {/* Active Tab View - Role Gated */}
       {resolvedTab === 'kasir' && <KasirView />}
       {resolvedTab === 'dasbor' && <DasborView />}
       {resolvedTab === 'stok' && <StokView />}
       {resolvedTab === 'absensi' && <AbsensiView />}
       {resolvedTab === 'laporan' && canViewLaporan && <LaporanView />}
+=======
+      {/* Active Tab View */}
+      {activeTab === 'kasir' && <KasirView />}
+      {activeTab === 'dasbor' && <DasborView />}
+      {activeTab === 'stok' && <StokView />}
+      {activeTab === 'laporan' && <LaporanView />}
+      {activeTab === 'staf' && <StafView />}
+      {activeTab === 'pelanggan' && <PelangganView />}
+>>>>>>> d7928819821c03363cb4223931f44273315b1f15
 
       {/* Modals & Overlays per PRD posa v3.0 */}
       <CustomizeModal />

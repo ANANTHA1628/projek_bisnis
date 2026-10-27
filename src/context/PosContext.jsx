@@ -9,7 +9,9 @@ import {
   INITIAL_SETTINGS,
   INITIAL_SHIFT,
   INITIAL_EXPENSES,
-  INITIAL_STOCK_MOVEMENTS
+  INITIAL_STOCK_MOVEMENTS,
+  INITIAL_STAFF,
+  INITIAL_CUSTOMERS
 } from '../data/initialData';
 import confetti from 'canvas-confetti';
 
@@ -31,6 +33,57 @@ export function PosProvider({ children }) {
   const [modifiers] = useState(INITIAL_MODIFIERS);
   const [expenses, setExpenses] = useState(INITIAL_EXPENSES);
   const [stockMovements, setStockMovements] = useState(INITIAL_STOCK_MOVEMENTS);
+  const [staffList, setStaffList] = useState(INITIAL_STAFF);
+  const [customerList, setCustomerList] = useState(INITIAL_CUSTOMERS);
+
+  // Staf & Customer CRUD Handlers
+  const addStaff = (newStaff) => {
+    const staffWithId = {
+      ...newStaff,
+      id: 'staff-' + Date.now(),
+      joinedDate: new Date().toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric' })
+    };
+    setStaffList((prev) => [staffWithId, ...prev]);
+    showToast(`Staf ${newStaff.name} berhasil ditambahkan!`);
+  };
+
+  const updateStaff = (id, updatedData) => {
+    setStaffList((prev) => prev.map((s) => (s.id === id ? { ...s, ...updatedData } : s)));
+    showToast('Data staf berhasil diperbarui');
+  };
+
+  const deleteStaff = (id) => {
+    const target = staffList.find((s) => s.id === id);
+    if (target?.role === 'Owner') {
+      showToast('Akun Owner utama tidak dapat dihapus', 'warning');
+      return;
+    }
+    setStaffList((prev) => prev.filter((s) => s.id !== id));
+    showToast('Staf berhasil dihapus');
+  };
+
+  const addCustomer = (newCustomer) => {
+    const custWithId = {
+      ...newCustomer,
+      id: 'cust-' + Date.now(),
+      totalVisits: 1,
+      totalSpent: 0,
+      points: 10,
+      lastVisit: 'Baru saja'
+    };
+    setCustomerList((prev) => [custWithId, ...prev]);
+    showToast(`Pelanggan ${newCustomer.name} berhasil didaftarkan!`);
+  };
+
+  const updateCustomer = (id, updatedData) => {
+    setCustomerList((prev) => prev.map((c) => (c.id === id ? { ...c, ...updatedData } : c)));
+    showToast('Data pelanggan berhasil disimpan');
+  };
+
+  const deleteCustomer = (id) => {
+    setCustomerList((prev) => prev.filter((c) => c.id !== id));
+    showToast('Data pelanggan telah dihapus');
+  };
 
   // POS State
   const [orderType, setOrderType] = useState('Makan di sini'); // 'Makan di sini' | 'Bawa pulang' | 'GoFood' | 'GrabFood'
@@ -693,6 +746,16 @@ export function PosProvider({ children }) {
     setShowAdminPinModal,
     adminPinConfig,
     setAdminPinConfig,
+    staffList,
+    setStaffList,
+    addStaff,
+    updateStaff,
+    deleteStaff,
+    customerList,
+    setCustomerList,
+    addCustomer,
+    updateCustomer,
+    deleteCustomer,
     toast,
     showToast
   };

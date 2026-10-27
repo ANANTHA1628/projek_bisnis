@@ -170,6 +170,7 @@ export default function Sidebar() {
             <ChevronRight size={14} />
           </button>
 
+<<<<<<< HEAD
           {/* STAF (Owner / Admin only) */}
           {canViewAbsensiAll && (
             <button
@@ -183,11 +184,24 @@ export default function Sidebar() {
               <ChevronRight size={14} />
             </button>
           )}
+=======
+          {/* STAF */}
+          <button
+            className={`sidebar-nav-item ${activeTab === 'staf' ? 'active' : ''}`}
+            onClick={() => setActiveTab('staf')}
+          >
+            <span style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+              <Users size={17} />
+              <span>STAF & ROLE</span>
+            </span>
+            <ChevronRight size={14} />
+          </button>
+>>>>>>> d7928819821c03363cb4223931f44273315b1f15
 
           {/* PELANGGAN */}
           <button
-            className="sidebar-nav-item"
-            onClick={() => showToast('Data Pelanggan & Riwayat Pesanan')}
+            className={`sidebar-nav-item ${activeTab === 'pelanggan' ? 'active' : ''}`}
+            onClick={() => setActiveTab('pelanggan')}
           >
             <span style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
               <UserCheck size={17} />

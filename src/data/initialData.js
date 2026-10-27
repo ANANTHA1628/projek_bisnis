@@ -531,3 +531,123 @@ export const INITIAL_STOCK_MOVEMENTS = [
   { id: 4, time: '08:45', materialName: 'Biji kopi arabika', type: 'sale', qty: -36, unitCost: 220, note: 'Order #TRX-20261001-002' },
   { id: 5, time: '09:00', materialName: 'Roti tawar', type: 'waste', qty: -2, unitCost: 2500, note: 'Roti berjamur (catat buang)' }
 ];
+
+export const INITIAL_STAFF = [
+  {
+    id: 'staff-1',
+    name: 'Rina Wijaya',
+    email: 'rina.owner@posacoffee.com',
+    role: 'Owner',
+    pin: '1234',
+    phone: '081299887766',
+    status: 'Aktif',
+    permissions: ['all_access', 'void_transaction', 'manual_discount', 'cash_drawer', 'stock_manage', 'financial_report'],
+    shift: 'Semua Shift',
+    joinedDate: '01 Jan 2026'
+  },
+  {
+    id: 'staff-2',
+    name: 'Budi Santoso',
+    email: 'budi.kasir@posacoffee.com',
+    role: 'Kasir',
+    pin: '0000',
+    phone: '085711223344',
+    status: 'Aktif',
+    permissions: ['cashier_pos', 'open_close_shift', 'print_receipt'],
+    shift: 'Shift Pagi (07:00 - 15:00)',
+    joinedDate: '15 Feb 2026'
+  },
+  {
+    id: 'staff-3',
+    name: 'Siti Rahma',
+    email: 'siti.barista@posacoffee.com',
+    role: 'Barista / Kasir',
+    pin: '2211',
+    phone: '081344556677',
+    status: 'Aktif',
+    permissions: ['cashier_pos', 'print_receipt'],
+    shift: 'Shift Sore (15:00 - 23:00)',
+    joinedDate: '01 Mar 2026'
+  },
+  {
+    id: 'staff-4',
+    name: 'Dimas Aditya',
+    email: 'dimas.supervisor@posacoffee.com',
+    role: 'Supervisor / Manager',
+    pin: '8899',
+    phone: '087822334455',
+    status: 'Cuti',
+    permissions: ['cashier_pos', 'manual_discount', 'cash_drawer', 'stock_manage'],
+    shift: 'Shift Fleksibel',
+    joinedDate: '10 Jan 2026'
+  }
+];
+
+export const INITIAL_CUSTOMERS = [
+  {
+    id: 'cust-1',
+    name: 'Anisa Maharani',
+    phone: '081234567890',
+    email: 'anisa.m@gmail.com',
+    tier: 'Gold VIP',
+    totalVisits: 28,
+    totalSpent: 890000,
+    points: 890,
+    favoriteMenu: 'Kopi Susu Aren, Croissant',
+    lastVisit: '2026-10-25 14:20',
+    notes: 'Less sweet, alergi susu sapi (ganti oat milk)'
+  },
+  {
+    id: 'cust-2',
+    name: 'Reza Pratama',
+    phone: '085698765432',
+    email: 'reza.p@yahoo.com',
+    tier: 'Silver',
+    totalVisits: 14,
+    totalSpent: 425000,
+    points: 425,
+    favoriteMenu: 'Americano, Kentang Goreng',
+    lastVisit: '2026-10-24 19:15',
+    notes: 'Sering kerja bawa laptop di area outdoor'
+  },
+  {
+    id: 'cust-3',
+    name: 'Dian Permatasari',
+    phone: '087712349988',
+    email: 'dian.p@gmail.com',
+    tier: 'Gold VIP',
+    totalVisits: 35,
+    totalSpent: 1250000,
+    points: 1250,
+    favoriteMenu: 'Matcha Latte, Roti Bakar',
+    lastVisit: '2026-10-25 11:45',
+    notes: 'Member komunitas coffee enthusiast'
+  },
+  {
+    id: 'cust-4',
+    name: 'Fikri Alamsyah',
+    phone: '089677889900',
+    email: 'fikri.a@outlook.com',
+    tier: 'Bronze',
+    totalVisits: 5,
+    totalSpent: 135000,
+    points: 135,
+    favoriteMenu: 'Caffe Latte',
+    lastVisit: '2026-10-20 16:30',
+    notes: 'Langganan jam istirahat kantor'
+  },
+  {
+    id: 'cust-5',
+    name: 'Grace Natalia',
+    phone: '081122334455',
+    email: 'grace.n@gmail.com',
+    tier: 'Silver',
+    totalVisits: 12,
+    totalSpent: 380000,
+    points: 380,
+    favoriteMenu: 'Es Teh Melati, Cokelat',
+    lastVisit: '2026-10-22 18:00',
+    notes: 'Suka takeaway cup 16oz'
+  }
+];
+

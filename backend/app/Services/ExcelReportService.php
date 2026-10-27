@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use PhpOffice\PhpSpreadsheet\Cell\DataType;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Style\Alignment;
 use PhpOffice\PhpSpreadsheet\Style\Border;
@@ -123,9 +124,9 @@ class ExcelReportService
         $tRow = 2;
         foreach ($transactions as $idx => $t) {
             $ws2->setCellValue([1, $tRow], $idx + 1);
-            $ws2->setCellValue([2, $tRow], $t['id'] ?? $t['invoice_number'] ?? '-');
-            $ws2->setCellValue([3, $tRow], $t['date'] ?? '-');
-            $ws2->setCellValue([4, $tRow], $t['time'] ?? '-');
+            $ws2->setCellValueExplicit([2, $tRow], (string) ($t['id'] ?? $t['invoice_number'] ?? '-'), DataType::TYPE_STRING);
+            $ws2->setCellValueExplicit([3, $tRow], (string) ($t['date'] ?? '-'), DataType::TYPE_STRING);
+            $ws2->setCellValueExplicit([4, $tRow], (string) ($t['time'] ?? '-'), DataType::TYPE_STRING);
             $ws2->setCellValue([5, $tRow], $t['customer'] ?? '-');
             $ws2->setCellValue([6, $tRow], $t['table'] ?? '-');
             $ws2->setCellValue([7, $tRow], $t['orderType'] ?? $t['order_type'] ?? '-');
@@ -137,6 +138,7 @@ class ExcelReportService
             if ($tRow % 2 === 0) {
                 $ws2->getStyle("A{$tRow}:K{$tRow}")->getFill()->setFillType(Fill::FILL_SOLID)->getStartColor()->setARGB($zebraColor);
             }
+            $ws2->getStyle("C{$tRow}:D{$tRow}")->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
             $ws2->getStyle("I{$tRow}:K{$tRow}")->getNumberFormat()->setFormatCode('"Rp "#,##0');
             $ws2->getStyle("A{$tRow}:K{$tRow}")->getBorders()->getAllBorders()->setBorderStyle(Border::BORDER_THIN)->getColor()->setARGB('E2E8F0');
             $tRow++;
@@ -179,8 +181,8 @@ class ExcelReportService
                 $price = $item['price'] ?? 0;
                 $subtotal = $qty * $price;
 
-                $ws3->setCellValue([1, $iRow], $tid);
-                $ws3->setCellValue([2, $iRow], $tDate);
+                $ws3->setCellValueExplicit([1, $iRow], (string) $tid, DataType::TYPE_STRING);
+                $ws3->setCellValueExplicit([2, $iRow], (string) $tDate, DataType::TYPE_STRING);
                 $ws3->setCellValue([3, $iRow], $item['name'] ?? '-');
                 $ws3->setCellValue([4, $iRow], $qty);
                 $ws3->setCellValue([5, $iRow], $price);
@@ -189,6 +191,7 @@ class ExcelReportService
                 if ($iRow % 2 === 0) {
                     $ws3->getStyle("A{$iRow}:F{$iRow}")->getFill()->setFillType(Fill::FILL_SOLID)->getStartColor()->setARGB($zebraColor);
                 }
+                $ws3->getStyle("B{$iRow}")->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
                 $ws3->getStyle("E{$iRow}:F{$iRow}")->getNumberFormat()->setFormatCode('"Rp "#,##0');
                 $ws3->getStyle("A{$iRow}:F{$iRow}")->getBorders()->getAllBorders()->setBorderStyle(Border::BORDER_THIN)->getColor()->setARGB('E2E8F0');
                 $iRow++;
@@ -236,10 +239,24 @@ class ExcelReportService
             }
         }
 
-        // Auto width for all sheets
+        // Auto width for all sheets dengan margin minimum agar tidak '###' / 'XXXX'
         foreach ($spreadsheet->getAllSheets() as $sheet) {
             foreach ($sheet->getColumnIterator() as $col) {
-                $sheet->getColumnDimension($col->getColumnIndex())->setAutoSize(true);
+                $colIndex = $col->getColumnIndex();
+                $sheet->getColumnDimension($colIndex)->setAutoSize(true);
+            }
+            $sheet->calculateColumnWidths();
+            foreach ($sheet->getColumnIterator() as $col) {
+                $colIndex = $col->getColumnIndex();
+                $currentWidth = $sheet->getColumnDimension($colIndex)->getWidth();
+                // Beri ruang ekstra minimal 14 untuk kolom tanggal/ID agar tidak sempit di Excel
+                if ($currentWidth < 14) {
+                    $sheet->getColumnDimension($colIndex)->setAutoSize(false);
+                    $sheet->getColumnDimension($colIndex)->setWidth(max(14, $currentWidth + 3));
+                } else {
+                    $sheet->getColumnDimension($colIndex)->setAutoSize(false);
+                    $sheet->getColumnDimension($colIndex)->setWidth($currentWidth + 2);
+                }
             }
         }
 

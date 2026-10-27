@@ -62,6 +62,7 @@ export default function TopNav() {
         >
           Dasbor
         </button>
+<<<<<<< HEAD
 
         {/* Laporan: Only Owner & Admin! Hidden from Karyawan */}
         {canViewLaporan && (
@@ -72,6 +73,20 @@ export default function TopNav() {
             Laporan
           </button>
         )}
+=======
+        <button
+          className={`nav-pill-btn ${activeTab === 'staf' ? 'active' : ''}`}
+          onClick={() => setActiveTab('staf')}
+        >
+          Staf
+        </button>
+        <button
+          className={`nav-pill-btn ${activeTab === 'pelanggan' ? 'active' : ''}`}
+          onClick={() => setActiveTab('pelanggan')}
+        >
+          Pelanggan
+        </button>
+>>>>>>> d7928819821c03363cb4223931f44273315b1f15
       </nav>
 
       {/* Right Tools: User Profile & Quick Actions */}

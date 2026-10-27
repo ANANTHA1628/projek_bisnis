@@ -20,6 +20,7 @@ import {
   Trash2,
   AlertOctagon
 } from 'lucide-react';
+import * as XLSX from 'xlsx';
 
 export default function LaporanView() {
   const {
@@ -128,12 +129,13 @@ export default function LaporanView() {
   };
 
   const handleExportCSV = (type) => {
-    let csvContent = 'data:text/csv;charset=utf-8,';
+    // Tambahkan BOM \uFEFF agar Microsoft Excel membaca encoding UTF-8 dengan benar tanpa error format
+    let csvContent = 'data:text/csv;charset=utf-8,\uFEFF';
 
     if (type === 'transaksi') {
       csvContent += 'ID Transaksi,Tanggal,Waktu,Tipe,Meja,Pelanggan,Metode,Status,Subtotal,Diskon,PB1,Total,HPP,Komisi Ojol\n';
       transactions.forEach((t) => {
-        csvContent += `${t.id},${t.date},${t.time},${t.orderType},${t.table},"${t.customer}",${t.method},${t.status},${t.subtotal},${t.discount || 0},${t.tax},${t.total},${t.cost},${t.commissionAmount || 0}\n`;
+        csvContent += `"${t.id}","${t.date}","${t.time}","${t.orderType}","${t.table}","${t.customer}","${t.method}","${t.status}",${t.subtotal},${t.discount || 0},${t.tax},${t.total},${t.cost},${t.commissionAmount || 0}\n`;
       });
     } else if (type === 'item') {
       csvContent += 'ID Transaksi,Nama Item,Harga,Jumlah,Subtotal Item\n';
@@ -164,36 +166,127 @@ export default function LaporanView() {
     showToast(`File CSV ${type} berhasil diunduh!`);
   };
 
-  const handleExportExcel = async () => {
+  const handleExportExcel = () => {
     setIsExporting(true);
-    showToast('Menghubungi backend Laravel untuk generate Excel (.xlsx)...');
+    showToast('Membuat file Excel (.xlsx) dengan format tanggal rapi...');
+
     try {
-      const response = await fetch('http://localhost:8000/api/export/excel', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          transactions,
-          rawMaterials,
-          periodInfo: { startDate, endDate }
-        })
+      // 1. Data Sheet Transaksi
+      const trxData = transactions.map((t, idx) => ({
+        'No': idx + 1,
+        'ID Transaksi': String(t.id || '-'),
+        'Tanggal': String(t.date || '-'),
+        'Waktu': String(t.time || '-'),
+        'Pelanggan': String(t.customer || '-'),
+        'Meja': String(t.table || '-'),
+        'Kanal Penjualan': String(t.orderType || '-'),
+        'Metode Pembayaran': String(t.method || '-'),
+        'Status': String(t.status || '-').toUpperCase(),
+        'Subtotal (Rp)': Number(t.subtotal || 0),
+        'Diskon (Rp)': Number(t.discount || 0),
+        'Pajak PB1 (Rp)': Number(t.tax || 0),
+        'Total (Rp)': Number(t.total || 0),
+        'HPP Bahan (Rp)': Number(t.cost || 0)
+      }));
+
+      // 2. Data Sheet Detail Item Terjual
+      const itemData = [];
+      transactions.forEach((t) => {
+        (t.items || []).forEach((item) => {
+          itemData.push({
+            'ID Transaksi': String(t.id || '-'),
+            'Tanggal': String(t.date || '-'),
+            'Nama Menu': String(item.name || '-'),
+            'Jumlah (Qty)': Number(item.quantity || 1),
+            'Harga Satuan (Rp)': Number(item.price || 0),
+            'Subtotal (Rp)': Number((item.quantity || 1) * (item.price || 0))
+          });
+        });
       });
 
-      if (!response.ok) throw new Error('Gagal dari server Laravel');
+      // 3. Data Sheet Ringkasan Keuangan (Laba Rugi)
+      const summaryData = [
+        { 'Komponen Laporan': 'Omzet Penjualan Bruto', 'Nominal (Rp)': totalOmzetBruto },
+        { 'Komponen Laporan': 'Total Potongan Diskon', 'Nominal (Rp)': totalDiskon },
+        { 'Komponen Laporan': 'Omzet Penjualan Bersih', 'Nominal (Rp)': totalOmzetNet },
+        { 'Komponen Laporan': 'HPP Bahan Baku (COGS)', 'Nominal (Rp)': totalHpp },
+        { 'Komponen Laporan': 'Komisi Platform Ojol', 'Nominal (Rp)': totalKomisiOjol },
+        { 'Komponen Laporan': 'Biaya Operasional Toko', 'Nominal (Rp)': totalBiayaOps },
+        { 'Komponen Laporan': 'Laba Bersih Usaha', 'Nominal (Rp)': labaBersih }
+      ];
 
-      const blob = await response.blob();
-      const url = window.URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `posa_laporan_${Date.now()}.xlsx`;
-      document.body.appendChild(a);
-      a.click();
-      window.URL.revokeObjectURL(url);
-      a.remove();
-      showToast('Laporan Excel multi-sheet berhasil diunduh dari Laravel!');
+      // 4. Data Sheet Stok Bahan Baku
+      const stockData = rawMaterials.map((m) => ({
+        'Nama Bahan': String(m.name || '-'),
+        'Sisa Stok': Number(m.stock || 0),
+        'Satuan': String(m.unit || '-'),
+        'HPP Satuan (Rp)': Number(m.avgPrice || 0),
+        'Batas Minimal': Number(m.minStock || 0),
+        'Status': m.stock <= m.minStock ? 'Menipis' : 'Aman'
+      }));
+
+      // Inisialisasi Workbook
+      const wb = XLSX.utils.book_new();
+
+      const wsTrx = XLSX.utils.json_to_sheet(trxData);
+      const wsItems = XLSX.utils.json_to_sheet(itemData);
+      const wsSummary = XLSX.utils.json_to_sheet(summaryData);
+      const wsStock = XLSX.utils.json_to_sheet(stockData);
+
+      // Tentukan lebar kolom yang lega (min 15 - 25) agar tanggal & angka tidak menjadi XXXXX atau ###
+      wsTrx['!cols'] = [
+        { wch: 6 },  // No
+        { wch: 22 }, // ID Transaksi
+        { wch: 18 }, // Tanggal (LEBAR LEGA)
+        { wch: 14 }, // Waktu
+        { wch: 22 }, // Pelanggan
+        { wch: 14 }, // Meja
+        { wch: 18 }, // Kanal
+        { wch: 18 }, // Metode
+        { wch: 12 }, // Status
+        { wch: 16 }, // Subtotal
+        { wch: 14 }, // Diskon
+        { wch: 14 }, // Pajak PB1
+        { wch: 16 }, // Total
+        { wch: 16 }  // HPP
+      ];
+
+      wsItems['!cols'] = [
+        { wch: 22 }, // ID Transaksi
+        { wch: 18 }, // Tanggal
+        { wch: 26 }, // Nama Menu
+        { wch: 14 }, // Qty
+        { wch: 18 }, // Harga Satuan
+        { wch: 18 }  // Subtotal
+      ];
+
+      wsSummary['!cols'] = [
+        { wch: 32 }, // Komponen
+        { wch: 22 }  // Nominal
+      ];
+
+      wsStock['!cols'] = [
+        { wch: 26 }, // Nama Bahan
+        { wch: 14 }, // Stok
+        { wch: 12 }, // Satuan
+        { wch: 18 }, // HPP
+        { wch: 16 }, // Min
+        { wch: 14 }  // Status
+      ];
+
+      // Tambahkan sheets ke workbook
+      XLSX.utils.book_append_sheet(wb, wsTrx, 'Transaksi');
+      XLSX.utils.book_append_sheet(wb, wsItems, 'Detail Item');
+      XLSX.utils.book_append_sheet(wb, wsSummary, 'Ringkasan Laba');
+      XLSX.utils.book_append_sheet(wb, wsStock, 'Stok Bahan');
+
+      // Tulis file .xlsx langsung ke unduhan browser
+      XLSX.writeFile(wb, `posa_laporan_${new Date().toISOString().slice(0, 10)}.xlsx`);
+      showToast('Laporan Excel (.xlsx) multi-sheet berhasil diunduh!');
     } catch (err) {
-      console.warn('Backend Laravel offline, fallback ke CSV:', err);
+      console.error('Gagal export excel:', err);
+      showToast('Gagal membuat file Excel, gunakan CSV transaksi.', 'warning');
       handleExportCSV('transaksi');
-      showToast('Mengunduh file CSV transaksi sebagai alternatif.');
     } finally {
       setIsExporting(false);
     }
