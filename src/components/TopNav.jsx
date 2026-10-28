@@ -1,9 +1,17 @@
 import React from 'react';
 import { usePos } from '../context/PosContext';
-import { Maximize2, Minimize2 } from 'lucide-react';
+import { Maximize2, Minimize2, Palette, Settings, HelpCircle } from 'lucide-react';
 
 export default function TopNav() {
-  const { activeTab, setActiveTab, isFullscreen, toggleFullscreen } = usePos();
+  const {
+    activeTab,
+    setActiveTab,
+    isFullscreen,
+    toggleFullscreen,
+    setShowTampilanModal,
+    setShowPengaturanModal,
+    setShowBantuanModal
+  } = usePos();
 
   return (
     <header className="top-header-bar">
@@ -55,7 +63,28 @@ export default function TopNav() {
       </nav>
 
       {/* Right Tools */}
-      <div className="top-right-quick-tools">
+      <div className="top-right-quick-tools" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+        <button
+          className="tool-icon-btn"
+          onClick={() => setShowTampilanModal(true)}
+          title="Tampilan & Tema Warna"
+        >
+          <Palette size={16} />
+        </button>
+        <button
+          className="tool-icon-btn"
+          onClick={() => setShowPengaturanModal(true)}
+          title="Pengaturan Toko & POS"
+        >
+          <Settings size={16} />
+        </button>
+        <button
+          className="tool-icon-btn"
+          onClick={() => setShowBantuanModal(true)}
+          title="Bantuan PRD v3.0 & SOP"
+        >
+          <HelpCircle size={16} />
+        </button>
         <button
           className="tool-icon-btn"
           onClick={toggleFullscreen}

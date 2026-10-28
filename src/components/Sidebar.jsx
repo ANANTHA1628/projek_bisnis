@@ -28,6 +28,9 @@ export default function Sidebar() {
     setLaporanSubTab,
     setShowRestockModal,
     setShowOpnameModal,
+    setShowTampilanModal,
+    setShowPengaturanModal,
+    setShowBantuanModal,
     showToast
   } = usePos();
 
@@ -252,7 +255,8 @@ export default function Sidebar() {
         <div className="sidebar-secondary-links">
           <button
             className="sidebar-link"
-            onClick={() => showToast('Tema Dark Mode Elegan (CSS Variables)')}
+            onClick={() => setShowTampilanModal(true)}
+            title="Kustomisasi Tema, Skala Teks & Suara Kasir"
           >
             <span style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
               <Palette size={16} />
@@ -261,7 +265,8 @@ export default function Sidebar() {
           </button>
           <button
             className="sidebar-link"
-            onClick={() => showToast('Pengaturan Toko, Pajak PB1 (10%), Komisi Ojol (20%)')}
+            onClick={() => setShowPengaturanModal(true)}
+            title="Pengaturan Toko, Pajak PB1, Komisi Ojol & PIN"
           >
             <span style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
               <Settings size={16} />
@@ -270,7 +275,8 @@ export default function Sidebar() {
           </button>
           <button
             className="sidebar-link"
-            onClick={() => showToast('PRD posa v3.0 - Panduan Sistem')}
+            onClick={() => setShowBantuanModal(true)}
+            title="Dokumentasi Sistem & Panduan PRD v3.0"
           >
             <span style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
               <HelpCircle size={16} />

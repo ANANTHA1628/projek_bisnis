@@ -26,8 +26,116 @@ export function PosProvider({ children }) {
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [printerSize, setPrinterSize] = useState('58mm'); // '58mm' | '80mm' (D6)
 
-  // Master Data & Configuration
-  const [settings, setSettings] = useState(INITIAL_SETTINGS);
+  // Default Theme Configuration
+  const DEFAULT_THEME = {
+    theme: 'dark', // 'dark' | 'oled' | 'coffee' | 'forest' | 'violet' | 'light'
+    accentColor: '#2563eb',
+    fontScale: 'normal', // 'compact' | 'normal' | 'large'
+    soundEnabled: true,
+    animationsEnabled: true,
+    cardDensity: 'standard' // 'standard' | 'compact'
+  };
+
+  // Master Data & Configuration with LocalStorage persistence
+  const [settings, setSettings] = useState(() => {
+    try {
+      const saved = localStorage.getItem('posa_settings');
+      if (saved) return { ...INITIAL_SETTINGS, ...JSON.parse(saved) };
+    } catch {
+      // fallback
+    }
+    return INITIAL_SETTINGS;
+  });
+
+  const [themeSettings, setThemeSettings] = useState(() => {
+    try {
+      const saved = localStorage.getItem('posa_theme');
+      if (saved) return { ...DEFAULT_THEME, ...JSON.parse(saved) };
+    } catch {
+      // fallback
+    }
+    return DEFAULT_THEME;
+  });
+
+  const updateSettings = (newPartialSettings) => {
+    setSettings((prev) => {
+      const updated = { ...prev, ...newPartialSettings };
+      try {
+        localStorage.setItem('posa_settings', JSON.stringify(updated));
+      } catch {}
+      return updated;
+    });
+    showToast('Pengaturan sistem berhasil disimpan!');
+  };
+
+  const updateThemeSettings = (newPartialTheme) => {
+    setThemeSettings((prev) => {
+      const updated = { ...prev, ...newPartialTheme };
+      try {
+        localStorage.setItem('posa_theme', JSON.stringify(updated));
+      } catch {}
+      return updated;
+    });
+  };
+
+  // Web Audio API Cashier Chime Synthesizer
+  const playSound = (type = 'click') => {
+    if (!themeSettings.soundEnabled) return;
+    try {
+      const AudioCtx = window.AudioContext || window.webkitAudioContext;
+      if (!AudioCtx) return;
+      const ctx = new AudioCtx();
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+
+      if (type === 'success') {
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(587.33, ctx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(880, ctx.currentTime + 0.15);
+        gain.gain.setValueAtTime(0.12, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.35);
+        osc.start();
+        osc.stop(ctx.currentTime + 0.35);
+      } else if (type === 'beep') {
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(987.77, ctx.currentTime);
+        gain.gain.setValueAtTime(0.08, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.08);
+        osc.start();
+        osc.stop(ctx.currentTime + 0.08);
+      } else {
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(440, ctx.currentTime);
+        gain.gain.setValueAtTime(0.05, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.05);
+        osc.start();
+        osc.stop(ctx.currentTime + 0.05);
+      }
+    } catch {}
+  };
+
+  // Synchronize Theme & CSS Variables to document
+  useEffect(() => {
+    const root = document.documentElement;
+    root.setAttribute('data-theme', themeSettings.theme || 'dark');
+
+    if (themeSettings.accentColor) {
+      root.style.setProperty('--accent-blue', themeSettings.accentColor);
+      root.style.setProperty('--border-active', themeSettings.accentColor);
+      root.style.setProperty('--shadow-glow', `0 0 15px ${themeSettings.accentColor}4d`);
+    }
+
+    if (themeSettings.fontScale === 'large') {
+      root.style.setProperty('--font-scale-factor', '1.08');
+    } else if (themeSettings.fontScale === 'compact') {
+      root.style.setProperty('--font-scale-factor', '0.94');
+    } else {
+      root.style.setProperty('--font-scale-factor', '1');
+    }
+  }, [themeSettings]);
+
   const [products, setProducts] = useState(INITIAL_PRODUCTS);
   const [rawMaterials, setRawMaterials] = useState(INITIAL_RAW_MATERIALS);
   const [modifiers] = useState(INITIAL_MODIFIERS);
@@ -120,6 +228,12 @@ export function PosProvider({ children }) {
   const [showWhatsAppModal, setShowWhatsAppModal] = useState(false);
   const [showAdminPinModal, setShowAdminPinModal] = useState(false);
   const [adminPinConfig, setAdminPinConfig] = useState(null); // { title, onSuccess }
+
+  // Modals for Tampilan, Pengaturan, and Bantuan PRD v3.0
+  const [showTampilanModal, setShowTampilanModal] = useState(false);
+  const [showPengaturanModal, setShowPengaturanModal] = useState(false);
+  const [showBantuanModal, setShowBantuanModal] = useState(false);
+
   const [toast, setToast] = useState(null);
 
   // Trigger Toast Notification
@@ -195,13 +309,21 @@ export function PosProvider({ children }) {
   }, [subtotal, discount]);
 
   const taxPb1 = useMemo(() => {
-    // PB1 10% dihitung dari subtotal setelah diskon
-    return Math.round(subtotalAfterDiscount * 0.10);
-  }, [subtotalAfterDiscount]);
+    const rate = Number(settings.tax_pb1_rate ?? 10) / 100;
+    if (settings.tax_mode === 'inclusive') {
+      // Inklusif: Pajak sudah termasuk di dalam subtotal (D1)
+      return Math.round(subtotalAfterDiscount - (subtotalAfterDiscount / (1 + rate)));
+    }
+    // Eksklusif: PB1 dihitung dari subtotal setelah diskon (Aturan Bisnis 4.1 & D1)
+    return Math.round(subtotalAfterDiscount * rate);
+  }, [subtotalAfterDiscount, settings.tax_pb1_rate, settings.tax_mode]);
 
   const total = useMemo(() => {
+    if (settings.tax_mode === 'inclusive') {
+      return subtotalAfterDiscount;
+    }
     return subtotalAfterDiscount + taxPb1;
-  }, [subtotalAfterDiscount, taxPb1]);
+  }, [subtotalAfterDiscount, taxPb1, settings.tax_mode]);
 
   // Total stock inventory value real-time (INV-06)
   const totalStockValue = useMemo(() => {
@@ -210,6 +332,7 @@ export function PosProvider({ children }) {
 
   // Cart Management
   const addToCart = (product) => {
+    playSound('beep');
     const basePrice = getProductPrice(product, orderType);
 
     setCart((prevCart) => {
@@ -442,14 +565,18 @@ export function PosProvider({ children }) {
     clearCart();
     setShowPaymentModal(false);
 
-    try {
-      confetti({
-        particleCount: 50,
-        spread: 60,
-        origin: { y: 0.6 }
-      });
-    } catch {
-      // ignore
+    playSound('success');
+
+    if (themeSettings.animationsEnabled) {
+      try {
+        confetti({
+          particleCount: 50,
+          spread: 60,
+          origin: { y: 0.6 }
+        });
+      } catch {
+        // ignore
+      }
     }
   };
 
@@ -746,6 +873,18 @@ export function PosProvider({ children }) {
     setShowAdminPinModal,
     adminPinConfig,
     setAdminPinConfig,
+    // 3 Fitur Baru: Tampilan, Pengaturan, Bantuan PRD v3.0
+    showTampilanModal,
+    setShowTampilanModal,
+    showPengaturanModal,
+    setShowPengaturanModal,
+    showBantuanModal,
+    setShowBantuanModal,
+    themeSettings,
+    setThemeSettings,
+    updateThemeSettings,
+    updateSettings,
+    playSound,
     staffList,
     setStaffList,
     addStaff,
