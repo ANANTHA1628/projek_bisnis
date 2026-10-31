@@ -4,23 +4,21 @@ namespace App\Models;
 
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
 {
     /** @use HasFactory<UserFactory> */
-    use HasApiTokens, HasFactory, Notifiable, SoftDeletes;
+    use HasFactory, Notifiable, SoftDeletes;
 
     protected $fillable = [
         'name',
         'email',
         'password',
         'pin_hash',
-        'role', // 'admin', 'owner', 'karyawan' (or 'cashier')
+        'role',
         'is_active',
     ];
 
@@ -44,28 +42,13 @@ class User extends Authenticatable
         return $this->role === 'admin';
     }
 
-    public function isOwner(): bool
-    {
-        return $this->role === 'owner';
-    }
-
-    public function isKaryawan(): bool
-    {
-        return in_array($this->role, ['karyawan', 'cashier'], true);
-    }
-
     public function isCashier(): bool
     {
-        return in_array($this->role, ['karyawan', 'cashier'], true);
+        return $this->role === 'cashier';
     }
 
-    public function cashSessions(): HasMany
+    public function cashSessions()
     {
         return $this->hasMany(CashSession::class);
-    }
-
-    public function attendances(): HasMany
-    {
-        return $this->hasMany(Attendance::class);
     }
 }

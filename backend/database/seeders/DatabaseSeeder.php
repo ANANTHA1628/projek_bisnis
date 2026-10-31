@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Models\Attendance;
+use App\Models\AuditLog;
 use App\Models\CashSession;
 use App\Models\Category;
 use App\Models\Customer;
@@ -22,25 +22,13 @@ class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
-        // 1. Users — 3 roles: admin, owner, karyawan
+        // 1. Users
         $admin = User::updateOrCreate(
-            ['email' => 'admin@posa.local'],
-            [
-                'name' => 'Admin Sistem',
-                'role' => 'admin',
-                'password' => Hash::make('admin123'),
-                'pin_hash' => Hash::make('9999'), // PIN Admin
-                'is_active' => true,
-            ]
-        );
-
-        $owner = User::updateOrCreate(
             ['email' => 'owner@posa.local'],
             [
-                'name' => 'Rina (Owner)',
-                'role' => 'owner',
-                'password' => Hash::make('owner123'),
-                'pin_hash' => Hash::make('1234'), // PIN Owner
+                'name' => 'Rina',
+                'role' => 'admin',
+                'pin_hash' => Hash::make('1234'), // PIN Admin
                 'is_active' => true,
             ]
         );
@@ -49,20 +37,8 @@ class DatabaseSeeder extends Seeder
             ['email' => 'kasir@posa.local'],
             [
                 'name' => 'Budi Barista',
-                'role' => 'karyawan',
-                'password' => Hash::make('karyawan123'),
-                'pin_hash' => Hash::make('0000'), // PIN Karyawan
-                'is_active' => true,
-            ]
-        );
-
-        $karyawan2 = User::updateOrCreate(
-            ['email' => 'sari@posa.local'],
-            [
-                'name' => 'Sari Kasir',
-                'role' => 'karyawan',
-                'password' => Hash::make('karyawan123'),
-                'pin_hash' => Hash::make('1111'), // PIN Karyawan 2
+                'role' => 'cashier',
+                'pin_hash' => Hash::make('0000'), // PIN Kasir
                 'is_active' => true,
             ]
         );
@@ -552,29 +528,13 @@ class DatabaseSeeder extends Seeder
             'note' => 'Uang makan & transport tim shift pagi',
         ]);
 
-        // 13. Initial Attendances
-        Attendance::updateOrCreate(
-            ['user_id' => $cashier->id, 'date' => now()->toDateString()],
-            [
-                'clock_in' => now()->startOfDay()->addHours(7)->addMinutes(25),
-                'clock_out' => null,
-                'type' => 'shift',
-                'status' => 'hadir',
-                'notes' => 'Shift pagi tepat waktu',
-                'location_in' => 'POS Outlet Utama',
-            ]
-        );
-
-        Attendance::updateOrCreate(
-            ['user_id' => $karyawan2->id, 'date' => now()->toDateString()],
-            [
-                'clock_in' => now()->startOfDay()->addHours(8)->addMinutes(45),
-                'clock_out' => null,
-                'type' => 'shift',
-                'status' => 'terlambat',
-                'notes' => 'Hujan deras di jalan',
-                'location_in' => 'POS Outlet Utama',
-            ]
-        );
+        // 12. Audit Logs (Log contoh)
+        AuditLog::create([
+            'user_id' => $admin->id,
+            'action' => 'setup_initial_db',
+            'entity' => 'system',
+            'entity_id' => 'v3.0',
+            'reason' => 'Inisialisasi sistem posa v3.0 sesuai PRD',
+        ]);
     }
 }

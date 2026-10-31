@@ -9,8 +9,13 @@ export const INITIAL_SETTINGS = {
   admin_pin: '1234',
   cashier_pin: '0000',
   store_name: 'posa Coffee & Eatery',
+  store_tagline: 'Specialty Coffee & Artisan Roastery',
   store_address: 'Jl. Bisnis No. 16, Jakarta Selatan',
-  store_wifi: 'posa_guest / posacoffee2026'
+  store_phone: '0812-3456-7890',
+  store_wifi: 'posa_guest / posacoffee2026',
+  footer_receipt_message: 'Terima Kasih atas Kunjungan Anda! Follow IG @posa.coffee',
+  auto_print_receipt: true,
+  round_cash_hundred: true
 };
 
 export const INITIAL_MODIFIERS = [
