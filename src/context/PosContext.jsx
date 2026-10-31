@@ -19,26 +19,12 @@ import confetti from 'canvas-confetti';
 const PosContext = createContext();
 
 export function PosProvider({ children }) {
-  // Navigation & UI Settings
-  const [activeTab, setActiveTab] = useState('admin'); // 'admin' | 'kasir'
+  // Navigation & UI Settings - Default ke Layar Login PIN Kiosk saat web dibuka
+  const [activeTab, setActiveTab] = useState('kasir'); // 'admin' | 'kasir'
   const [adminView, setAdminView] = useState('raw-materials'); // Matches example screenshots
-  const [isKioskMode, setIsKioskMode] = useState(false);
+  const [isKioskMode, setIsKioskMode] = useState(true);
   const [isKioskLocked, setIsKioskLocked] = useState(true);
-  const [currentUser, setCurrentUser] = useState(() => {
-    try {
-      const savedUser = localStorage.getItem('posa_current_user');
-      if (savedUser) return JSON.parse(savedUser);
-    } catch {}
-    // Default logged in user in Backoffice is Owner (Ahmad Rafi Hamdi)
-    return {
-      id: 'staff-2',
-      name: 'Ahmad Rafi Hamdi',
-      email: 'hamdirafi310@gmail.com',
-      role: 'Owner',
-      permissions: 'Manage All',
-      pin: '1234'
-    };
-  });
+  const [currentUser, setCurrentUser] = useState(null); // Terkunci sebelum input PIN
   const [displayMode, setDisplayMode] = useState('none'); // 'none' | 'kitchen' | 'customer'
   const [showDisplayModeModal, setShowDisplayModeModal] = useState(false);
   const [showLeaveDisplayModal, setShowLeaveDisplayModal] = useState(false);

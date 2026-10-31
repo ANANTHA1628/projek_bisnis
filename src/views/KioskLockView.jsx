@@ -84,11 +84,15 @@ export default function KioskLockView() {
 
       if (activeUser.role === 'Owner') {
         showToast(`Selamat datang ${activeUser.name} (Owner/Admin)`, 'success');
+        // Jika login sebagai Owner / Supervisor, otomatis diarahkan ke Admin Backoffice
+        setIsKioskMode(false);
+        setIsKioskLocked(false);
       } else {
         showToast(`Kasir aktif: ${activeUser.name} (${activeUser.role})`, 'success');
+        // Jika login sebagai Karyawan / Kasir, langsung diarahkan ke layar Kasir POS
+        setIsKioskMode(true);
+        setIsKioskLocked(false);
       }
-
-      setIsKioskLocked(false);
     } else {
       playSound('beep');
       setErrorShake(true);
