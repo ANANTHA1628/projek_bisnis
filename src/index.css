@@ -1733,3 +1733,1436 @@ input:focus, select:focus, textarea:focus {
     justify-content: flex-start !important;
   }
 }
+
+/* ========================================================================= */
+/* POSA V3.0 EXACT DESIGN MATCH (From example/ screenshots)                  */
+/* ========================================================================= */
+
+.posa-app-root {
+  width: 100vw;
+  min-height: 100vh;
+  background-color: #0b0e17;
+  color: #f8fafc;
+  font-family: var(--font-sans);
+  overflow-x: hidden;
+}
+
+.posa-admin-layout {
+  display: flex;
+  min-height: 100vh;
+  width: 100%;
+}
+
+/* SIDEBAR */
+.posa-admin-sidebar {
+  width: 230px;
+  min-width: 230px;
+  background-color: #0b0e17;
+  border-right: 1px solid rgba(255, 255, 255, 0.07);
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  position: sticky;
+  top: 0;
+  padding: 20px 14px 16px 14px;
+}
+
+.posa-sidebar-brand {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  padding: 0 8px 18px 8px;
+}
+
+.posa-brand-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: -0.5px;
+}
+
+.posa-brand-badge {
+  font-size: 11px;
+  font-weight: 700;
+  color: #64748b;
+  letter-spacing: 0.8px;
+}
+
+.posa-sidebar-nav {
+  flex: 1;
+  overflow-y: auto;
+  padding-right: 4px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.posa-nav-section {
+  margin-bottom: 3px;
+}
+
+.posa-nav-group-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 6px 10px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.6px;
+  color: #94a3b8;
+  border-radius: 6px;
+  cursor: pointer;
+  background: transparent;
+  border: none;
+}
+
+.posa-nav-group-header:hover {
+  color: #ffffff;
+}
+
+.posa-subnav-tree {
+  margin-left: 14px;
+  padding-left: 10px;
+  border-left: 1.5px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-top: 2px;
+  margin-bottom: 6px;
+}
+
+.posa-subnav-item {
+  padding: 7px 10px;
+  font-size: 13px;
+  color: #94a3b8;
+  border-radius: 8px;
+  text-align: left;
+  transition: all 0.15s;
+  cursor: pointer;
+  background: transparent;
+  border: none;
+  width: 100%;
+}
+
+.posa-subnav-item:hover {
+  color: #ffffff;
+  background-color: rgba(255, 255, 255, 0.04);
+}
+
+.posa-subnav-item.active {
+  background-color: #263859;
+  color: #ffffff;
+  font-weight: 600;
+}
+
+.posa-nav-single {
+  display: block;
+  width: 100%;
+  padding: 8px 10px;
+  font-size: 13px;
+  font-weight: 500;
+  color: #cbd5e1;
+  border-radius: 8px;
+  text-align: left;
+  cursor: pointer;
+  background: transparent;
+  border: none;
+  transition: all 0.15s;
+}
+
+.posa-nav-single:hover {
+  color: #ffffff;
+  background-color: rgba(255, 255, 255, 0.04);
+}
+
+.posa-nav-single.active {
+  background-color: #2563eb;
+  color: #ffffff;
+  font-weight: 600;
+}
+
+.posa-nav-divider {
+  height: 1px;
+  background-color: rgba(255, 255, 255, 0.06);
+  margin: 10px 4px;
+}
+
+.posa-sidebar-footer {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding-top: 14px;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  margin-top: auto;
+}
+
+.posa-kiosk-trigger-btn {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 14px;
+  background-color: #2563eb;
+  color: #ffffff;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 600;
+  box-shadow: 0 4px 14px rgba(37, 99, 235, 0.35);
+  cursor: pointer;
+  border: none;
+  width: 100%;
+  transition: background-color 0.15s;
+}
+
+.posa-kiosk-trigger-btn:hover {
+  background-color: #1d4ed8;
+}
+
+.kiosk-btn-content {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.posa-logout-outline-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 9px;
+  border: 1px solid rgba(239, 68, 68, 0.35);
+  border-radius: 10px;
+  color: #ef4444;
+  font-size: 13px;
+  font-weight: 600;
+  background-color: rgba(239, 68, 68, 0.04);
+  cursor: pointer;
+  width: 100%;
+  transition: background-color 0.15s;
+}
+
+.posa-logout-outline-btn:hover {
+  background-color: rgba(239, 68, 68, 0.12);
+}
+
+/* MAIN CONTENT */
+.posa-admin-main-content {
+  flex: 1;
+  min-width: 0;
+  background-color: #0b0e17;
+  padding: 24px 36px;
+  overflow-y: auto;
+  height: 100vh;
+}
+
+.posa-admin-page {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  max-width: 1280px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.posa-admin-top-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.posa-header-title {
+  font-size: 22px;
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: -0.3px;
+}
+
+.posa-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.posa-header-tool-btn {
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  background-color: #121724;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #94a3b8;
+  cursor: pointer;
+}
+
+.posa-header-tool-btn:hover {
+  color: #ffffff;
+  border-color: rgba(255, 255, 255, 0.16);
+}
+
+.posa-lang-pill {
+  display: flex;
+  background-color: #121724;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  padding: 2px;
+}
+
+.posa-lang-item {
+  padding: 5px 12px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #94a3b8;
+  border-radius: 6px;
+  cursor: pointer;
+  background: transparent;
+  border: none;
+}
+
+.posa-lang-item.active {
+  background-color: #2563eb;
+  color: #ffffff;
+}
+
+/* CARDS */
+.posa-admin-card {
+  background-color: #111522;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 14px;
+  padding: 20px 24px;
+}
+
+.posa-card-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.posa-card-subtitle {
+  font-size: 13px;
+  color: #94a3b8;
+  line-height: 1.5;
+  margin-top: 4px;
+}
+
+.posa-card-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.posa-search-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  min-width: 240px;
+}
+
+.posa-search-input {
+  width: 100%;
+  background-color: #161c2d;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  padding: 8px 14px 8px 36px;
+  color: #ffffff;
+  font-size: 13px;
+  outline: none;
+}
+
+.posa-search-input:focus {
+  border-color: #2563eb;
+}
+
+.posa-search-icon {
+  position: absolute;
+  left: 12px;
+  color: #64748b;
+  pointer-events: none;
+}
+
+.posa-filter-pills {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.posa-pill-btn {
+  padding: 6px 14px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #94a3b8;
+  background-color: #161c2d;
+  border-radius: 9999px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  cursor: pointer;
+}
+
+.posa-pill-btn.active {
+  background-color: #2563eb;
+  color: #ffffff;
+  border-color: #2563eb;
+}
+
+.posa-btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background-color: #2563eb;
+  color: #ffffff;
+  font-weight: 600;
+  font-size: 13px;
+  padding: 8px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  border: none;
+  transition: background-color 0.15s;
+}
+
+.posa-btn-primary:hover {
+  background-color: #1d4ed8;
+}
+
+.posa-btn-outline {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background-color: #161c2d;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #cbd5e1;
+  font-weight: 500;
+  font-size: 13px;
+  padding: 7px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.posa-btn-outline:hover {
+  border-color: rgba(255, 255, 255, 0.2);
+  color: #ffffff;
+}
+
+.posa-btn-sm {
+  padding: 4px 10px;
+  font-size: 12px;
+  border-radius: 6px;
+  background-color: #1a2236;
+  color: #cbd5e1;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  cursor: pointer;
+}
+
+.posa-btn-sm:hover {
+  background-color: #253350;
+  color: #ffffff;
+}
+
+.posa-btn-sm.text-danger {
+  color: #ef4444;
+  border-color: rgba(239, 68, 68, 0.3);
+}
+
+.posa-btn-sm.text-danger:hover {
+  background-color: rgba(239, 68, 68, 0.15);
+}
+
+.posa-table-container {
+  width: 100%;
+  overflow-x: auto;
+  margin-top: 10px;
+}
+
+.posa-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.posa-table th {
+  padding: 12px 14px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #64748b;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.posa-table td {
+  padding: 14px;
+  font-size: 13px;
+  color: #cbd5e1;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.posa-empty-state {
+  padding: 48px 20px;
+  text-align: center;
+  color: #64748b;
+  font-size: 13.5px;
+}
+
+.posa-empty-state-centered {
+  padding: 56px 20px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.posa-icon-circle-empty {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background-color: #161c2d;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.posa-restock-grid {
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  gap: 20px;
+}
+
+.posa-dashed-box {
+  border: 1.5px dashed rgba(255, 255, 255, 0.12);
+  border-radius: 10px;
+  padding: 40px 20px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: #64748b;
+  font-size: 13px;
+}
+
+.posa-select, .posa-input {
+  background-color: #161c2d;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  padding: 8px 12px;
+  color: #ffffff;
+  font-size: 13px;
+}
+
+.posa-label {
+  display: block;
+  font-size: 12px;
+  font-weight: 500;
+  color: #94a3b8;
+  margin-bottom: 4px;
+}
+
+.posa-metric-card {
+  background-color: #111522;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 12px;
+  padding: 16px 20px;
+}
+
+.posa-export-card {
+  padding: 14px;
+  background-color: #161c2d;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 10px;
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.posa-export-card:hover {
+  border-color: #2563eb;
+  background-color: #1b233a;
+}
+
+.posa-danger-zone-card {
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  background-color: rgba(239, 68, 68, 0.03);
+  border-radius: 14px;
+  padding: 20px 24px;
+}
+
+.posa-date-pill {
+  padding: 8px 16px;
+  background-color: #161c2d;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.posa-tab-row-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.posa-tab-pills {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.posa-tab-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 16px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #94a3b8;
+  background-color: #161c2d;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 9999px;
+  cursor: pointer;
+}
+
+.posa-tab-btn.active {
+  background-color: #2563eb;
+  color: #ffffff;
+  border-color: #2563eb;
+}
+
+.posa-table-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.posa-action-icon-btn {
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  background-color: #161c2d;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #cbd5e1;
+  cursor: pointer;
+}
+
+.posa-action-icon-btn:hover {
+  background-color: #253350;
+  color: #ffffff;
+}
+
+.posa-action-icon-btn.text-danger:hover {
+  background-color: rgba(239, 68, 68, 0.15);
+  color: #ef4444;
+}
+
+.posa-badge-pill {
+  padding: 3px 10px;
+  background-color: #1a2236;
+  border-radius: 9999px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #94a3b8;
+}
+
+.posa-badge-warning {
+  padding: 3px 8px;
+  background-color: rgba(245, 158, 11, 0.15);
+  color: #fbbf24;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.posa-badge-success {
+  padding: 3px 8px;
+  background-color: rgba(16, 185, 129, 0.15);
+  color: #34d399;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.posa-badge-danger {
+  padding: 3px 8px;
+  background-color: rgba(239, 68, 68, 0.15);
+  color: #f87171;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.posa-count-badge {
+  padding: 2px 8px;
+  background-color: #1e293b;
+  border-radius: 9999px;
+  font-size: 11px;
+  font-weight: 700;
+  color: #cbd5e1;
+}
+
+/* TOGGLE SWITCH */
+.posa-switch {
+  position: relative;
+  display: inline-block;
+  width: 44px;
+  height: 24px;
+}
+
+.posa-switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.posa-slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #1e293b;
+  transition: .3s;
+  border-radius: 24px;
+}
+
+.posa-slider:before {
+  position: absolute;
+  content: "";
+  height: 18px;
+  width: 18px;
+  left: 3px;
+  bottom: 3px;
+  background-color: white;
+  transition: .3s;
+  border-radius: 50%;
+}
+
+.posa-switch input:checked + .posa-slider {
+  background-color: #2563eb;
+}
+
+.posa-switch input:checked + .posa-slider:before {
+  transform: translateX(20px);
+}
+
+/* STATUS TAG */
+.posa-status-tag {
+  display: inline-block;
+  padding: 3px 8px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+.posa-status-tag.in {
+  background: rgba(16, 185, 129, 0.15);
+  color: #10b981;
+  border: 1px solid rgba(16, 185, 129, 0.25);
+}
+
+.posa-status-tag.out {
+  background: rgba(239, 68, 68, 0.15);
+  color: #ef4444;
+  border: 1px solid rgba(239, 68, 68, 0.25);
+}
+
+/* KIOSK LOCK PIN SCREEN (WhatsApp Image 2026-10-31 at 21.47.43.jpeg) */
+.kiosk-lock-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: #0b0e17;
+  display: flex;
+  flex-direction: column;
+  z-index: 999;
+}
+
+.kiosk-top-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 24px 36px;
+}
+
+.kiosk-header-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  color: #cbd5e1;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.kiosk-top-tools {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.kiosk-header-icon-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #cbd5e1;
+  cursor: pointer;
+}
+
+.kiosk-lang-toggle {
+  display: flex;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  padding: 2px;
+}
+
+.kiosk-lang-btn {
+  padding: 5px 12px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #94a3b8;
+  border-radius: 6px;
+  cursor: pointer;
+  background: transparent;
+  border: none;
+}
+
+.kiosk-lang-btn.active {
+  background-color: #2563eb;
+  color: #ffffff;
+}
+
+.kiosk-lock-body {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 140px;
+  padding: 0 40px;
+}
+
+.kiosk-logo-text {
+  font-size: 26px;
+  font-weight: 700;
+  color: #ffffff;
+  margin-bottom: 4px;
+}
+
+.kiosk-store-title {
+  font-size: 32px;
+  font-weight: 700;
+  color: #ffffff;
+  margin-bottom: 6px;
+  letter-spacing: -0.5px;
+}
+
+.kiosk-pin-instructions {
+  font-size: 14px;
+  color: #94a3b8;
+  margin-bottom: 24px;
+}
+
+.kiosk-pin-dots {
+  display: flex;
+  gap: 14px;
+  margin-bottom: 14px;
+}
+
+.pin-dot {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  border: 2px solid #334155;
+  transition: all 0.15s;
+}
+
+.pin-dot.filled {
+  background-color: #3b82f6;
+  border-color: #3b82f6;
+  box-shadow: 0 0 10px rgba(59, 130, 246, 0.6);
+}
+
+.kiosk-quick-hint {
+  font-size: 12px;
+  color: #64748b;
+}
+
+.kiosk-quick-hint code {
+  color: #60a5fa;
+  background: #161c2d;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.kiosk-keypad-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 80px);
+  gap: 20px;
+}
+
+.kiosk-key-btn {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background-color: #192033;
+  color: #ffffff;
+  font-size: 28px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.kiosk-key-btn:hover {
+  background-color: #242e49;
+  transform: scale(1.05);
+}
+
+.kiosk-key-btn:active {
+  background-color: #2563eb;
+}
+
+.kiosk-key-btn.text-action {
+  font-size: 15px;
+  color: #94a3b8;
+  background: transparent;
+  border: none;
+}
+
+.kiosk-key-btn.text-action:hover {
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.kiosk-key-btn.icon-action {
+  color: #94a3b8;
+  background: transparent;
+  border: none;
+}
+
+.kiosk-key-btn.icon-action:hover {
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.shake {
+  animation: shake 0.4s ease-in-out;
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20%, 60% { transform: translateX(-8px); }
+  40%, 80% { transform: translateX(8px); }
+}
+
+/* ========================================================================= */
+/* LOGOUT & DISPLAY MODE MODALS (From WhatsApp Image 22.33.20 - 22.35.26)    */
+/* ========================================================================= */
+
+.posa-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(3, 7, 18, 0.75);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  padding: 16px;
+}
+
+/* Logout Dialog (WhatsApp Image 2026-10-31 at 22.33.20.jpeg) */
+.posa-logout-dialog-card {
+  width: 100%;
+  max-width: 380px;
+  background-color: #121724;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  padding: 32px 28px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+  animation: modalFadeIn 0.2s ease-out;
+}
+
+.posa-logout-title {
+  font-size: 22px;
+  font-weight: 700;
+  color: #ffffff;
+  margin-bottom: 6px;
+}
+
+.posa-logout-subtitle {
+  font-size: 13.5px;
+  color: #94a3b8;
+  margin-bottom: 24px;
+}
+
+.posa-confirm-logout-btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 18px;
+  background-color: #3b82f6;
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 600;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.15s;
+  box-shadow: 0 4px 14px rgba(59, 130, 246, 0.35);
+}
+
+.posa-confirm-logout-btn:hover {
+  background-color: #2563eb;
+}
+
+.posa-cancel-logout-btn {
+  margin-top: 14px;
+  background: transparent;
+  border: none;
+  color: #94a3b8;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  padding: 6px 12px;
+}
+
+.posa-cancel-logout-btn:hover {
+  color: #ffffff;
+}
+
+/* Display Mode Dialog (WhatsApp Image 2026-10-31 at 22.34.29.jpeg) */
+.posa-display-mode-card {
+  width: 100%;
+  max-width: 440px;
+  background-color: #121724;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  padding: 28px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+  animation: modalFadeIn 0.2s ease-out;
+}
+
+.posa-display-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: #ffffff;
+  margin-bottom: 6px;
+}
+
+.posa-display-desc {
+  font-size: 13px;
+  color: #94a3b8;
+  line-height: 1.5;
+  margin-bottom: 20px;
+}
+
+.posa-display-option-btn {
+  padding: 14px 16px;
+  background-color: #161d2e;
+  border: 1.5px solid rgba(255, 255, 255, 0.06);
+  border-radius: 12px;
+  margin-bottom: 10px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.posa-display-option-btn:hover {
+  background-color: #1c263c;
+  border-color: rgba(59, 130, 246, 0.4);
+}
+
+.posa-display-option-btn.selected {
+  border-color: #3b82f6;
+  background-color: #1a253e;
+}
+
+.posa-kitchen-warning-banner {
+  margin-top: 10px;
+  padding: 10px 14px;
+  background-color: #261d11;
+  border: 1px solid rgba(245, 158, 11, 0.2);
+  border-radius: 8px;
+  color: #f59e0b;
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+.posa-display-pin-input {
+  width: 100%;
+  background-color: #182032;
+  border: 1.5px solid #2d3b59;
+  border-radius: 8px;
+  padding: 10px 14px;
+  color: #ffffff;
+  font-size: 16px;
+  letter-spacing: 4px;
+  outline: none;
+}
+
+.posa-display-pin-input:focus {
+  border-color: #3b82f6;
+}
+
+.posa-display-btn-cancel {
+  flex: 1;
+  padding: 11px 16px;
+  background-color: #1a2236;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  color: #cbd5e1;
+  font-size: 13.5px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.posa-display-btn-cancel:hover {
+  background-color: #222d46;
+  color: #ffffff;
+}
+
+.posa-display-btn-start {
+  flex: 1;
+  padding: 11px 16px;
+  background-color: #2563eb;
+  border: none;
+  border-radius: 8px;
+  color: #ffffff;
+  font-size: 13.5px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.15s;
+}
+
+.posa-display-btn-start:hover {
+  background-color: #1d4ed8;
+}
+
+/* Leave Display Mode Dialog (WhatsApp Image 2026-10-31 at 22.35.26.jpeg) */
+.posa-leave-display-card {
+  width: 100%;
+  max-width: 400px;
+  background-color: #121724;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  padding: 28px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+  animation: modalFadeIn 0.2s ease-out;
+}
+
+/* KITCHEN & CUSTOMER SCREEN STYLES (WhatsApp Image 22.34.09 & 22.34.46) */
+.posa-display-screen-root {
+  width: 100vw;
+  min-height: 100vh;
+  background-color: #0b0e17;
+  color: #ffffff;
+  display: flex;
+  flex-direction: column;
+}
+
+.posa-display-screen-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 24px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.posa-display-icon-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  background-color: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #cbd5e1;
+  cursor: pointer;
+}
+
+.posa-display-icon-btn:hover {
+  background-color: rgba(255, 255, 255, 0.08);
+  color: #ffffff;
+}
+
+.posa-display-pill-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  background-color: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  color: #cbd5e1;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.posa-display-pill-btn:hover {
+  background-color: rgba(255, 255, 255, 0.08);
+  color: #ffffff;
+}
+
+.posa-display-warning-strip {
+  margin: 16px 24px;
+  padding: 12px 18px;
+  background-color: #211910;
+  border: 1px solid rgba(245, 158, 11, 0.25);
+  border-radius: 8px;
+  color: #f59e0b;
+  font-size: 13px;
+}
+
+.posa-display-split-columns {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  padding: 16px 24px;
+  gap: 32px;
+}
+
+.posa-display-col {
+  display: flex;
+  flex-direction: column;
+}
+
+.posa-display-col-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: #94a3b8;
+  letter-spacing: 0.5px;
+  margin-bottom: 24px;
+}
+
+.posa-display-empty-text {
+  color: #64748b;
+  font-size: 13.5px;
+  text-align: center;
+  margin-top: 60px;
+}
+
+/* CUSTOMER SCREEN (WhatsApp Image 2026-10-31 at 22.34.46.jpeg) */
+.posa-display-screen-root.customer-view {
+  background-color: #0b0f19;
+}
+
+.posa-customer-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 24px 32px;
+}
+
+.posa-customer-store-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.posa-customer-split {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 320px 1fr;
+  height: calc(100vh - 80px);
+}
+
+.posa-customer-col.being-prepared {
+  background-color: #080c14;
+  border-right: 1px solid rgba(255, 255, 255, 0.05);
+  padding: 24px 28px;
+}
+
+.posa-customer-col.ready-collect {
+  background-color: #0c1220;
+  padding: 24px 36px;
+}
+
+.posa-customer-col-title {
+  font-size: 14px;
+  font-weight: 700;
+  margin-bottom: 24px;
+}
+
+.posa-customer-col-title.gray {
+  color: #94a3b8;
+}
+
+.posa-customer-col-title.blue {
+  color: #3b82f6;
+}
+
+.posa-customer-empty-msg {
+  color: #64748b;
+  font-size: 14px;
+  margin-top: 20px;
+}
+
+/* STAFF MODAL CARD */
+.posa-staff-modal-card {
+  width: 100%;
+  max-width: 540px;
+  background-color: #111522;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 24px 48px rgba(0, 0, 0, 0.7);
+  animation: modalFadeIn 0.2s ease-out;
+}
+
+/* ACTIVE USER DISPLAY STYLES (Header, Sidebar, Staff Table) */
+.posa-active-user-badge {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 5px 12px 5px 6px;
+  background-color: #121724;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 9999px;
+}
+
+.posa-user-avatar {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #2563eb, #1d4ed8);
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.posa-user-name {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: #ffffff;
+  line-height: 1.2;
+}
+
+.posa-user-role-tag {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+  color: #38bdf8;
+  font-weight: 600;
+}
+
+.posa-role-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: #10b981;
+  box-shadow: 0 0 6px #10b981;
+}
+
+/* Sidebar user card */
+.posa-sidebar-user-card {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  background-color: #111625;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 10px;
+  margin-bottom: 2px;
+}
+
+.posa-sidebar-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background-color: #2563eb;
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 13.5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.posa-sidebar-user-info {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  text-align: left;
+}
+
+.posa-sidebar-user-name {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: #ffffff;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.posa-sidebar-user-role {
+  font-size: 11px;
+  font-weight: 500;
+  color: #60a5fa;
+}
+
+/* Staff Table Highlights */
+.posa-row-logged-in {
+  background-color: rgba(37, 99, 235, 0.08);
+}
+
+.posa-badge-you {
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 7px;
+  border-radius: 9999px;
+  background-color: rgba(16, 185, 129, 0.15);
+  color: #10b981;
+  border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.posa-status-indicator-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+}
+
+.posa-status-indicator-dot.active {
+  background-color: #10b981;
+  box-shadow: 0 0 6px rgba(16, 185, 129, 0.7);
+}
+
+.posa-status-indicator-dot.inactive {
+  background-color: #ef4444;
+}
+
+@keyframes modalFadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}

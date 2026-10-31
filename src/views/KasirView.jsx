@@ -52,7 +52,13 @@ export default function KasirView() {
     setShowOpenBillsModal,
     openBills,
     toggleFullscreen,
-    showToast
+    showToast,
+    currentUser,
+    setCurrentUser,
+    setShowLogoutModal,
+    setLogoutTarget,
+    setIsKioskMode,
+    setIsKioskLocked
   } = usePos();
 
   const categories = ['Semua', 'Makanan', 'Non-Kopi', 'Kopi'];
@@ -136,9 +142,36 @@ export default function KasirView() {
             </button>
 
             <div className="user-profile-badge">
-              <span className="user-profile-name">Rina</span>
-              <span className="user-profile-role">Owner</span>
+              <span className="user-profile-name">{currentUser?.name?.split(' ')[0] || 'Budi'}</span>
+              <span className="user-profile-role">{currentUser?.role || 'Kasir'}</span>
             </div>
+
+            {/* Jika role Owner/Supervisor, bisa langsung kembali ke Admin Backoffice */}
+            {(currentUser?.role === 'Owner' || currentUser?.role === 'Supervisor') ? (
+              <button
+                className="kasir-action-pill-btn"
+                onClick={() => {
+                  setIsKioskMode(false);
+                  setIsKioskLocked(true);
+                  showToast('Beralih ke Admin Backoffice');
+                }}
+                title="Buka Admin Backoffice"
+              >
+                ⬅ <span>Ke Admin</span>
+              </button>
+            ) : null}
+
+            {/* Tombol Logout Karyawan / Kasir */}
+            <button
+              className="kasir-action-pill-btn text-amber-300 border-amber-500/30"
+              onClick={() => {
+                setLogoutTarget('kiosk');
+                setShowLogoutModal(true);
+              }}
+              title="Logout Karyawan / Kasir (Kembali ke Sign In PIN)"
+            >
+              🚪 <span>Logout ({currentUser?.name?.split(' ')[0] || 'Kasir'})</span>
+            </button>
 
             {currentShift.isOpen ? (
               <button

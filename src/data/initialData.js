@@ -8,14 +8,23 @@ export const INITIAL_SETTINGS = {
   receipt_printer_size: '58mm', // '58mm' | '80mm' (D6)
   admin_pin: '1234',
   cashier_pin: '0000',
-  store_name: 'posa Coffee & Eatery',
+  store_name: 'Staycy_2026',
   store_tagline: 'Specialty Coffee & Artisan Roastery',
   store_address: 'Jl. Bisnis No. 16, Jakarta Selatan',
-  store_phone: '0812-3456-7890',
-  store_wifi: 'posa_guest / posacoffee2026',
-  footer_receipt_message: 'Terima Kasih atas Kunjungan Anda! Follow IG @posa.coffee',
+  store_phone: '6283871983300',
+  store_email: 'hamdirafi310@gmail.com',
+  business_code: 'e14d33a6-e2a7-4f8c-8ce6-63a7e1f6c6d7',
+  store_wifi: 'Staycy_guest / staycy2026',
+  footer_receipt_message: 'Terima Kasih atas Kunjungan Anda! Follow IG @staycy.posa',
   auto_print_receipt: true,
-  round_cash_hundred: true
+  round_cash_hundred: true,
+  queue_numbers: false,
+  order_type_dinein: true,
+  order_type_takeaway: true,
+  delivery_gofood: false,
+  delivery_grabfood: false,
+  delivery_shopeefood: false,
+  supervisor_approval: true
 };
 
 export const INITIAL_MODIFIERS = [
@@ -540,51 +549,101 @@ export const INITIAL_STOCK_MOVEMENTS = [
 export const INITIAL_STAFF = [
   {
     id: 'staff-1',
-    name: 'Rina Wijaya',
-    email: 'rina.owner@posacoffee.com',
+    name: 'Aryaputra Ferdiananta',
+    email: 'aryaputra@staycy.local',
+    role: 'Supervisor',
+    pin: '5678',
+    phone: '081234567890',
+    status: 'Aktif',
+    active: 'Yes',
+    permissions: 'Day-to-day running (not the account)',
+    shift: 'Shift Pagi (08:00 - 16:00)',
+    joinedDate: '15 Feb 2026'
+  },
+  {
+    id: 'staff-2',
+    name: 'Ahmad Rafi Hamdi',
+    email: 'hamdirafi310@gmail.com',
     role: 'Owner',
     pin: '1234',
-    phone: '081299887766',
+    phone: '6283871983300',
     status: 'Aktif',
-    permissions: ['all_access', 'void_transaction', 'manual_discount', 'cash_drawer', 'stock_manage', 'financial_report'],
+    active: 'Yes',
+    permissions: 'Manage All',
     shift: 'Semua Shift',
     joinedDate: '01 Jan 2026'
   },
   {
-    id: 'staff-2',
-    name: 'Budi Santoso',
-    email: 'budi.kasir@posacoffee.com',
-    role: 'Kasir',
+    id: 'staff-3',
+    name: 'Budi Barista',
+    email: 'budi@staycy.local',
+    role: 'Cashier',
     pin: '0000',
     phone: '085711223344',
     status: 'Aktif',
-    permissions: ['cashier_pos', 'open_close_shift', 'print_receipt'],
-    shift: 'Shift Pagi (07:00 - 15:00)',
-    joinedDate: '15 Feb 2026'
-  },
-  {
-    id: 'staff-3',
-    name: 'Siti Rahma',
-    email: 'siti.barista@posacoffee.com',
-    role: 'Barista / Kasir',
-    pin: '2211',
-    phone: '081344556677',
-    status: 'Aktif',
-    permissions: ['cashier_pos', 'print_receipt'],
+    active: 'Yes',
+    permissions: 'Cashier POS only',
     shift: 'Shift Sore (15:00 - 23:00)',
     joinedDate: '01 Mar 2026'
+  }
+];
+
+export const INITIAL_STAFF_ACTIVITY = [
+  {
+    id: 1,
+    name: 'Ahmad Rafi Hamdi',
+    role: 'Owner',
+    action: 'SIGNED IN',
+    details: 'Logged into Backoffice Admin',
+    time: '31/10/2026, 21:47'
   },
   {
-    id: 'staff-4',
-    name: 'Dimas Aditya',
-    email: 'dimas.supervisor@posacoffee.com',
-    role: 'Supervisor / Manager',
-    pin: '8899',
-    phone: '087822334455',
-    status: 'Cuti',
-    permissions: ['cashier_pos', 'manual_discount', 'cash_drawer', 'stock_manage'],
-    shift: 'Shift Fleksibel',
-    joinedDate: '10 Jan 2026'
+    id: 2,
+    name: 'Budi Barista',
+    role: 'Cashier',
+    action: 'SIGNED IN',
+    details: 'Logged into POS Kiosk (Shift Sore)',
+    time: '31/10/2026, 15:02'
+  },
+  {
+    id: 3,
+    name: 'Aryaputra Ferdiananta',
+    role: 'Supervisor',
+    action: 'SIGNED OUT',
+    details: 'Logged out & closed register',
+    time: '31/10/2026, 14:58'
+  },
+  {
+    id: 4,
+    name: 'Aryaputra Ferdiananta',
+    role: 'Supervisor',
+    action: 'SIGNED IN',
+    details: 'Logged into POS Kiosk (Shift Pagi)',
+    time: '31/10/2026, 07:55'
+  },
+  {
+    id: 5,
+    name: 'Budi Barista',
+    role: 'Cashier',
+    action: 'SIGNED OUT',
+    details: 'End of shift logout',
+    time: '30/10/2026, 23:05'
+  },
+  {
+    id: 6,
+    name: 'Ahmad Rafi Hamdi',
+    role: 'Owner',
+    action: 'SIGNED OUT',
+    details: 'Logged out of Admin Backoffice',
+    time: '30/10/2026, 13:58'
+  },
+  {
+    id: 7,
+    name: 'Ahmad Rafi Hamdi',
+    role: 'Owner',
+    action: 'SIGNED IN',
+    details: 'Logged into POS system',
+    time: '30/10/2026, 13:32'
   }
 ];
 

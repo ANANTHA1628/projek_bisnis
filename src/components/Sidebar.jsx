@@ -1,319 +1,310 @@
 import React, { useState } from 'react';
 import { usePos } from '../context/PosContext';
 import {
-  LayoutDashboard,
-  Boxes,
-  UtensilsCrossed,
-  Users,
-  UserCheck,
-  Briefcase,
-  FileText,
-  Palette,
-  Settings,
-  HelpCircle,
-  Store,
-  Crown,
-  LogOut,
+  ChevronDown,
   ChevronRight,
-  ChevronDown
+  Store,
+  LogOut
 } from 'lucide-react';
 
 export default function Sidebar() {
   const {
-    activeTab,
-    setActiveTab,
-    stokSubTab,
-    setStokSubTab,
-    laporanSubTab,
-    setLaporanSubTab,
-    setShowRestockModal,
-    setShowOpnameModal,
-    setShowTampilanModal,
-    setShowPengaturanModal,
-    setShowBantuanModal,
+    adminView,
+    setAdminView,
+    setIsKioskMode,
+    setIsKioskLocked,
+    currentUser,
+    setShowLogoutModal,
+    setLogoutTarget,
     showToast
   } = usePos();
 
-  const [stokExpanded, setStokExpanded] = useState(true);
-  const [laporanExpanded, setLaporanExpanded] = useState(true);
+  // Accordion state
+  const [stockOpen, setStockOpen] = useState(true);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [staffOpen, setStaffOpen] = useState(false);
+  const [operationsOpen, setOperationsOpen] = useState(false);
+  const [reportsOpen, setReportsOpen] = useState(false);
+
+  const handleOpenKiosk = () => {
+    setIsKioskMode(true);
+    setIsKioskLocked(true);
+    showToast('Beralih ke mode POS Kiosk');
+  };
+
+  const handleLogout = () => {
+    setLogoutTarget('admin');
+    setShowLogoutModal(true);
+  };
 
   return (
-    <aside className="admin-sidebar">
-      <div>
-        {/* Sidebar Brand */}
-        <div className="sidebar-brand-box">
-          <span className="posa-brand">posa</span>
-          <span className="posa-brand-sub">ADMIN</span>
-        </div>
-
-        {/* Main Nav Group */}
-        <nav className="sidebar-nav-group">
-          {/* Dasbor */}
-          <button
-            className={`sidebar-nav-item ${activeTab === 'dasbor' ? 'active' : ''}`}
-            onClick={() => setActiveTab('dasbor')}
-          >
-            <span style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-              <LayoutDashboard size={17} />
-              <span>Dasbor</span>
-            </span>
-          </button>
-
-          {/* STOK with Dropdown */}
-          <div>
-            <button
-              className={`sidebar-nav-item ${activeTab === 'stok' ? 'active' : ''}`}
-              onClick={() => {
-                setActiveTab('stok');
-                setStokExpanded(!stokExpanded);
-              }}
-            >
-              <span style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                <Boxes size={17} />
-                <span>STOK & HPP</span>
-              </span>
-              {stokExpanded ? <ChevronDown size={14} /> : <ChevronRight size={14} />}
-            </button>
-
-            {stokExpanded && (
-              <div className="sidebar-subnav-list">
-                <button
-                  className={`sidebar-subnav-item ${activeTab === 'stok' && stokSubTab === 'bahan' ? 'active' : ''}`}
-                  onClick={() => {
-                    setActiveTab('stok');
-                    setStokSubTab('bahan');
-                  }}
-                >
-                  Bahan Baku
-                </button>
-                <button
-                  className={`sidebar-subnav-item ${activeTab === 'stok' && stokSubTab === 'resep' ? 'active' : ''}`}
-                  onClick={() => {
-                    setActiveTab('stok');
-                    setStokSubTab('resep');
-                  }}
-                >
-                  Resep & HPP Menu
-                </button>
-                <button
-                  className={`sidebar-subnav-item ${activeTab === 'stok' && stokSubTab === 'simulator' ? 'active' : ''}`}
-                  onClick={() => {
-                    setActiveTab('stok');
-                    setStokSubTab('simulator');
-                  }}
-                >
-                  Simulator HPP (R&D)
-                </button>
-                <button
-                  className="sidebar-subnav-item"
-                  onClick={() => setShowRestockModal(true)}
-                >
-                  Restock
-                </button>
-                <button
-                  className="sidebar-subnav-item"
-                  onClick={() => setShowOpnameModal(true)}
-                >
-                  Stok opname & buang
-                </button>
-                <button
-                  className={`sidebar-subnav-item ${activeTab === 'stok' && stokSubTab === 'ledger' ? 'active' : ''}`}
-                  onClick={() => {
-                    setActiveTab('stok');
-                    setStokSubTab('ledger');
-                  }}
-                >
-                  Buku Besar Mutasi
-                </button>
-              </div>
-            )}
-          </div>
-
-          {/* MENU */}
-          <button
-            className="sidebar-nav-item"
-            onClick={() => {
-              setActiveTab('stok');
-              setStokSubTab('resep');
-            }}
-          >
-            <span style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-              <UtensilsCrossed size={17} />
-              <span>MENU & RESEP</span>
-            </span>
-            <ChevronRight size={14} />
-          </button>
-
-          {/* STAF */}
-          <button
-            className={`sidebar-nav-item ${activeTab === 'staf' ? 'active' : ''}`}
-            onClick={() => setActiveTab('staf')}
-          >
-            <span style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-              <Users size={17} />
-              <span>STAF & ROLE</span>
-            </span>
-            <ChevronRight size={14} />
-          </button>
-
-          {/* PELANGGAN */}
-          <button
-            className={`sidebar-nav-item ${activeTab === 'pelanggan' ? 'active' : ''}`}
-            onClick={() => setActiveTab('pelanggan')}
-          >
-            <span style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-              <UserCheck size={17} />
-              <span>PELANGGAN</span>
-            </span>
-            <ChevronRight size={14} />
-          </button>
-
-          {/* OPERASIONAL */}
-          <button
-            className="sidebar-nav-item"
-            onClick={() => {
-              setActiveTab('laporan');
-              setLaporanSubTab('biaya');
-            }}
-          >
-            <span style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-              <Briefcase size={17} />
-              <span>BIAYA OPERASIONAL</span>
-            </span>
-            <ChevronRight size={14} />
-          </button>
-
-          {/* LAPORAN */}
-          <div>
-            <button
-              className={`sidebar-nav-item ${activeTab === 'laporan' ? 'active' : ''}`}
-              onClick={() => {
-                setActiveTab('laporan');
-                setLaporanExpanded(!laporanExpanded);
-              }}
-            >
-              <span style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                <FileText size={17} />
-                <span>LAPORAN</span>
-              </span>
-              {laporanExpanded ? <ChevronDown size={14} /> : <ChevronRight size={14} />}
-            </button>
-
-            {laporanExpanded && (
-              <div className="sidebar-subnav-list">
-                <button
-                  className={`sidebar-subnav-item ${activeTab === 'laporan' && laporanSubTab === 'pendapatan' ? 'active' : ''}`}
-                  onClick={() => {
-                    setActiveTab('laporan');
-                    setLaporanSubTab('pendapatan');
-                  }}
-                >
-                  RPT-01 Pendapatan
-                </button>
-                <button
-                  className={`sidebar-subnav-item ${activeTab === 'laporan' && laporanSubTab === 'labarugi' ? 'active' : ''}`}
-                  onClick={() => {
-                    setActiveTab('laporan');
-                    setLaporanSubTab('labarugi');
-                  }}
-                >
-                  RPT-03 Laba Rugi
-                </button>
-                <button
-                  className={`sidebar-subnav-item ${activeTab === 'laporan' && laporanSubTab === 'item' ? 'active' : ''}`}
-                  onClick={() => {
-                    setActiveTab('laporan');
-                    setLaporanSubTab('item');
-                  }}
-                >
-                  RPT-02 & 06 Item & Margin
-                </button>
-                <button
-                  className={`sidebar-subnav-item ${activeTab === 'laporan' && laporanSubTab === 'biaya' ? 'active' : ''}`}
-                  onClick={() => {
-                    setActiveTab('laporan');
-                    setLaporanSubTab('biaya');
-                  }}
-                >
-                  Biaya Operasional
-                </button>
-                <button
-                  className={`sidebar-subnav-item ${activeTab === 'laporan' && laporanSubTab === 'riwayat' ? 'active' : ''}`}
-                  onClick={() => {
-                    setActiveTab('laporan');
-                    setLaporanSubTab('riwayat');
-                  }}
-                >
-                  Riwayat & Void (PIN Admin)
-                </button>
-              </div>
-            )}
-          </div>
-        </nav>
-
-        {/* Secondary Navigation */}
-        <div className="sidebar-secondary-links">
-          <button
-            className="sidebar-link"
-            onClick={() => setShowTampilanModal(true)}
-            title="Kustomisasi Tema, Skala Teks & Suara Kasir"
-          >
-            <span style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-              <Palette size={16} />
-              <span>Tampilan</span>
-            </span>
-          </button>
-          <button
-            className="sidebar-link"
-            onClick={() => setShowPengaturanModal(true)}
-            title="Pengaturan Toko, Pajak PB1, Komisi Ojol & PIN"
-          >
-            <span style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-              <Settings size={16} />
-              <span>Pengaturan</span>
-            </span>
-          </button>
-          <button
-            className="sidebar-link"
-            onClick={() => setShowBantuanModal(true)}
-            title="Dokumentasi Sistem & Panduan PRD v3.0"
-          >
-            <span style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-              <HelpCircle size={16} />
-              <span>Bantuan PRD v3.0</span>
-            </span>
-          </button>
-        </div>
+    <aside className="posa-admin-sidebar">
+      {/* Brand Header */}
+      <div className="posa-sidebar-brand">
+        <span className="posa-brand-title">posa</span>
+        <span className="posa-brand-badge">ADMIN</span>
       </div>
 
-      {/* Bottom Actions */}
-      <div className="sidebar-bottom-actions">
-        <button className="buka-kiosk-btn" onClick={() => setActiveTab('kasir')}>
-          <span style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <Store size={16} />
-            <span>Buka Kasir POS</span>
-          </span>
-          <ChevronRight size={16} />
+      {/* Navigation Scrollable Area */}
+      <nav className="posa-sidebar-nav">
+        {/* Dashboard */}
+        <div className="posa-nav-section">
+          <button
+            type="button"
+            className={`posa-nav-single ${adminView === 'dashboard' ? 'active' : ''}`}
+            onClick={() => setAdminView('dashboard')}
+          >
+            Dashboard
+          </button>
+        </div>
+
+        {/* STOCK */}
+        <div className="posa-nav-section">
+          <button
+            type="button"
+            className="posa-nav-group-header"
+            onClick={() => setStockOpen(!stockOpen)}
+          >
+            <span>STOCK</span>
+            {stockOpen ? <ChevronDown size={14} /> : <ChevronRight size={14} />}
+          </button>
+
+          {stockOpen && (
+            <div className="posa-subnav-tree">
+              <button
+                type="button"
+                className={`posa-subnav-item ${adminView === 'raw-materials' ? 'active' : ''}`}
+                onClick={() => setAdminView('raw-materials')}
+              >
+                Raw Materials
+              </button>
+              <button
+                type="button"
+                className={`posa-subnav-item ${adminView === 'semi-finished' ? 'active' : ''}`}
+                onClick={() => setAdminView('semi-finished')}
+              >
+                Semi-Finished Goods
+              </button>
+              <button
+                type="button"
+                className={`posa-subnav-item ${adminView === 'restock' ? 'active' : ''}`}
+                onClick={() => setAdminView('restock')}
+              >
+                Restock
+              </button>
+              <button
+                type="button"
+                className={`posa-subnav-item ${adminView === 'stock-take' ? 'active' : ''}`}
+                onClick={() => setAdminView('stock-take')}
+              >
+                Stock take & waste
+              </button>
+              <button
+                type="button"
+                className={`posa-subnav-item ${adminView === 'suppliers' ? 'active' : ''}`}
+                onClick={() => setAdminView('suppliers')}
+              >
+                Suppliers
+              </button>
+            </div>
+          )}
+        </div>
+
+        {/* MENU */}
+        <div className="posa-nav-section">
+          <button
+            type="button"
+            className="posa-nav-group-header"
+            onClick={() => setMenuOpen(!menuOpen)}
+          >
+            <span>MENU</span>
+            {menuOpen ? <ChevronDown size={14} /> : <ChevronRight size={14} />}
+          </button>
+
+          {menuOpen && (
+            <div className="posa-subnav-tree">
+              <button
+                type="button"
+                className={`posa-subnav-item ${adminView === 'menus' ? 'active' : ''}`}
+                onClick={() => setAdminView('menus')}
+              >
+                Menus
+              </button>
+              <button
+                type="button"
+                className={`posa-subnav-item ${adminView === 'packages' ? 'active' : ''}`}
+                onClick={() => setAdminView('packages')}
+              >
+                Packages
+              </button>
+              <button
+                type="button"
+                className={`posa-subnav-item ${adminView === 'promos' ? 'active' : ''}`}
+                onClick={() => setAdminView('promos')}
+              >
+                Promos
+              </button>
+            </div>
+          )}
+        </div>
+
+        {/* STAFF */}
+        <div className="posa-nav-section">
+          <button
+            type="button"
+            className="posa-nav-group-header"
+            onClick={() => setStaffOpen(!staffOpen)}
+          >
+            <span>STAFF</span>
+            {staffOpen ? <ChevronDown size={14} /> : <ChevronRight size={14} />}
+          </button>
+
+          {staffOpen && (
+            <div className="posa-subnav-tree">
+              <button
+                type="button"
+                className={`posa-subnav-item ${adminView === 'staff' ? 'active' : ''}`}
+                onClick={() => setAdminView('staff')}
+              >
+                Staff
+              </button>
+              <button
+                type="button"
+                className={`posa-subnav-item ${adminView === 'staff-activity' ? 'active' : ''}`}
+                onClick={() => setAdminView('staff-activity')}
+              >
+                Staff Activity
+              </button>
+            </div>
+          )}
+        </div>
+
+        {/* OPERATIONS */}
+        <div className="posa-nav-section">
+          <button
+            type="button"
+            className="posa-nav-group-header"
+            onClick={() => setOperationsOpen(!operationsOpen)}
+          >
+            <span>OPERATIONS</span>
+            {operationsOpen ? <ChevronDown size={14} /> : <ChevronRight size={14} />}
+          </button>
+
+          {operationsOpen && (
+            <div className="posa-subnav-tree">
+              <button
+                type="button"
+                className={`posa-subnav-item ${adminView === 'orders-void' ? 'active' : ''}`}
+                onClick={() => setAdminView('orders-void')}
+              >
+                Orders & Void
+              </button>
+              <button
+                type="button"
+                className={`posa-subnav-item ${adminView === 'tables' ? 'active' : ''}`}
+                onClick={() => setAdminView('tables')}
+              >
+                Tables
+              </button>
+              <button
+                type="button"
+                className={`posa-subnav-item ${adminView === 'tax-service' ? 'active' : ''}`}
+                onClick={() => setAdminView('tax-service')}
+              >
+                Tax & Service Charge
+              </button>
+            </div>
+          )}
+        </div>
+
+        {/* REPORTS */}
+        <div className="posa-nav-section">
+          <button
+            type="button"
+            className="posa-nav-group-header"
+            onClick={() => setReportsOpen(!reportsOpen)}
+          >
+            <span>REPORTS</span>
+            {reportsOpen ? <ChevronDown size={14} /> : <ChevronRight size={14} />}
+          </button>
+
+          {reportsOpen && (
+            <div className="posa-subnav-tree">
+              <button
+                type="button"
+                className={`posa-subnav-item ${adminView === 'revenue-report' ? 'active' : ''}`}
+                onClick={() => setAdminView('revenue-report')}
+              >
+                Revenue Report
+              </button>
+            </div>
+          )}
+        </div>
+
+        {/* Single Standalone Links */}
+        <div className="posa-nav-divider" />
+
+        <button
+          type="button"
+          className={`posa-nav-single ${adminView === 'appearance' ? 'active' : ''}`}
+          onClick={() => setAdminView('appearance')}
+        >
+          Appearance
         </button>
 
-        <div className="pro-badge-card">
-          <Crown size={18} color="#fbbf24" />
-          <div>
-            <div className="pro-badge-text">posa v3.0 Pro</div>
-            <div className="pro-subtext">Fase 1 & 2 Aktif</div>
+        <button
+          type="button"
+          className={`posa-nav-single ${adminView === 'settings' ? 'active' : ''}`}
+          onClick={() => setAdminView('settings')}
+        >
+          Settings
+        </button>
+
+        <button
+          type="button"
+          className={`posa-nav-single ${adminView === 'help' ? 'active' : ''}`}
+          onClick={() => setAdminView('help')}
+        >
+          Help
+        </button>
+      </nav>
+
+      {/* Bottom Actions (Free trial removed as instructed!) */}
+      <div className="posa-sidebar-footer">
+        {/* User Card: Menampilkan siapa yang aktif login di Admin */}
+        <div className="posa-sidebar-user-card">
+          <div className="posa-sidebar-avatar">
+            {currentUser?.name ? currentUser.name.charAt(0).toUpperCase() : 'A'}
+          </div>
+          <div className="posa-sidebar-user-info">
+            <div className="posa-sidebar-user-name">
+              {currentUser?.name || 'Ahmad Rafi Hamdi'}
+            </div>
+            <div className="posa-sidebar-user-role">
+              {currentUser?.role || 'Owner'}
+            </div>
           </div>
         </div>
 
         <button
-          className="logout-btn"
-          onClick={() => {
-            if (window.confirm('Yakin ingin keluar (logout)?')) {
-              showToast('Sesi kasir diamankan');
-            }
-          }}
+          type="button"
+          className="posa-kiosk-trigger-btn"
+          onClick={handleOpenKiosk}
         >
-          <LogOut size={15} />
-          <span>Keluar (Logout)</span>
+          <div className="kiosk-btn-content">
+            <Store size={17} />
+            <span>Open POS Kiosk</span>
+          </div>
+          <ChevronRight size={17} />
+        </button>
+
+        <button
+          type="button"
+          className="posa-logout-outline-btn"
+          onClick={handleLogout}
+        >
+          <LogOut size={16} />
+          <span>Logout ({currentUser?.name?.split(' ')[0] || 'Admin'})</span>
         </button>
       </div>
     </aside>

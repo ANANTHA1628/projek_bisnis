@@ -11,6 +11,7 @@ import {
   INITIAL_EXPENSES,
   INITIAL_STOCK_MOVEMENTS,
   INITIAL_STAFF,
+  INITIAL_STAFF_ACTIVITY,
   INITIAL_CUSTOMERS
 } from '../data/initialData';
 import confetti from 'canvas-confetti';
@@ -19,10 +20,34 @@ const PosContext = createContext();
 
 export function PosProvider({ children }) {
   // Navigation & UI Settings
-  const [activeTab, setActiveTab] = useState('kasir'); // 'kasir' | 'dasbor' | 'stok' | 'laporan'
+  const [activeTab, setActiveTab] = useState('admin'); // 'admin' | 'kasir'
+  const [adminView, setAdminView] = useState('raw-materials'); // Matches example screenshots
+  const [isKioskMode, setIsKioskMode] = useState(false);
+  const [isKioskLocked, setIsKioskLocked] = useState(true);
+  const [currentUser, setCurrentUser] = useState(() => {
+    try {
+      const savedUser = localStorage.getItem('posa_current_user');
+      if (savedUser) return JSON.parse(savedUser);
+    } catch {}
+    // Default logged in user in Backoffice is Owner (Ahmad Rafi Hamdi)
+    return {
+      id: 'staff-2',
+      name: 'Ahmad Rafi Hamdi',
+      email: 'hamdirafi310@gmail.com',
+      role: 'Owner',
+      permissions: 'Manage All',
+      pin: '1234'
+    };
+  });
+  const [displayMode, setDisplayMode] = useState('none'); // 'none' | 'kitchen' | 'customer'
+  const [showDisplayModeModal, setShowDisplayModeModal] = useState(false);
+  const [showLeaveDisplayModal, setShowLeaveDisplayModal] = useState(false);
+  const [showLogoutModal, setShowLogoutModal] = useState(false);
+  const [logoutTarget, setLogoutTarget] = useState(null); // 'admin' | 'kiosk'
+  const [kioskPin, setKioskPin] = useState('');
   const [stokSubTab, setStokSubTab] = useState('bahan'); // 'bahan' | 'resep' | 'simulator' | 'restock' | 'opname' | 'ledger'
   const [laporanSubTab, setLaporanSubTab] = useState('pendapatan'); // 'pendapatan' | 'item' | 'labarugi' | 'ledger' | 'shift' | 'topmargin' | 'biaya'
-  const [language, setLanguage] = useState('ID');
+  const [language, setLanguage] = useState('EN'); // Matches example screenshots
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [printerSize, setPrinterSize] = useState('58mm'); // '58mm' | '80mm' (D6)
 
@@ -143,6 +168,38 @@ export function PosProvider({ children }) {
   const [stockMovements, setStockMovements] = useState(INITIAL_STOCK_MOVEMENTS);
   const [staffList, setStaffList] = useState(INITIAL_STAFF);
   const [customerList, setCustomerList] = useState(INITIAL_CUSTOMERS);
+  const [staffActivityLogs, setStaffActivityLogs] = useState(() => {
+    try {
+      const saved = localStorage.getItem('posa_staff_activity');
+      if (saved) return JSON.parse(saved);
+    } catch {}
+    return INITIAL_STAFF_ACTIVITY;
+  });
+
+  const recordStaffActivity = (userName, userRole, action, details) => {
+    const newLog = {
+      id: Date.now(),
+      name: userName || 'Staff',
+      role: userRole || 'Cashier',
+      action, // 'SIGNED IN' | 'SIGNED OUT'
+      details: details || (action === 'SIGNED IN' ? 'Logged into POS system' : 'Logged out'),
+      time: new Date().toLocaleString('en-GB', {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+      }).replace(',', '')
+    };
+
+    setStaffActivityLogs((prev) => {
+      const updated = [newLog, ...prev];
+      try {
+        localStorage.setItem('posa_staff_activity', JSON.stringify(updated.slice(0, 50)));
+      } catch {}
+      return updated;
+    });
+  };
 
   // Staf & Customer CRUD Handlers
   const addStaff = (newStaff) => {
@@ -784,6 +841,26 @@ export function PosProvider({ children }) {
   const value = {
     activeTab,
     setActiveTab,
+    adminView,
+    setAdminView,
+    isKioskMode,
+    setIsKioskMode,
+    isKioskLocked,
+    setIsKioskLocked,
+    currentUser,
+    setCurrentUser,
+    displayMode,
+    setDisplayMode,
+    showDisplayModeModal,
+    setShowDisplayModeModal,
+    showLeaveDisplayModal,
+    setShowLeaveDisplayModal,
+    showLogoutModal,
+    setShowLogoutModal,
+    logoutTarget,
+    setLogoutTarget,
+    kioskPin,
+    setKioskPin,
     stokSubTab,
     setStokSubTab,
     laporanSubTab,
@@ -887,6 +964,9 @@ export function PosProvider({ children }) {
     playSound,
     staffList,
     setStaffList,
+    staffActivityLogs,
+    setStaffActivityLogs,
+    recordStaffActivity,
     addStaff,
     updateStaff,
     deleteStaff,
