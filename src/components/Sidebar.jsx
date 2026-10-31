@@ -170,33 +170,31 @@ export default function Sidebar() {
             <ChevronRight size={14} />
           </button>
 
-<<<<<<< HEAD
+          {/* ABSENSI */}
+          <button
+            className={`sidebar-nav-item ${activeTab === 'absensi' ? 'active' : ''}`}
+            onClick={() => setActiveTab('absensi')}
+          >
+            <span style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+              <Clock size={17} />
+              <span>ABSENSI KERJA</span>
+            </span>
+            <ChevronRight size={14} />
+          </button>
+
           {/* STAF (Owner / Admin only) */}
           {canViewAbsensiAll && (
             <button
-              className="sidebar-nav-item"
-              onClick={() => setActiveTab('absensi')}
+              className={`sidebar-nav-item ${activeTab === 'staf' ? 'active' : ''}`}
+              onClick={() => setActiveTab('staf')}
             >
               <span style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                 <Users size={17} />
-                <span>STAF & ABSENSI</span>
+                <span>STAF & ROLE</span>
               </span>
               <ChevronRight size={14} />
             </button>
           )}
-=======
-          {/* STAF */}
-          <button
-            className={`sidebar-nav-item ${activeTab === 'staf' ? 'active' : ''}`}
-            onClick={() => setActiveTab('staf')}
-          >
-            <span style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-              <Users size={17} />
-              <span>STAF & ROLE</span>
-            </span>
-            <ChevronRight size={14} />
-          </button>
->>>>>>> d7928819821c03363cb4223931f44273315b1f15
 
           {/* PELANGGAN */}
           <button
