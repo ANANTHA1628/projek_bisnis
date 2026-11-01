@@ -46,6 +46,106 @@
   --shadow-glow: 0 0 15px rgba(37, 99, 235, 0.3);
 }
 
+/* ========================================================================= */
+/* THEME PALETTES (data-theme attribute on <html>)                          */
+/* ========================================================================= */
+
+[data-theme='oled'] {
+  --bg-app: #000000;
+  --bg-header: #050507;
+  --bg-sidebar: #020203;
+  --bg-sidebar-hover: #111116;
+  --bg-card: #0a0a0d;
+  --bg-card-alt: #101014;
+  --bg-input: #08080c;
+  --bg-pill: #14141e;
+  --bg-pill-hover: #1e1e2c;
+  --border-subtle: rgba(255, 255, 255, 0.12);
+  --border-card: #1c1c28;
+  --border-active: #3b82f6;
+  --accent-blue: #3b82f6;
+  --text-primary: #ffffff;
+  --text-secondary: #a1a1aa;
+}
+
+[data-theme='coffee'] {
+  --bg-app: #140d09;
+  --bg-header: #0f0906;
+  --bg-sidebar: #19110c;
+  --bg-sidebar-hover: #261b14;
+  --bg-card: #201610;
+  --bg-card-alt: #2a1e16;
+  --bg-input: #170f0b;
+  --bg-pill: #2e2017;
+  --bg-pill-hover: #3d2c20;
+  --border-subtle: rgba(217, 119, 6, 0.2);
+  --border-card: #3d2b1f;
+  --border-active: #d97706;
+  --accent-blue: #d97706;
+  --accent-blue-hover: #b45309;
+  --accent-blue-subtle: rgba(217, 119, 6, 0.25);
+  --text-primary: #fef3c7;
+  --text-secondary: #d6c7b2;
+}
+
+[data-theme='forest'] {
+  --bg-app: #061510;
+  --bg-header: #040f0c;
+  --bg-sidebar: #091c15;
+  --bg-sidebar-hover: #112d22;
+  --bg-card: #0d251d;
+  --bg-card-alt: #133328;
+  --bg-input: #081712;
+  --bg-pill: #15382c;
+  --bg-pill-hover: #1c4b3a;
+  --border-subtle: rgba(16, 185, 129, 0.2);
+  --border-card: #1b4536;
+  --border-active: #10b981;
+  --accent-blue: #10b981;
+  --accent-blue-hover: #059669;
+  --accent-blue-subtle: rgba(16, 185, 129, 0.25);
+  --text-primary: #ecfdf5;
+  --text-secondary: #a7f3d0;
+}
+
+[data-theme='violet'] {
+  --bg-app: #0d0918;
+  --bg-header: #080610;
+  --bg-sidebar: #120d22;
+  --bg-sidebar-hover: #1f1738;
+  --bg-card: #17112b;
+  --bg-card-alt: #21193d;
+  --bg-input: #0f0a1c;
+  --bg-pill: #261d44;
+  --bg-pill-hover: #352960;
+  --border-subtle: rgba(139, 92, 246, 0.2);
+  --border-card: #33275c;
+  --border-active: #8b5cf6;
+  --accent-blue: #8b5cf6;
+  --accent-blue-hover: #7c3aed;
+  --accent-blue-subtle: rgba(139, 92, 246, 0.25);
+  --text-primary: #f5f3ff;
+  --text-secondary: #c4b5fd;
+}
+
+[data-theme='light'] {
+  --bg-app: #f4f6fa;
+  --bg-header: #ffffff;
+  --bg-sidebar: #ffffff;
+  --bg-sidebar-hover: #f1f5f9;
+  --bg-card: #ffffff;
+  --bg-card-alt: #f8fafc;
+  --bg-input: #ffffff;
+  --bg-pill: #e2e8f0;
+  --bg-pill-hover: #cbd5e1;
+  --border-subtle: rgba(0, 0, 0, 0.08);
+  --border-card: #e2e8f0;
+  --border-active: #2563eb;
+  --accent-blue: #2563eb;
+  --text-primary: #0f172a;
+  --text-secondary: #475569;
+}
+
 * {
   margin: 0;
   padding: 0;
@@ -269,13 +369,13 @@ input:focus, select:focus, textarea:focus {
   border-radius: var(--radius-pill);
   font-size: 13px;
   font-weight: 500;
-  color: #60a5fa;
-  background-color: rgba(37, 99, 235, 0.12);
-  border: 1px solid rgba(59, 130, 246, 0.3);
+  color: var(--accent-blue, #60a5fa);
+  background-color: var(--accent-blue-subtle, rgba(37, 99, 235, 0.12));
+  border: 1px solid var(--accent-blue, rgba(59, 130, 246, 0.3));
 }
 
 .kasir-action-pill-btn:hover {
-  background-color: rgba(37, 99, 235, 0.22);
+  filter: brightness(1.15);
 }
 
 .user-profile-badge {
@@ -287,20 +387,21 @@ input:focus, select:focus, textarea:focus {
 
 .user-profile-name {
   font-size: 13px;
-  font-weight: 600;
+  font-weight: 700;
   color: var(--text-primary);
   line-height: 1.2;
 }
 
 .user-profile-role {
   font-size: 11px;
-  color: var(--text-muted);
+  color: var(--accent-blue, #60a5fa);
+  font-weight: 600;
   line-height: 1;
 }
 
 .tutup-kasir-btn {
   padding: 7px 16px;
-  background-color: #192236;
+  background-color: var(--bg-card-alt, #192236);
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-pill);
   font-size: 13px;
@@ -309,8 +410,8 @@ input:focus, select:focus, textarea:focus {
 }
 
 .tutup-kasir-btn:hover {
-  background-color: #24314c;
-  border-color: #3b82f6;
+  background-color: var(--bg-pill-hover, #24314c);
+  border-color: var(--accent-blue, #3b82f6);
 }
 
 /* Kasir Search & Filter */
@@ -354,23 +455,23 @@ input:focus, select:focus, textarea:focus {
 .category-pill {
   padding: 7px 18px;
   border-radius: var(--radius-pill);
-  background-color: #162033;
+  background-color: var(--bg-card-alt, #162033);
   color: var(--text-secondary);
   font-size: 13px;
   font-weight: 500;
-  border: 1px solid transparent;
+  border: 1px solid var(--border-subtle, transparent);
   white-space: nowrap;
 }
 
 .category-pill:hover {
-  background-color: #1f2d48;
+  background-color: var(--bg-pill-hover, #1f2d48);
   color: var(--text-primary);
 }
 
 .category-pill.active {
-  background-color: #1a2744;
-  color: #60a5fa;
-  border-color: rgba(96, 165, 250, 0.4);
+  background-color: var(--accent-blue-subtle, #1a2744);
+  color: var(--accent-blue, #60a5fa);
+  border-color: var(--accent-blue, rgba(96, 165, 250, 0.4));
   font-weight: 600;
 }
 
@@ -389,8 +490,8 @@ input:focus, select:focus, textarea:focus {
   justify-content: center;
   text-align: center;
   padding: 18px 12px;
-  background-color: #141c2c;
-  border: 1px solid rgba(255, 255, 255, 0.05);
+  background-color: var(--bg-card, #141c2c);
+  border: 1px solid var(--border-subtle, rgba(255, 255, 255, 0.05));
   border-radius: var(--radius-lg);
   cursor: pointer;
   position: relative;
@@ -399,8 +500,8 @@ input:focus, select:focus, textarea:focus {
 }
 
 .product-card:hover {
-  background-color: #1a243a;
-  border-color: rgba(59, 130, 246, 0.4);
+  background-color: var(--bg-card-alt, #1a243a);
+  border-color: var(--accent-blue, rgba(59, 130, 246, 0.4));
   transform: translateY(-2px);
   box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
 }
@@ -459,7 +560,7 @@ input:focus, select:focus, textarea:focus {
 .product-price {
   font-size: 13px;
   font-weight: 700;
-  color: #60a5fa;
+  color: var(--accent-blue, #60a5fa);
 }
 
 /* ========================================================================= */
@@ -468,7 +569,7 @@ input:focus, select:focus, textarea:focus {
 .kasir-cart-panel {
   width: 380px;
   min-width: 360px;
-  background-color: #0f1523;
+  background-color: var(--bg-sidebar, #0f1523);
   display: flex;
   flex-direction: column;
   height: 100%;
@@ -512,7 +613,8 @@ input:focus, select:focus, textarea:focus {
   font-size: 12px;
   font-weight: 500;
   color: var(--text-secondary);
-  background-color: #172033;
+  background-color: var(--bg-card, #172033);
+  border: 1px solid var(--border-subtle, transparent);
   white-space: nowrap;
 }
 
@@ -533,8 +635,8 @@ input:focus, select:focus, textarea:focus {
 }
 
 .cart-item-card {
-  background-color: #141b2c;
-  border: 1px solid rgba(255, 255, 255, 0.05);
+  background-color: var(--bg-card, #141b2c);
+  border: 1px solid var(--border-subtle, rgba(255, 255, 255, 0.05));
   border-radius: var(--radius-md);
   padding: 12px 14px;
   display: flex;
@@ -627,7 +729,7 @@ input:focus, select:focus, textarea:focus {
 /* Cart Footer & Payment */
 .cart-footer {
   padding: 14px 18px 18px 18px;
-  background-color: #0d131f;
+  background-color: var(--bg-card-alt, #0d131f);
   border-top: 1px solid var(--border-subtle);
   display: flex;
   flex-direction: column;
@@ -652,8 +754,8 @@ input:focus, select:focus, textarea:focus {
   padding: 8px 12px;
   border-radius: var(--radius-md);
   font-size: 12px;
-  background-color: #141c2c;
-  border: 1px solid var(--border-card);
+  background-color: var(--bg-input, #141c2c);
+  border: 1px solid var(--border-subtle, var(--border-card));
   color: var(--text-primary);
 }
 
@@ -680,7 +782,7 @@ input:focus, select:focus, textarea:focus {
 }
 
 .summary-row.total-row .total-amount {
-  color: #60a5fa;
+  color: var(--accent-blue, #60a5fa);
 }
 
 .payment-methods-grid {
@@ -697,8 +799,8 @@ input:focus, select:focus, textarea:focus {
   gap: 4px;
   padding: 8px 4px;
   border-radius: var(--radius-md);
-  background-color: #141b2c;
-  border: 1px solid rgba(255, 255, 255, 0.05);
+  background-color: var(--bg-card, #141b2c);
+  border: 1px solid var(--border-subtle, rgba(255, 255, 255, 0.05));
   color: var(--text-secondary);
   font-size: 11px;
   font-weight: 500;
@@ -1480,7 +1582,7 @@ input:focus, select:focus, textarea:focus {
 }
 
 .modal-dialog-box {
-  background-color: #121929;
+  background-color: var(--bg-card, #121929);
   border: 1px solid var(--border-card);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-card);
@@ -1741,10 +1843,11 @@ input:focus, select:focus, textarea:focus {
 .posa-app-root {
   width: 100vw;
   min-height: 100vh;
-  background-color: #0b0e17;
-  color: #f8fafc;
+  background-color: var(--bg-app, #0b0e17);
+  color: var(--text-primary, #f8fafc);
   font-family: var(--font-sans);
   overflow-x: hidden;
+  transition: background-color 0.2s ease, color 0.2s ease;
 }
 
 .posa-admin-layout {
@@ -1757,14 +1860,15 @@ input:focus, select:focus, textarea:focus {
 .posa-admin-sidebar {
   width: 230px;
   min-width: 230px;
-  background-color: #0b0e17;
-  border-right: 1px solid rgba(255, 255, 255, 0.07);
+  background-color: var(--bg-sidebar, #0b0e17);
+  border-right: 1px solid var(--border-subtle, rgba(255, 255, 255, 0.07));
   display: flex;
   flex-direction: column;
   height: 100vh;
   position: sticky;
   top: 0;
   padding: 20px 14px 16px 14px;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
 }
 
 .posa-sidebar-brand {
@@ -1874,9 +1978,10 @@ input:focus, select:focus, textarea:focus {
 }
 
 .posa-subnav-item.active {
-  background-color: #263859;
-  color: #ffffff;
+  background-color: var(--accent-blue-subtle, rgba(37, 99, 235, 0.2));
+  color: var(--text-primary, #ffffff);
   font-weight: 600;
+  border-left: 2px solid var(--accent-blue, #2563eb);
 }
 
 .posa-nav-single {
@@ -1885,7 +1990,7 @@ input:focus, select:focus, textarea:focus {
   padding: 8px 10px;
   font-size: 13px;
   font-weight: 500;
-  color: #cbd5e1;
+  color: var(--text-secondary, #cbd5e1);
   border-radius: 8px;
   text-align: left;
   cursor: pointer;
@@ -1895,12 +2000,12 @@ input:focus, select:focus, textarea:focus {
 }
 
 .posa-nav-single:hover {
-  color: #ffffff;
+  color: var(--text-primary, #ffffff);
   background-color: rgba(255, 255, 255, 0.04);
 }
 
 .posa-nav-single.active {
-  background-color: #2563eb;
+  background-color: var(--accent-blue, #2563eb);
   color: #ffffff;
   font-weight: 600;
 }
@@ -1925,7 +2030,7 @@ input:focus, select:focus, textarea:focus {
   align-items: center;
   justify-content: space-between;
   padding: 12px 14px;
-  background-color: #2563eb;
+  background-color: var(--accent-blue, #2563eb);
   color: #ffffff;
   border-radius: 10px;
   font-size: 13px;
@@ -1934,11 +2039,11 @@ input:focus, select:focus, textarea:focus {
   cursor: pointer;
   border: none;
   width: 100%;
-  transition: background-color 0.15s;
+  transition: all 0.15s;
 }
 
 .posa-kiosk-trigger-btn:hover {
-  background-color: #1d4ed8;
+  filter: brightness(1.1);
 }
 
 .kiosk-btn-content {
@@ -1972,10 +2077,11 @@ input:focus, select:focus, textarea:focus {
 .posa-admin-main-content {
   flex: 1;
   min-width: 0;
-  background-color: #0b0e17;
+  background-color: var(--bg-app, #0b0e17);
   padding: 24px 36px;
   overflow-y: auto;
   height: 100vh;
+  transition: background-color 0.2s ease;
 }
 
 .posa-admin-page {
@@ -2068,29 +2174,29 @@ input:focus, select:focus, textarea:focus {
 }
 
 .posa-lang-item.active {
-  background-color: #2563eb;
+  background-color: var(--accent-blue, #2563eb);
   color: #ffffff;
 }
 
 /* CARDS */
 .posa-admin-card {
-  background-color: #111522;
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  background-color: var(--bg-card, #111522);
+  border: 1px solid var(--border-subtle, rgba(255, 255, 255, 0.06));
   border-radius: 14px;
   padding: 22px 26px;
-  transition: border-color 0.15s ease;
+  transition: all 0.2s ease;
 }
 
 .posa-card-title {
   font-size: 16px;
   font-weight: 700;
-  color: #ffffff;
+  color: var(--text-primary, #ffffff);
   letter-spacing: -0.2px;
 }
 
 .posa-card-subtitle {
   font-size: 13px;
-  color: #94a3b8;
+  color: var(--text-secondary, #94a3b8);
   line-height: 1.6;
   margin-top: 6px;
 }
@@ -2141,24 +2247,24 @@ input:focus, select:focus, textarea:focus {
   padding: 6px 14px;
   font-size: 12px;
   font-weight: 600;
-  color: #94a3b8;
-  background-color: #161c2d;
+  color: var(--text-secondary, #94a3b8);
+  background-color: var(--bg-pill, #161c2d);
   border-radius: 9999px;
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  border: 1px solid var(--border-subtle, rgba(255, 255, 255, 0.06));
   cursor: pointer;
 }
 
 .posa-pill-btn.active {
-  background-color: #2563eb;
+  background-color: var(--accent-blue, #2563eb);
   color: #ffffff;
-  border-color: #2563eb;
+  border-color: var(--accent-blue, #2563eb);
 }
 
 .posa-btn-primary {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  background-color: #2563eb;
+  background-color: var(--accent-blue, #2563eb);
   color: #ffffff;
   font-weight: 600;
   font-size: 13px;
@@ -2166,7 +2272,11 @@ input:focus, select:focus, textarea:focus {
   border-radius: 8px;
   cursor: pointer;
   border: none;
-  transition: background-color 0.15s;
+  transition: all 0.15s;
+}
+
+.posa-btn-primary:hover {
+  filter: brightness(1.1);
 }
 
 .posa-btn-primary:hover {
@@ -2232,15 +2342,15 @@ input:focus, select:focus, textarea:focus {
   padding: 12px 14px;
   font-size: 12px;
   font-weight: 600;
-  color: #64748b;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  color: var(--text-secondary, #64748b);
+  border-bottom: 1px solid var(--border-subtle, rgba(255, 255, 255, 0.08));
 }
 
 .posa-table td {
   padding: 14px;
   font-size: 13px;
-  color: #cbd5e1;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  color: var(--text-primary, #cbd5e1);
+  border-bottom: 1px solid var(--border-subtle, rgba(255, 255, 255, 0.04));
 }
 
 .posa-empty-state {
@@ -2263,7 +2373,7 @@ input:focus, select:focus, textarea:focus {
   width: 60px;
   height: 60px;
   border-radius: 50%;
-  background-color: #161c2d;
+  background-color: var(--bg-card-alt, #161c2d);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -2282,8 +2392,8 @@ input:focus, select:focus, textarea:focus {
   left: 0;
   right: 0;
   margin-top: 6px;
-  background-color: #161c2d;
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  background-color: var(--bg-card-alt, #161c2d);
+  border: 1px solid var(--border-subtle, rgba(255, 255, 255, 0.12));
   border-radius: 10px;
   box-shadow: 0 12px 28px rgba(0, 0, 0, 0.5);
   max-height: 220px;
@@ -2297,9 +2407,9 @@ input:focus, select:focus, textarea:focus {
   align-items: center;
   padding: 10px 14px;
   font-size: 13px;
-  color: #ffffff;
+  color: var(--text-primary, #ffffff);
   cursor: pointer;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  border-bottom: 1px solid var(--border-subtle, rgba(255, 255, 255, 0.04));
   transition: background-color 0.15s;
 }
 
@@ -2308,8 +2418,8 @@ input:focus, select:focus, textarea:focus {
 }
 
 .posa-dropdown-item:hover {
-  background-color: #222d46;
-  color: #60a5fa;
+  background-color: var(--bg-pill-hover, #222d46);
+  color: var(--accent-blue, #60a5fa);
 }
 
 .posa-restock-items-list {
@@ -2323,19 +2433,19 @@ input:focus, select:focus, textarea:focus {
   justify-content: space-between;
   align-items: center;
   padding: 12px 14px;
-  background-color: #0f1422;
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  background-color: var(--bg-card, #0f1422);
+  border: 1px solid var(--border-subtle, rgba(255, 255, 255, 0.06));
   border-radius: 10px;
   gap: 12px;
 }
 
 .posa-qty-input {
   width: 72px;
-  background-color: #161c2d;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background-color: var(--bg-input, #161c2d);
+  border: 1px solid var(--border-subtle, rgba(255, 255, 255, 0.1));
   border-radius: 6px;
   padding: 6px 8px;
-  color: #ffffff;
+  color: var(--text-primary, #ffffff);
   font-size: 13px;
   font-weight: 600;
   text-align: center;
@@ -2343,7 +2453,7 @@ input:focus, select:focus, textarea:focus {
 }
 
 .posa-qty-input:focus {
-  border-color: #2563eb;
+  border-color: var(--accent-blue, #2563eb);
 }
 
 .posa-remove-btn {
@@ -2368,8 +2478,8 @@ input:focus, select:focus, textarea:focus {
 
 .posa-summary-block {
   padding: 14px 16px;
-  background-color: #0d111a;
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  background-color: var(--bg-card-alt, #0d111a);
+  border: 1px solid var(--border-subtle, rgba(255, 255, 255, 0.06));
   border-radius: 10px;
   margin-top: 14px;
 }
@@ -2388,11 +2498,11 @@ input:focus, select:focus, textarea:focus {
 }
 
 .posa-select, .posa-input {
-  background-color: #161c2d;
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background-color: var(--bg-input, #161c2d);
+  border: 1px solid var(--border-subtle, rgba(255, 255, 255, 0.08));
   border-radius: 8px;
   padding: 8px 12px;
-  color: #ffffff;
+  color: var(--text-primary, #ffffff);
   font-size: 13px;
 }
 
@@ -2400,25 +2510,26 @@ input:focus, select:focus, textarea:focus {
   display: block;
   font-size: 12px;
   font-weight: 500;
-  color: #94a3b8;
+  color: var(--text-secondary, #94a3b8);
   margin-bottom: 4px;
 }
 
 .posa-metric-card {
-  background-color: #111522;
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  background-color: var(--bg-card, #111522);
+  border: 1px solid var(--border-subtle, rgba(255, 255, 255, 0.06));
   border-radius: 12px;
   padding: 18px 20px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   min-height: 104px;
+  transition: all 0.2s ease;
 }
 
 .posa-export-card {
   padding: 16px 18px;
-  background-color: #161c2d;
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  background-color: var(--bg-card-alt, #161c2d);
+  border: 1px solid var(--border-subtle, rgba(255, 255, 255, 0.06));
   border-radius: 10px;
   text-align: left;
   cursor: pointer;
@@ -2442,12 +2553,12 @@ input:focus, select:focus, textarea:focus {
 
 .posa-date-pill {
   padding: 8px 16px;
-  background-color: #161c2d;
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background-color: var(--bg-card-alt, #161c2d);
+  border: 1px solid var(--border-subtle, rgba(255, 255, 255, 0.08));
   border-radius: 8px;
   font-size: 13px;
   font-weight: 600;
-  color: #ffffff;
+  color: var(--text-primary, #ffffff);
 }
 
 .posa-tab-row-container {
@@ -2469,17 +2580,17 @@ input:focus, select:focus, textarea:focus {
   padding: 7px 16px;
   font-size: 13px;
   font-weight: 600;
-  color: #94a3b8;
-  background-color: #161c2d;
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  color: var(--text-secondary, #94a3b8);
+  background-color: var(--bg-pill, #161c2d);
+  border: 1px solid var(--border-subtle, rgba(255, 255, 255, 0.06));
   border-radius: 9999px;
   cursor: pointer;
 }
 
 .posa-tab-btn.active {
-  background-color: #2563eb;
+  background-color: var(--accent-blue, #2563eb);
   color: #ffffff;
-  border-color: #2563eb;
+  border-color: var(--accent-blue, #2563eb);
 }
 
 .posa-table-actions {
@@ -2492,12 +2603,12 @@ input:focus, select:focus, textarea:focus {
   width: 28px;
   height: 28px;
   border-radius: 6px;
-  background-color: #161c2d;
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  background-color: var(--bg-card-alt, #161c2d);
+  border: 1px solid var(--border-subtle, rgba(255, 255, 255, 0.06));
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #cbd5e1;
+  color: var(--text-secondary, #cbd5e1);
   cursor: pointer;
 }
 
@@ -2513,11 +2624,11 @@ input:focus, select:focus, textarea:focus {
 
 .posa-badge-pill {
   padding: 3px 10px;
-  background-color: #1a2236;
+  background-color: var(--bg-pill, #1a2236);
   border-radius: 9999px;
   font-size: 11px;
   font-weight: 600;
-  color: #94a3b8;
+  color: var(--text-secondary, #94a3b8);
 }
 
 .posa-badge-warning {
@@ -2595,7 +2706,7 @@ input:focus, select:focus, textarea:focus {
 }
 
 .posa-switch input:checked + .posa-slider {
-  background-color: #2563eb;
+  background-color: var(--accent-blue, #2563eb);
 }
 
 .posa-switch input:checked + .posa-slider:before {
@@ -2769,25 +2880,25 @@ input:focus, select:focus, textarea:focus {
   width: 80px;
   height: 80px;
   border-radius: 50%;
-  background-color: #192033;
-  color: #ffffff;
+  background-color: var(--bg-card-alt, #192033);
+  color: var(--text-primary, #ffffff);
   font-size: 28px;
   font-weight: 600;
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 1px solid rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--border-subtle, rgba(255, 255, 255, 0.04));
   cursor: pointer;
   transition: all 0.15s;
 }
 
 .kiosk-key-btn:hover {
-  background-color: #242e49;
+  background-color: var(--bg-pill-hover, #242e49);
   transform: scale(1.05);
 }
 
 .kiosk-key-btn:active {
-  background-color: #2563eb;
+  background-color: var(--accent-blue, #2563eb);
 }
 
 .kiosk-key-btn.text-action {
@@ -3212,7 +3323,7 @@ input:focus, select:focus, textarea:focus {
 .posa-user-name {
   font-size: 12.5px;
   font-weight: 600;
-  color: #ffffff;
+  color: var(--text-primary, #ffffff);
   line-height: 1.2;
 }
 
@@ -3221,7 +3332,7 @@ input:focus, select:focus, textarea:focus {
   align-items: center;
   gap: 5px;
   font-size: 11px;
-  color: #38bdf8;
+  color: var(--accent-blue, #38bdf8);
   font-weight: 600;
 }
 
@@ -3459,10 +3570,17 @@ input:focus, select:focus, textarea:focus {
 .bg-blue-500\/10 { background-color: rgba(59, 130, 246, 0.1); }
 .bg-amber-500\/10 { background-color: rgba(245, 158, 11, 0.1); }
 .bg-emerald-500\/10 { background-color: rgba(16, 185, 129, 0.1); }
-.bg-\[\#0f1422\] { background-color: #0f1422; }
+.bg-\[\#0f1422\] { background-color: var(--bg-card-alt, #0f1422); }
+.bg-\[\#161c2d\] { background-color: var(--bg-card-alt, #161c2d); }
+.bg-\[\#0d111a\] { background-color: var(--bg-card-alt, #0d111a); }
+.bg-\[\#101422\] { background-color: var(--bg-card-alt, #101422); }
+.bg-\[\#1a1c2e\] { background-color: var(--bg-card-alt, #1a1c2e); }
+.bg-\[\#101726\] { background-color: var(--bg-card-alt, #101726); }
+.bg-\[\#192236\] { background-color: var(--bg-card-alt, #192236); }
+.bg-\[\#0b0e17\] { background-color: var(--bg-app, #0b0e17); }
 
-.border-slate-700 { border-color: #334155; }
-.border-slate-800 { border-color: #1e293b; }
+.border-slate-700 { border-color: var(--border-subtle, #334155); }
+.border-slate-800 { border-color: var(--border-subtle, #1e293b); }
 .border-amber-500\/30 { border-color: rgba(245, 158, 11, 0.3); }
 
 .rounded-md { border-radius: 6px; }
