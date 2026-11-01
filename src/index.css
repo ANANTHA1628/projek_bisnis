@@ -1,23 +1,23 @@
 @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
 
 :root {
-  --bg-app: #0c1017;
-  --bg-header: #090d14;
-  --bg-sidebar: #0f1523;
-  --bg-sidebar-hover: #162032;
-  --bg-card: #131a29;
-  --bg-card-alt: #162033;
-  --bg-input: #0e1420;
-  --bg-pill: #192236;
-  --bg-pill-hover: #222f48;
+  --bg-app: #080c14;
+  --bg-header: #060910;
+  --bg-sidebar: #0b101b;
+  --bg-sidebar-hover: #121927;
+  --bg-card: #0f1523;
+  --bg-card-alt: #141c2d;
+  --bg-input: #0a0e18;
+  --bg-pill: #151e30;
+  --bg-pill-hover: #1c273e;
   
-  --border-subtle: rgba(255, 255, 255, 0.07);
-  --border-card: #1d273b;
-  --border-active: #3b82f6;
+  --border-subtle: rgba(255, 255, 255, 0.08);
+  --border-card: #182335;
+  --border-active: #10b981;
 
-  --accent-blue: #2563eb;
-  --accent-blue-hover: #1d4ed8;
-  --accent-blue-subtle: rgba(37, 99, 235, 0.15);
+  --accent-blue: #10b981;
+  --accent-blue-hover: #059669;
+  --accent-blue-subtle: rgba(16, 185, 129, 0.16);
 
   --accent-green: #10b981;
   --accent-green-hover: #059669;
@@ -43,7 +43,7 @@
   --radius-pill: 9999px;
 
   --shadow-card: 0 4px 20px rgba(0, 0, 0, 0.25);
-  --shadow-glow: 0 0 15px rgba(37, 99, 235, 0.3);
+  --shadow-glow: 0 0 15px rgba(16, 185, 129, 0.3);
 }
 
 /* ========================================================================= */
@@ -62,8 +62,8 @@
   --bg-pill-hover: #1e1e2c;
   --border-subtle: rgba(255, 255, 255, 0.12);
   --border-card: #1c1c28;
-  --border-active: #3b82f6;
-  --accent-blue: #3b82f6;
+  --border-active: #10b981;
+  --accent-blue: #10b981;
   --text-primary: #ffffff;
   --text-secondary: #a1a1aa;
 }
@@ -160,8 +160,8 @@
   --bg-pill-hover: #cbd5e1;
   --border-subtle: rgba(0, 0, 0, 0.08);
   --border-card: #e2e8f0;
-  --border-active: #2563eb;
-  --accent-blue: #2563eb;
+  --border-active: #10b981;
+  --accent-blue: #10b981;
   --text-primary: #0f172a;
   --text-secondary: #475569;
 }
@@ -1682,7 +1682,7 @@ input:focus, select:focus, textarea:focus {
 }
 
 .chart-bar-fill:hover {
-  background: linear-gradient(180deg, #60a5fa 0%, #2563eb 100%);
+  background: linear-gradient(180deg, #34d399 0%, #10b981 100%);
 }
 
 .chart-bar-label {
@@ -1982,9 +1982,9 @@ input:focus, select:focus, textarea:focus {
 
 /* SIDEBAR */
 .posa-admin-sidebar {
-  width: 230px;
-  min-width: 230px;
-  background-color: var(--bg-sidebar, #0b0e17);
+  width: 240px;
+  min-width: 240px;
+  background-color: var(--bg-sidebar, #0b101b);
   border-right: 1px solid var(--border-subtle, rgba(255, 255, 255, 0.07));
   display: flex;
   flex-direction: column;
@@ -1992,7 +1992,28 @@ input:focus, select:focus, textarea:focus {
   position: sticky;
   top: 0;
   padding: 20px 14px 16px 14px;
-  transition: background-color 0.2s ease, border-color 0.2s ease;
+  transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+              min-width 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+              padding 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+              transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+              opacity 0.25s ease;
+  z-index: 40;
+  overflow-x: hidden;
+  white-space: nowrap;
+}
+
+@media (min-width: 1024px) {
+  .posa-admin-sidebar.collapsed {
+    width: 0 !important;
+    min-width: 0 !important;
+    max-width: 0 !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    border-right-width: 0 !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+    transform: translateX(-100%);
+  }
 }
 
 .posa-sidebar-brand {
@@ -2006,6 +2027,32 @@ input:focus, select:focus, textarea:focus {
   display: flex;
   align-items: baseline;
   gap: 8px;
+}
+
+.posa-desktop-collapse-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  color: var(--text-secondary, #94a3b8);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.posa-desktop-collapse-btn:hover {
+  background-color: var(--bg-pill, rgba(255, 255, 255, 0.08));
+  color: var(--text-primary, #ffffff);
+  border-color: var(--border-subtle);
+}
+
+@media (max-width: 1023px) {
+  .posa-desktop-collapse-btn {
+    display: none !important;
+  }
 }
 
 .posa-sidebar-close-btn {
@@ -2102,10 +2149,10 @@ input:focus, select:focus, textarea:focus {
 }
 
 .posa-subnav-item.active {
-  background-color: var(--accent-blue-subtle, rgba(37, 99, 235, 0.2));
+  background-color: var(--accent-blue-subtle, rgba(16, 185, 129, 0.2));
   color: var(--text-primary, #ffffff);
   font-weight: 600;
-  border-left: 2px solid var(--accent-blue, #2563eb);
+  border-left: 2px solid var(--accent-blue, #10b981);
 }
 
 .posa-nav-single {
@@ -2129,9 +2176,10 @@ input:focus, select:focus, textarea:focus {
 }
 
 .posa-nav-single.active {
-  background-color: var(--accent-blue, #2563eb);
+  background-color: var(--accent-blue, #10b981);
   color: #ffffff;
   font-weight: 600;
+  box-shadow: 0 2px 10px var(--accent-blue-subtle, rgba(16, 185, 129, 0.3));
 }
 
 .posa-nav-divider {
@@ -2154,12 +2202,12 @@ input:focus, select:focus, textarea:focus {
   align-items: center;
   justify-content: space-between;
   padding: 12px 14px;
-  background-color: var(--accent-blue, #2563eb);
+  background-color: var(--accent-blue, #10b981);
   color: #ffffff;
   border-radius: 10px;
   font-size: 13px;
   font-weight: 600;
-  box-shadow: 0 4px 14px rgba(37, 99, 235, 0.35);
+  box-shadow: 0 4px 14px var(--accent-blue-subtle, rgba(16, 185, 129, 0.35));
   cursor: pointer;
   border: none;
   width: 100%;
@@ -2227,6 +2275,29 @@ input:focus, select:focus, textarea:focus {
   display: flex;
   align-items: center;
   gap: 12px;
+}
+
+.posa-sidebar-toggle-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  background: var(--bg-card-alt, #141c2d);
+  border: 1px solid var(--border-subtle, rgba(255, 255, 255, 0.08));
+  color: var(--text-secondary, #cbd5e1);
+  border-radius: var(--radius-md, 8px);
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  flex-shrink: 0;
+}
+
+.posa-sidebar-toggle-btn:hover {
+  background-color: var(--bg-pill-hover, #1c273e);
+  color: var(--text-primary, #ffffff);
+  border-color: var(--accent-blue);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px var(--accent-blue-subtle);
 }
 
 .posa-mobile-menu-btn {
@@ -2298,14 +2369,14 @@ input:focus, select:focus, textarea:focus {
 }
 
 .posa-lang-item.active {
-  background-color: var(--accent-blue, #2563eb);
+  background-color: var(--accent-blue, #10b981);
   color: #ffffff;
 }
 
 /* CARDS */
 .posa-admin-card {
-  background-color: var(--bg-card, #111522);
-  border: 1px solid var(--border-subtle, rgba(255, 255, 255, 0.06));
+  background-color: var(--bg-card, #0f1523);
+  border: 1px solid var(--border-subtle, rgba(255, 255, 255, 0.08));
   border-radius: 14px;
   padding: 22px 26px;
   transition: all 0.2s ease;
@@ -2341,8 +2412,8 @@ input:focus, select:focus, textarea:focus {
 
 .posa-search-input {
   width: 100%;
-  background-color: #161c2d;
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background-color: var(--bg-input, #0e1422);
+  border: 1px solid var(--border-subtle, rgba(255, 255, 255, 0.08));
   border-radius: 8px;
   padding: 8px 14px 8px 36px;
   color: #ffffff;
@@ -2351,7 +2422,8 @@ input:focus, select:focus, textarea:focus {
 }
 
 .posa-search-input:focus {
-  border-color: #2563eb;
+  border-color: var(--accent-blue, #10b981);
+  box-shadow: 0 0 10px var(--accent-blue-subtle, rgba(16, 185, 129, 0.2));
 }
 
 .posa-search-icon {
@@ -2379,16 +2451,17 @@ input:focus, select:focus, textarea:focus {
 }
 
 .posa-pill-btn.active {
-  background-color: var(--accent-blue, #2563eb);
+  background-color: var(--accent-blue, #10b981);
   color: #ffffff;
-  border-color: var(--accent-blue, #2563eb);
+  border-color: var(--accent-blue, #10b981);
+  box-shadow: 0 2px 8px var(--accent-blue-subtle, rgba(16, 185, 129, 0.25));
 }
 
 .posa-btn-primary {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  background-color: var(--accent-blue, #2563eb);
+  background-color: var(--accent-blue, #10b981);
   color: #ffffff;
   font-weight: 600;
   font-size: 13px;
@@ -2397,14 +2470,13 @@ input:focus, select:focus, textarea:focus {
   cursor: pointer;
   border: none;
   transition: all 0.15s;
+  box-shadow: 0 2px 10px var(--accent-blue-subtle, rgba(16, 185, 129, 0.25));
 }
 
 .posa-btn-primary:hover {
-  filter: brightness(1.1);
-}
-
-.posa-btn-primary:hover {
-  background-color: #1d4ed8;
+  background-color: var(--accent-blue-hover, #059669);
+  filter: brightness(1.08);
+  box-shadow: 0 4px 14px var(--accent-blue-subtle, rgba(16, 185, 129, 0.35));
 }
 
 .posa-btn-outline {
@@ -2577,7 +2649,7 @@ input:focus, select:focus, textarea:focus {
 }
 
 .posa-qty-input:focus {
-  border-color: var(--accent-blue, #2563eb);
+  border-color: var(--accent-blue, #10b981);
 }
 
 .posa-remove-btn {
@@ -2664,8 +2736,8 @@ input:focus, select:focus, textarea:focus {
 }
 
 .posa-export-card:hover {
-  border-color: #2563eb;
-  background-color: #1b233a;
+  border-color: var(--accent-blue, #10b981);
+  background-color: var(--bg-card-alt, #131d2c);
 }
 
 .posa-danger-zone-card {
@@ -2712,9 +2784,10 @@ input:focus, select:focus, textarea:focus {
 }
 
 .posa-tab-btn.active {
-  background-color: var(--accent-blue, #2563eb);
+  background-color: var(--accent-blue, #10b981);
   color: #ffffff;
-  border-color: var(--accent-blue, #2563eb);
+  border-color: var(--accent-blue, #10b981);
+  box-shadow: 0 2px 8px var(--accent-blue-subtle, rgba(16, 185, 129, 0.3));
 }
 
 .posa-table-actions {
@@ -2830,7 +2903,7 @@ input:focus, select:focus, textarea:focus {
 }
 
 .posa-switch input:checked + .posa-slider {
-  background-color: var(--accent-blue, #2563eb);
+  background-color: var(--accent-blue, #10b981);
 }
 
 .posa-switch input:checked + .posa-slider:before {
@@ -2944,7 +3017,7 @@ input:focus, select:focus, textarea:focus {
 }
 
 .kiosk-lang-btn.active {
-  background-color: var(--accent-blue, #2563eb);
+  background-color: var(--accent-blue, #10b981);
   color: #ffffff;
   box-shadow: 0 2px 8px var(--accent-blue-subtle);
 }
@@ -3071,7 +3144,7 @@ input:focus, select:focus, textarea:focus {
 }
 
 .kiosk-key-btn:active {
-  background-color: var(--accent-blue, #2563eb);
+  background-color: var(--accent-blue, #10b981);
   color: #ffffff;
   transform: scale(0.96);
 }
@@ -3164,7 +3237,7 @@ input:focus, select:focus, textarea:focus {
   justify-content: center;
   gap: 8px;
   padding: 12px 18px;
-  background-color: #3b82f6;
+  background-color: var(--accent-blue, #10b981);
   color: #ffffff;
   font-size: 14px;
   font-weight: 600;
@@ -3172,11 +3245,11 @@ input:focus, select:focus, textarea:focus {
   border: none;
   cursor: pointer;
   transition: all 0.15s;
-  box-shadow: 0 4px 14px rgba(59, 130, 246, 0.35);
+  box-shadow: 0 4px 14px var(--accent-blue-subtle, rgba(16, 185, 129, 0.35));
 }
 
 .posa-confirm-logout-btn:hover {
-  background-color: #2563eb;
+  background-color: var(--accent-blue-hover, #059669);
 }
 
 .posa-cancel-logout-btn {
@@ -3287,18 +3360,18 @@ input:focus, select:focus, textarea:focus {
 .posa-display-btn-start {
   flex: 1;
   padding: 11px 16px;
-  background-color: #2563eb;
+  background-color: var(--accent-blue, #10b981);
   border: none;
   border-radius: 8px;
   color: #ffffff;
   font-size: 13.5px;
   font-weight: 600;
   cursor: pointer;
-  transition: background-color 0.15s;
+  transition: all 0.15s;
 }
 
 .posa-display-btn-start:hover {
-  background-color: #1d4ed8;
+  background-color: var(--accent-blue-hover, #059669);
 }
 
 /* Leave Display Mode Dialog (WhatsApp Image 2026-10-31 at 22.35.26.jpeg) */
@@ -3489,7 +3562,7 @@ input:focus, select:focus, textarea:focus {
   width: 28px;
   height: 28px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #2563eb, #1d4ed8);
+  background: linear-gradient(135deg, var(--accent-blue, #10b981), #059669);
   color: #ffffff;
   font-size: 13px;
   font-weight: 700;
@@ -3538,7 +3611,7 @@ input:focus, select:focus, textarea:focus {
   width: 32px;
   height: 32px;
   border-radius: 50%;
-  background-color: #2563eb;
+  background-color: var(--accent-blue, #10b981);
   color: #ffffff;
   font-weight: 700;
   font-size: 13.5px;
@@ -3738,14 +3811,14 @@ input:focus, select:focus, textarea:focus {
 .text-slate-300 { color: #cbd5e1; }
 .text-slate-400 { color: #94a3b8; }
 .text-slate-500 { color: #64748b; }
-.text-blue-400 { color: #60a5fa; }
+.text-blue-400 { color: var(--accent-blue, #10b981); }
 .text-emerald-400 { color: #34d399; }
 .text-amber-300 { color: #fcd34d; }
 .text-amber-400 { color: #fbbf24; }
 .text-red-400 { color: #f87171; }
 
 .bg-white { background-color: #ffffff; }
-.bg-blue-500\/10 { background-color: rgba(59, 130, 246, 0.1); }
+.bg-blue-500\/10 { background-color: var(--accent-blue-subtle, rgba(16, 185, 129, 0.12)); }
 .bg-amber-500\/10 { background-color: rgba(245, 158, 11, 0.1); }
 .bg-emerald-500\/10 { background-color: rgba(16, 185, 129, 0.1); }
 .bg-\[\#0f1422\] { background-color: var(--bg-card-alt, #0f1422); }
@@ -3973,14 +4046,14 @@ input:focus, select:focus, textarea:focus {
 
   .kasir-floating-pay-btn {
     padding: 8px 16px;
-    background-color: #2563eb;
+    background-color: var(--accent-blue, #10b981);
     border: none;
     color: #ffffff;
     font-size: 12.5px;
     font-weight: 700;
     border-radius: 8px;
     cursor: pointer;
-    box-shadow: 0 2px 8px rgba(37, 99, 235, 0.45);
+    box-shadow: 0 2px 8px var(--accent-blue-subtle, rgba(16, 185, 129, 0.45));
   }
 }
 

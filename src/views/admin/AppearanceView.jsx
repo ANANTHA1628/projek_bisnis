@@ -9,35 +9,11 @@ export default function AppearanceView() {
   const themes = [
     {
       id: 'dark',
-      name: 'Dark Navy (Default)',
-      desc: 'High-tech modern POS, seimbang dan nyaman di mata',
-      bg: '#0c1017',
-      card: '#131a29',
-      border: '#2563eb'
-    },
-    {
-      id: 'cyber',
-      name: 'Cyberpunk Neon',
-      desc: 'Nuansa neon cyan futuristik khas arcade & coffee bar modern',
-      bg: '#060913',
-      card: '#0b1326',
-      border: '#06b6d4'
-    },
-    {
-      id: 'oled',
-      name: 'Pitch Black OLED',
-      desc: 'Hitam pekat hemat baterai tablet & kontras maksimal',
-      bg: '#000000',
-      card: '#0c0c10',
-      border: '#3b82f6'
-    },
-    {
-      id: 'coffee',
-      name: 'Artisan Coffee',
-      desc: 'Nuansa hangat biji kopi & karamel khas café barista',
-      bg: '#140d09',
-      card: '#201610',
-      border: '#d97706'
+      name: 'Titanium Emerald (Default)',
+      desc: 'High-tech modern POS dengan aksen emerald mint segar, mewah dan nyaman di mata',
+      bg: '#080c14',
+      card: '#0f1523',
+      border: '#10b981'
     },
     {
       id: 'forest',
@@ -48,6 +24,22 @@ export default function AppearanceView() {
       border: '#10b981'
     },
     {
+      id: 'coffee',
+      name: 'Artisan Coffee',
+      desc: 'Nuansa hangat biji kopi & karamel khas café barista',
+      bg: '#140d09',
+      card: '#201610',
+      border: '#d97706'
+    },
+    {
+      id: 'cyber',
+      name: 'Cyberpunk Neon',
+      desc: 'Nuansa neon cyan futuristik khas arcade & coffee bar modern',
+      bg: '#060913',
+      card: '#0b1326',
+      border: '#06b6d4'
+    },
+    {
       id: 'violet',
       name: 'Royal Violet',
       desc: 'Warna ungu elegan khas lounge & kafe malam',
@@ -56,22 +48,30 @@ export default function AppearanceView() {
       border: '#8b5cf6'
     },
     {
+      id: 'oled',
+      name: 'Pitch Black OLED',
+      desc: 'Hitam pekat hemat baterai tablet & kontras maksimal',
+      bg: '#000000',
+      card: '#0c0c10',
+      border: '#10b981'
+    },
+    {
       id: 'light',
       name: 'Clean Light',
       desc: 'Tema terang bersih cocok untuk area outdoor siang hari',
       bg: '#f1f5f9',
       card: '#ffffff',
-      border: '#2563eb'
+      border: '#10b981'
     }
   ];
 
   const accentColors = [
-    { id: '#2563eb', name: 'Blue Electric', hex: '#2563eb' },
-    { id: '#10b981', name: 'Emerald Green', hex: '#10b981' },
+    { id: '#10b981', name: 'Emerald Mint (Default)', hex: '#10b981' },
     { id: '#f59e0b', name: 'Amber Gold', hex: '#f59e0b' },
     { id: '#8b5cf6', name: 'Royal Purple', hex: '#8b5cf6' },
-    { id: '#ec4899', name: 'Rose Pink', hex: '#ec4899' },
-    { id: '#06b6d4', name: 'Cyan Neon', hex: '#06b6d4' }
+    { id: '#06b6d4', name: 'Cyan Neon', hex: '#06b6d4' },
+    { id: '#14b8a6', name: 'Teal Jade', hex: '#14b8a6' },
+    { id: '#ec4899', name: 'Rose Pink', hex: '#ec4899' }
   ];
 
   const handleSelectTheme = (t) => {
@@ -115,9 +115,9 @@ export default function AppearanceView() {
                 key={t.id}
                 className="p-4 rounded-xl border cursor-pointer transition-all flex flex-col justify-between"
                 style={{
-                  borderColor: isActive ? 'var(--accent-blue, #2563eb)' : 'var(--border-subtle, rgba(255,255,255,0.08))',
-                  backgroundColor: isActive ? 'var(--bg-card-alt, rgba(37,99,235,0.12))' : 'var(--bg-card, #111522)',
-                  boxShadow: isActive ? '0 0 16px rgba(37, 99, 235, 0.25)' : 'none'
+                  borderColor: isActive ? 'var(--accent-blue, #10b981)' : 'var(--border-subtle, rgba(255,255,255,0.08))',
+                  backgroundColor: isActive ? 'var(--bg-card-alt, rgba(16,185,129,0.12))' : 'var(--bg-card, #111522)',
+                  boxShadow: isActive ? '0 0 16px rgba(16, 185, 129, 0.25)' : 'none'
                 }}
                 onClick={() => handleSelectTheme(t)}
               >
@@ -132,7 +132,7 @@ export default function AppearanceView() {
                       {isActive && (
                         <span
                           className="w-5 h-5 rounded-full text-white flex items-center justify-center shadow"
-                          style={{ backgroundColor: 'var(--accent-blue, #2563eb)' }}
+                          style={{ backgroundColor: 'var(--accent-blue, #10b981)' }}
                         >
                           <Check size={12} />
                         </span>
@@ -174,7 +174,7 @@ export default function AppearanceView() {
 
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3">
           {accentColors.map((ac) => {
-            const isSelected = (themeSettings.accentColor || '#2563eb') === ac.hex;
+            const isSelected = (themeSettings.accentColor || '#10b981') === ac.hex;
             return (
               <div
                 key={ac.id}

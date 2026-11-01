@@ -37,11 +37,28 @@ export function PosProvider({ children }) {
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [printerSize, setPrinterSize] = useState('58mm'); // '58mm' | '80mm' (D6)
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(() => {
+    try {
+      return localStorage.getItem('posa_sidebar_collapsed') === 'true';
+    } catch {
+      return false;
+    }
+  });
 
-  // Default Theme Configuration
+  const toggleSidebar = () => {
+    setSidebarCollapsed((prev) => {
+      const next = !prev;
+      try {
+        localStorage.setItem('posa_sidebar_collapsed', String(next));
+      } catch {}
+      return next;
+    });
+  };
+
+  // Default Theme Configuration - Modern Emerald Mint (Non-Blue)
   const DEFAULT_THEME = {
     theme: 'dark', // 'dark' | 'oled' | 'coffee' | 'forest' | 'violet' | 'light'
-    accentColor: '#2563eb',
+    accentColor: '#10b981', // Emerald Mint
     fontScale: 'normal', // 'compact' | 'normal' | 'large'
     soundEnabled: true,
     animationsEnabled: true,
@@ -62,7 +79,15 @@ export function PosProvider({ children }) {
   const [themeSettings, setThemeSettings] = useState(() => {
     try {
       const saved = localStorage.getItem('posa_theme');
-      if (saved) return { ...DEFAULT_THEME, ...JSON.parse(saved) };
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        // Otomatis migrasi warna lama yang biru ke emerald mint modern
+        if (parsed.accentColor === '#2563eb' || parsed.accentColor === '#3b82f6') {
+          parsed.accentColor = '#10b981';
+          localStorage.setItem('posa_theme', JSON.stringify(parsed));
+        }
+        return { ...DEFAULT_THEME, ...parsed };
+      }
     } catch {
       // fallback
     }
@@ -860,6 +885,9 @@ export function PosProvider({ children }) {
     setPrinterSize,
     mobileSidebarOpen,
     setMobileSidebarOpen,
+    sidebarCollapsed,
+    setSidebarCollapsed,
+    toggleSidebar,
     settings,
     setSettings,
     products,

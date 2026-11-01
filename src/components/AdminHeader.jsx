@@ -1,21 +1,38 @@
 import React from 'react';
 import { usePos } from '../context/PosContext';
-import { Maximize2, Minimize2, Menu } from 'lucide-react';
+import { Maximize2, Minimize2, PanelLeftClose, PanelLeftOpen, Menu } from 'lucide-react';
 
 export default function AdminHeader({ title, children }) {
-  const { language, setLanguage, isFullscreen, toggleFullscreen, currentUser, setMobileSidebarOpen } = usePos();
+  const {
+    language,
+    setLanguage,
+    isFullscreen,
+    toggleFullscreen,
+    currentUser,
+    setMobileSidebarOpen,
+    sidebarCollapsed,
+    toggleSidebar
+  } = usePos();
+
+  const handleToggle = () => {
+    if (window.innerWidth < 1024) {
+      setMobileSidebarOpen(true);
+    } else {
+      toggleSidebar();
+    }
+  };
 
   return (
     <div className="posa-admin-top-header">
       <div className="posa-header-title-box">
         <button
           type="button"
-          className="posa-mobile-menu-btn"
-          onClick={() => setMobileSidebarOpen(true)}
-          title="Menu Navigasi"
-          aria-label="Buka Menu"
+          className="posa-sidebar-toggle-btn"
+          onClick={handleToggle}
+          title={sidebarCollapsed ? 'Buka Sidebar (Slide Buka)' : 'Tutup Sidebar (Slide Tutup)'}
+          aria-label="Toggle Sidebar"
         >
-          <Menu size={20} />
+          {sidebarCollapsed ? <PanelLeftOpen size={19} /> : <PanelLeftClose size={19} />}
         </button>
         <h1 className="posa-header-title">{title}</h1>
         {children}

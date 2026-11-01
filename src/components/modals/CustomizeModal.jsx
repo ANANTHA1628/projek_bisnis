@@ -124,8 +124,8 @@ export default function CustomizeModal() {
                       alignItems: 'center',
                       justifyContent: 'space-between',
                       padding: '10px 12px',
-                      backgroundColor: isSelected ? 'rgba(37, 99, 235, 0.15)' : '#162033',
-                      border: `1px solid ${isSelected ? '#3b82f6' : 'var(--border-subtle)'}`,
+                      backgroundColor: isSelected ? 'var(--accent-blue-subtle, rgba(16, 185, 129, 0.15))' : '#162033',
+                      border: `1px solid ${isSelected ? 'var(--accent-blue, #10b981)' : 'var(--border-subtle)'}`,
                       borderRadius: '8px',
                       cursor: 'pointer'
                     }}
@@ -135,13 +135,13 @@ export default function CustomizeModal() {
                         type="checkbox"
                         checked={isSelected}
                         onChange={() => toggleModifier(mod)}
-                        style={{ width: '16px', height: '16px', accentColor: '#2563eb' }}
+                        style={{ width: '16px', height: '16px', accentColor: 'var(--accent-blue, #10b981)' }}
                       />
                       <span style={{ fontSize: '13px', fontWeight: isSelected ? 600 : 400, color: 'var(--text-primary)' }}>
                         {mod.name}
                       </span>
                     </div>
-                    <span style={{ fontSize: '12.5px', fontWeight: 700, color: '#60a5fa' }}>
+                    <span style={{ fontSize: '12.5px', fontWeight: 700, color: 'var(--accent-blue, #10b981)' }}>
                       +{formatRupiah(mod.priceDelta)}
                     </span>
                   </label>

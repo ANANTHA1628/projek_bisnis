@@ -105,7 +105,7 @@ export default function KasirView() {
               {openBills.length > 0 && (
                 <span
                   style={{
-                    backgroundColor: '#2563eb',
+                    backgroundColor: 'var(--accent-blue)',
                     color: '#fff',
                     borderRadius: '50%',
                     padding: '1px 6px',
@@ -255,11 +255,11 @@ export default function KasirView() {
           <div
             style={{
               padding: '6px 12px',
-              backgroundColor: 'rgba(37, 99, 235, 0.1)',
-              border: '1px solid rgba(37, 99, 235, 0.25)',
+              backgroundColor: 'var(--accent-blue-subtle, rgba(16, 185, 129, 0.1))',
+              border: '1px solid var(--accent-blue, #10b981)',
               borderRadius: '6px',
               fontSize: '11.5px',
-              color: '#60a5fa',
+              color: 'var(--accent-blue, #10b981)',
               marginBottom: '10px'
             }}
           >

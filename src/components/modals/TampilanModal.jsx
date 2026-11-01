@@ -17,30 +17,12 @@ import {
 const PRESET_THEMES = [
   {
     id: 'dark',
-    name: 'Dark Slate (Default)',
-    desc: 'Nuansa modern high-tech POS dengan kontras seimbang',
-    bg: '#0c1017',
-    card: '#131a29',
-    accent: '#2563eb',
+    name: 'Titanium Mint (Default)',
+    desc: 'Nuansa modern high-tech POS dengan aksen emerald mint segar & kontras seimbang',
+    bg: '#080c14',
+    card: '#0f1523',
+    accent: '#10b981',
     text: '#f8fafc'
-  },
-  {
-    id: 'oled',
-    name: 'OLED Pure Black',
-    desc: 'Hitam pekat hemat daya baterai layar tablet & kontras maksimal',
-    bg: '#000000',
-    card: '#0d0d0f',
-    accent: '#3b82f6',
-    text: '#ffffff'
-  },
-  {
-    id: 'coffee',
-    name: 'Espresso Roast (Coffee)',
-    desc: 'Gradasi hangat biji kopi & karamel untuk coffee shop autentik',
-    bg: '#140e0b',
-    card: '#201712',
-    accent: '#d97706',
-    text: '#fef3c7'
   },
   {
     id: 'forest',
@@ -52,6 +34,15 @@ const PRESET_THEMES = [
     text: '#ecfdf5'
   },
   {
+    id: 'coffee',
+    name: 'Espresso Roast (Coffee)',
+    desc: 'Gradasi hangat biji kopi & karamel untuk coffee shop autentik',
+    bg: '#140e0b',
+    card: '#201712',
+    accent: '#d97706',
+    text: '#fef3c7'
+  },
+  {
     id: 'violet',
     name: 'Royal Violet (Bistro)',
     desc: 'Sentuhan warna ungu elegan khas lounge & kafe malam',
@@ -61,21 +52,30 @@ const PRESET_THEMES = [
     text: '#f5f3ff'
   },
   {
+    id: 'oled',
+    name: 'OLED Pure Black',
+    desc: 'Hitam pekat hemat daya baterai layar tablet & kontras maksimal',
+    bg: '#000000',
+    card: '#0d0d0f',
+    accent: '#10b981',
+    text: '#ffffff'
+  },
+  {
     id: 'light',
     name: 'Clean Light (Siang Hari)',
     desc: 'Mode terang bersih cocok untuk area kasir outdoor terkena matahari',
     bg: '#f4f6fa',
     card: '#ffffff',
-    accent: '#2563eb',
+    accent: '#10b981',
     text: '#0f172a'
   }
 ];
 
 const ACCENT_COLORS = [
-  { id: '#2563eb', name: 'Royal Blue', color: '#2563eb' },
-  { id: '#10b981', name: 'Emerald', color: '#10b981' },
+  { id: '#10b981', name: 'Emerald Mint (Default)', color: '#10b981' },
   { id: '#f59e0b', name: 'Amber Gold', color: '#f59e0b' },
   { id: '#8b5cf6', name: 'Violet', color: '#8b5cf6' },
+  { id: '#14b8a6', name: 'Teal Jade', color: '#14b8a6' },
   { id: '#f43f5e', name: 'Rose Red', color: '#f43f5e' },
   { id: '#06b6d4', name: 'Cyan Neon', color: '#06b6d4' }
 ];
@@ -107,7 +107,7 @@ export default function TampilanModal() {
   const handleReset = () => {
     updateThemeSettings({
       theme: 'dark',
-      accentColor: '#2563eb',
+      accentColor: '#10b981',
       fontScale: 'normal',
       soundEnabled: true,
       animationsEnabled: true,
@@ -191,7 +191,7 @@ export default function TampilanModal() {
                     onClick={() => handleSelectTheme(th.id)}
                     style={{
                       border: isActive
-                        ? '2px solid var(--accent-blue, #2563eb)'
+                        ? '2px solid var(--accent-blue, #10b981)'
                         : '1px solid var(--border-subtle, rgba(255,255,255,0.08))',
                       borderRadius: '10px',
                       padding: '12px',
@@ -241,7 +241,7 @@ export default function TampilanModal() {
                       {isActive && (
                         <div
                           style={{
-                            backgroundColor: 'var(--accent-blue, #2563eb)',
+                            backgroundColor: 'var(--accent-blue, #10b981)',
                             borderRadius: '50%',
                             width: '20px',
                             height: '20px',
@@ -356,7 +356,7 @@ export default function TampilanModal() {
                       cursor: 'pointer',
                       backgroundColor:
                         themeSettings.fontScale === s.id
-                          ? 'var(--accent-blue, #2563eb)'
+                          ? 'var(--accent-blue, #10b981)'
                           : 'var(--bg-pill, #192236)',
                       color: themeSettings.fontScale === s.id ? '#ffffff' : 'var(--text-secondary)'
                     }}
@@ -474,7 +474,7 @@ export default function TampilanModal() {
                 </span>
                 <button
                   style={{
-                    backgroundColor: 'var(--accent-blue, #2563eb)',
+                    backgroundColor: 'var(--accent-blue, #10b981)',
                     color: '#ffffff',
                     border: 'none',
                     borderRadius: '6px',

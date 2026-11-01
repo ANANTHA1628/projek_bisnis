@@ -39,9 +39,9 @@ export default function OpenBillsModal() {
             <button
               className="buka-restock-btn"
               style={{
-                backgroundColor: 'rgba(37, 99, 235, 0.15)',
-                borderColor: '#3b82f6',
-                color: '#60a5fa',
+                backgroundColor: 'var(--accent-blue-subtle, rgba(16, 185, 129, 0.15))',
+                borderColor: 'var(--accent-blue, #10b981)',
+                color: 'var(--accent-blue, #10b981)',
                 marginTop: 0
               }}
               onClick={() => {

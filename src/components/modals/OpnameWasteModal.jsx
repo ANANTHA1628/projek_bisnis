@@ -49,7 +49,7 @@ export default function OpnameWasteModal() {
       <div className="modal-dialog-box" style={{ maxWidth: '440px' }}>
         <div className="modal-header">
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            {isWasteMode ? <Trash2 size={18} color="#ef4444" /> : <ClipboardCheck size={18} color="#3b82f6" />}
+            {isWasteMode ? <Trash2 size={18} color="#ef4444" /> : <ClipboardCheck size={18} color="var(--accent-blue, #10b981)" />}
             <span className="modal-title">
               {isWasteMode ? 'Catat Buang Bahan (Waste)' : 'Stok Opname (Hitung Fisik)'}
             </span>

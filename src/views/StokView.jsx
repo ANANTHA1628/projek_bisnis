@@ -193,7 +193,7 @@ export default function StokView() {
               <div style={{ display: 'flex', gap: '8px', marginLeft: 'auto' }}>
                 <button
                   className="kasir-action-pill-btn"
-                  style={{ backgroundColor: 'rgba(37, 99, 235, 0.15)', borderColor: '#3b82f6', color: '#60a5fa' }}
+                  style={{ backgroundColor: 'var(--accent-blue-subtle, rgba(16, 185, 129, 0.15))', borderColor: 'var(--accent-blue, #10b981)', color: 'var(--accent-blue, #10b981)' }}
                   onClick={() => setShowRestockModal(true)}
                 >
                   <PackageCheck size={15} />
@@ -475,7 +475,7 @@ export default function StokView() {
                   backgroundColor: '#162033',
                   borderRadius: '12px',
                   padding: '20px',
-                  border: `1px solid ${isSimWarning ? '#ef4444' : '#3b82f6'}`,
+                  border: `1px solid ${isSimWarning ? '#ef4444' : 'var(--accent-blue, #10b981)'}`,
                   display: 'flex',
                   flexDirection: 'column',
                   justifyContent: 'space-between'
@@ -483,7 +483,7 @@ export default function StokView() {
               >
                 <div>
                   <div style={{ fontSize: '12px', color: 'var(--text-muted)' }}>HASIL SIMULASI R&D</div>
-                  <div style={{ fontSize: '24px', fontWeight: 800, color: '#60a5fa', margin: '4px 0 12px 0' }}>
+                  <div style={{ fontSize: '24px', fontWeight: 800, color: 'var(--accent-blue, #10b981)', margin: '4px 0 12px 0' }}>
                     HPP: {formatRupiah(simulatedHpp)}
                   </div>
 

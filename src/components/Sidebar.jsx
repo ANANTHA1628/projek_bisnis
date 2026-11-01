@@ -5,6 +5,7 @@ import {
   ChevronRight,
   Store,
   LogOut,
+  PanelLeftClose,
   X
 } from 'lucide-react';
 
@@ -19,7 +20,9 @@ export default function Sidebar() {
     setLogoutTarget,
     showToast,
     mobileSidebarOpen,
-    setMobileSidebarOpen
+    setMobileSidebarOpen,
+    sidebarCollapsed,
+    toggleSidebar
   } = usePos();
 
   // Accordion state
@@ -55,13 +58,22 @@ export default function Sidebar() {
           onClick={() => setMobileSidebarOpen(false)}
         />
       )}
-      <aside className={`posa-admin-sidebar ${mobileSidebarOpen ? 'mobile-open' : ''}`}>
+      <aside className={`posa-admin-sidebar ${mobileSidebarOpen ? 'mobile-open' : ''} ${sidebarCollapsed ? 'collapsed' : ''}`}>
         {/* Brand Header */}
         <div className="posa-sidebar-brand">
           <div className="posa-sidebar-brand-left">
             <span className="posa-brand-title">posa</span>
             <span className="posa-brand-badge">ADMIN</span>
           </div>
+          <button
+            type="button"
+            className="posa-desktop-collapse-btn"
+            onClick={toggleSidebar}
+            title="Tutup / Sembunyikan Sidebar"
+            aria-label="Tutup Sidebar"
+          >
+            <PanelLeftClose size={18} />
+          </button>
           <button
             type="button"
             className="posa-sidebar-close-btn"

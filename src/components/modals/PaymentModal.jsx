@@ -217,7 +217,7 @@ export default function PaymentModal() {
                       fontSize: '11px',
                       fontWeight: discountMode === 'target_price' ? 700 : 500,
                       color: discountMode === 'target_price' ? '#ffffff' : '#94a3b8',
-                      backgroundColor: discountMode === 'target_price' ? '#2563eb' : 'transparent',
+                      backgroundColor: discountMode === 'target_price' ? 'var(--accent-blue, #10b981)' : 'transparent',
                       borderRadius: '6px'
                     }}
                     onClick={() => { setDiscountMode('target_price'); setDiscountInputVal(''); }}
@@ -232,7 +232,7 @@ export default function PaymentModal() {
                       fontSize: '11px',
                       fontWeight: discountMode === 'nominal' ? 700 : 500,
                       color: discountMode === 'nominal' ? '#ffffff' : '#94a3b8',
-                      backgroundColor: discountMode === 'nominal' ? '#2563eb' : 'transparent',
+                      backgroundColor: discountMode === 'nominal' ? 'var(--accent-blue, #10b981)' : 'transparent',
                       borderRadius: '6px'
                     }}
                     onClick={() => { setDiscountMode('nominal'); setDiscountInputVal(''); }}
@@ -247,7 +247,7 @@ export default function PaymentModal() {
                       fontSize: '11px',
                       fontWeight: discountMode === 'percent' ? 700 : 500,
                       color: discountMode === 'percent' ? '#ffffff' : '#94a3b8',
-                      backgroundColor: discountMode === 'percent' ? '#2563eb' : 'transparent',
+                      backgroundColor: discountMode === 'percent' ? 'var(--accent-blue, #10b981)' : 'transparent',
                       borderRadius: '6px'
                     }}
                     onClick={() => { setDiscountMode('percent'); setDiscountInputVal(''); }}
