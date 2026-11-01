@@ -6,7 +6,6 @@ import {
   ChevronLeft,
   Store,
   LogOut,
-  PanelLeftClose,
   X
 } from 'lucide-react';
 
@@ -88,15 +87,6 @@ export default function Sidebar() {
             <span className="posa-brand-title">posa</span>
             <span className="posa-brand-badge">ADMIN</span>
           </div>
-          <button
-            type="button"
-            className="posa-desktop-collapse-btn"
-            onClick={toggleSidebar}
-            title="Tutup / Sembunyikan Sidebar"
-            aria-label="Tutup Sidebar"
-          >
-            <PanelLeftClose size={18} />
-          </button>
           <button
             type="button"
             className="posa-sidebar-close-btn"
