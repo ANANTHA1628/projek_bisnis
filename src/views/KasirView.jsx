@@ -223,29 +223,31 @@ export default function KasirView() {
           </div>
         )}
 
-        {/* Search Bar */}
-        <div className="kasir-search-bar">
-          <Search size={17} className="kasir-search-icon" />
-          <input
-            type="text"
-            className="kasir-search-input"
-            placeholder="Cari menu..."
-            value={menuSearch}
-            onChange={(e) => setMenuSearch(e.target.value)}
-          />
-        </div>
+        {/* Kasir Top Filter Bar (Search + Categories in one unified clean strip) */}
+        <div className="kasir-controls-strip">
+          <div className="kasir-search-bar">
+            <Search size={16} className="kasir-search-icon" />
+            <input
+              type="text"
+              className="kasir-search-input"
+              placeholder="Cari menu / scan barcode..."
+              value={menuSearch}
+              onChange={(e) => setMenuSearch(e.target.value)}
+            />
+          </div>
 
-        {/* Categories Pills */}
-        <div className="kasir-categories-row">
-          {categories.map((cat) => (
-            <button
-              key={cat}
-              className={`category-pill ${activeCategory === cat ? 'active' : ''}`}
-              onClick={() => setActiveCategory(cat)}
-            >
-              {cat}
-            </button>
-          ))}
+          {/* Categories Pills */}
+          <div className="kasir-categories-row">
+            {categories.map((cat) => (
+              <button
+                key={cat}
+                className={`category-pill ${activeCategory === cat ? 'active' : ''}`}
+                onClick={() => setActiveCategory(cat)}
+              >
+                {cat}
+              </button>
+            ))}
+          </div>
         </div>
 
         {/* Channel Pricing Notice Banner */}

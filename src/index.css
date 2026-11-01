@@ -465,60 +465,75 @@ input:focus, select:focus, textarea:focus {
   transform: translateY(-1px);
 }
 
-/* Kasir Search & Filter */
+/* Kasir Search & Filter Bar Unified Strip */
+.kasir-controls-strip {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 20px;
+  padding: 8px 12px;
+  background-color: var(--bg-card, #131a29);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+}
+
 .kasir-search-bar {
   display: flex;
   align-items: center;
   position: relative;
-  margin-bottom: 16px;
+  min-width: 240px;
+  max-width: 300px;
+  margin-bottom: 0;
 }
 
 .kasir-search-icon {
   position: absolute;
-  left: 14px;
+  left: 12px;
   color: var(--text-muted);
   pointer-events: none;
 }
 
 .kasir-search-input {
   width: 100%;
-  padding: 12px 18px 12px 42px;
-  background-color: var(--bg-card);
-  border: 1px solid var(--border-subtle, var(--border-card));
-  border-radius: var(--radius-md);
-  font-size: 13.5px;
+  padding: 8px 14px 8px 36px;
+  background-color: var(--bg-app, #0c1017);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-pill);
+  font-size: 13px;
   color: var(--text-primary);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   transition: all 0.2s ease;
 }
 
 .kasir-search-input:focus {
   border-color: var(--accent-blue);
-  box-shadow: 0 0 12px var(--accent-blue-subtle);
+  box-shadow: 0 0 10px var(--accent-blue-subtle);
   outline: none;
 }
 
 .kasir-search-input::placeholder {
   color: var(--text-muted);
+  font-size: 12px;
 }
 
 .kasir-categories-row {
   display: flex;
   align-items: center;
-  gap: 8px;
-  margin-bottom: 20px;
+  gap: 6px;
+  margin-bottom: 0;
   overflow-x: auto;
-  padding-bottom: 6px;
+  padding-bottom: 2px;
+  flex: 1;
 }
 
 .category-pill {
-  padding: 8px 20px;
+  padding: 6px 16px;
   border-radius: var(--radius-pill);
-  background-color: var(--bg-card, #162033);
+  background-color: transparent;
   color: var(--text-secondary);
-  font-size: 13px;
+  font-size: 12.5px;
   font-weight: 600;
-  border: 1px solid var(--border-subtle, transparent);
+  border: 1px solid transparent;
   white-space: nowrap;
   transition: all 0.2s ease;
 }
@@ -526,7 +541,6 @@ input:focus, select:focus, textarea:focus {
 .category-pill:hover {
   background-color: var(--bg-pill-hover, #1f2d48);
   color: var(--text-primary);
-  border-color: var(--border-subtle);
 }
 
 .category-pill.active {
@@ -534,7 +548,7 @@ input:focus, select:focus, textarea:focus {
   color: #ffffff;
   border-color: var(--accent-blue);
   font-weight: 700;
-  box-shadow: 0 3px 12px var(--accent-blue-subtle, rgba(37, 99, 235, 0.4));
+  box-shadow: 0 2px 10px var(--accent-blue-subtle, rgba(37, 99, 235, 0.4));
 }
 
 /* Menu Grid */
@@ -2837,11 +2851,11 @@ input:focus, select:focus, textarea:focus {
   border: 1px solid rgba(239, 68, 68, 0.25);
 }
 
-/* KIOSK LOCK PIN SCREEN (WhatsApp Image 2026-10-31 at 21.47.43.jpeg) */
+/* KIOSK LOCK PIN SCREEN */
 .kiosk-lock-overlay {
   position: fixed;
   inset: 0;
-  background-color: #0b0e17;
+  background: radial-gradient(circle at 50% 30%, var(--bg-card, #111726) 0%, var(--bg-app, #070a12) 100%);
   display: flex;
   flex-direction: column;
   z-index: 999;
@@ -2852,19 +2866,28 @@ input:focus, select:focus, textarea:focus {
   justify-content: space-between;
   align-items: center;
   padding: 24px 36px;
+  background: transparent;
 }
 
 .kiosk-header-btn {
   display: flex;
   align-items: center;
   gap: 8px;
-  padding: 8px 14px;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 8px;
-  color: #cbd5e1;
+  padding: 8px 16px;
+  background: var(--bg-card, rgba(255, 255, 255, 0.05));
+  border: 1px solid var(--border-subtle, rgba(255, 255, 255, 0.08));
+  border-radius: var(--radius-pill);
+  color: var(--text-secondary, #cbd5e1);
   font-size: 13px;
+  font-weight: 500;
   cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.kiosk-header-btn:hover {
+  background: var(--bg-pill-hover);
+  color: var(--text-primary);
+  border-color: var(--border-subtle);
 }
 
 .kiosk-top-tools {
@@ -2874,40 +2897,48 @@ input:focus, select:focus, textarea:focus {
 }
 
 .kiosk-header-icon-btn {
-  width: 36px;
-  height: 36px;
-  border-radius: 8px;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  width: 38px;
+  height: 38px;
+  border-radius: var(--radius-pill);
+  background: var(--bg-card, rgba(255, 255, 255, 0.05));
+  border: 1px solid var(--border-subtle, rgba(255, 255, 255, 0.08));
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #cbd5e1;
+  color: var(--text-secondary, #cbd5e1);
   cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.kiosk-header-icon-btn:hover {
+  color: var(--text-primary);
+  border-color: var(--accent-blue);
 }
 
 .kiosk-lang-toggle {
   display: flex;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 8px;
-  padding: 2px;
+  background: var(--bg-card, rgba(255, 255, 255, 0.05));
+  border: 1px solid var(--border-subtle, rgba(255, 255, 255, 0.08));
+  border-radius: var(--radius-pill);
+  padding: 3px;
 }
 
 .kiosk-lang-btn {
-  padding: 5px 12px;
+  padding: 5px 14px;
   font-size: 12px;
   font-weight: 700;
-  color: #94a3b8;
-  border-radius: 6px;
+  color: var(--text-muted, #94a3b8);
+  border-radius: var(--radius-pill);
   cursor: pointer;
   background: transparent;
   border: none;
+  transition: all 0.2s ease;
 }
 
 .kiosk-lang-btn.active {
-  background-color: #2563eb;
+  background-color: var(--accent-blue, #2563eb);
   color: #ffffff;
+  box-shadow: 0 2px 8px var(--accent-blue-subtle);
 }
 
 .kiosk-lock-body {
@@ -2915,115 +2946,152 @@ input:focus, select:focus, textarea:focus {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 140px;
+  gap: 120px;
   padding: 0 40px;
 }
 
+.kiosk-lock-info {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
 .kiosk-logo-text {
-  font-size: 26px;
-  font-weight: 700;
-  color: #ffffff;
+  font-size: 28px;
+  font-weight: 900;
+  color: var(--text-primary, #ffffff);
   margin-bottom: 4px;
+  letter-spacing: -1px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.kiosk-logo-text::after {
+  content: '';
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: var(--accent-blue);
+  box-shadow: 0 0 10px var(--accent-blue);
 }
 
 .kiosk-store-title {
-  font-size: 32px;
-  font-weight: 700;
-  color: #ffffff;
-  margin-bottom: 6px;
-  letter-spacing: -0.5px;
+  font-size: 34px;
+  font-weight: 800;
+  color: var(--text-primary, #ffffff);
+  margin-bottom: 8px;
+  letter-spacing: -0.8px;
 }
 
 .kiosk-pin-instructions {
-  font-size: 14px;
-  color: #94a3b8;
-  margin-bottom: 24px;
+  font-size: 14.5px;
+  color: var(--text-muted, #94a3b8);
+  margin-bottom: 28px;
+  font-weight: 500;
 }
 
 .kiosk-pin-dots {
   display: flex;
-  gap: 14px;
+  gap: 16px;
   margin-bottom: 14px;
+  padding: 12px 24px;
+  background: var(--bg-card, rgba(0, 0, 0, 0.25));
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-pill);
 }
 
 .pin-dot {
   width: 14px;
   height: 14px;
   border-radius: 50%;
-  border: 2px solid #334155;
-  transition: all 0.15s;
+  border: 2px solid var(--border-subtle, #334155);
+  background: transparent;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .pin-dot.filled {
-  background-color: #3b82f6;
-  border-color: #3b82f6;
-  box-shadow: 0 0 10px rgba(59, 130, 246, 0.6);
+  background-color: var(--accent-blue, #3b82f6);
+  border-color: var(--accent-blue, #3b82f6);
+  box-shadow: 0 0 14px var(--accent-blue, rgba(59, 130, 246, 0.8));
+  transform: scale(1.15);
 }
 
 .kiosk-quick-hint {
   font-size: 12px;
-  color: #64748b;
+  color: var(--text-muted, #64748b);
 }
 
-.kiosk-quick-hint code {
-  color: #60a5fa;
-  background: #161c2d;
-  padding: 2px 6px;
-  border-radius: 4px;
+.kiosk-keypad-container {
+  padding: 30px;
+  background: var(--bg-card, rgba(16, 22, 36, 0.7));
+  border: 1px solid var(--border-subtle);
+  border-radius: 28px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4), 0 0 30px var(--accent-blue-subtle, rgba(37, 99, 235, 0.08));
+  backdrop-filter: blur(16px);
 }
 
 .kiosk-keypad-grid {
   display: grid;
-  grid-template-columns: repeat(3, 80px);
-  gap: 20px;
+  grid-template-columns: repeat(3, 84px);
+  gap: 18px;
 }
 
 .kiosk-key-btn {
-  width: 80px;
-  height: 80px;
+  width: 84px;
+  height: 84px;
   border-radius: 50%;
   background-color: var(--bg-card-alt, #192033);
   color: var(--text-primary, #ffffff);
   font-size: 28px;
-  font-weight: 600;
+  font-weight: 700;
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 1px solid var(--border-subtle, rgba(255, 255, 255, 0.04));
+  border: 1px solid var(--border-subtle, rgba(255, 255, 255, 0.06));
   cursor: pointer;
-  transition: all 0.15s;
+  transition: all 0.18s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
 }
 
 .kiosk-key-btn:hover {
   background-color: var(--bg-pill-hover, #242e49);
-  transform: scale(1.05);
+  border-color: var(--accent-blue);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25), 0 0 12px var(--accent-blue-subtle);
 }
 
 .kiosk-key-btn:active {
   background-color: var(--accent-blue, #2563eb);
+  color: #ffffff;
+  transform: scale(0.96);
 }
 
 .kiosk-key-btn.text-action {
   font-size: 15px;
-  color: #94a3b8;
+  font-weight: 600;
+  color: var(--text-secondary, #94a3b8);
   background: transparent;
-  border: none;
+  border: 1px solid transparent;
 }
 
 .kiosk-key-btn.text-action:hover {
-  color: #ffffff;
-  background: rgba(255, 255, 255, 0.05);
+  color: var(--text-primary);
+  background: var(--bg-card-alt);
+  border-color: var(--border-subtle);
 }
 
 .kiosk-key-btn.icon-action {
-  color: #94a3b8;
+  color: var(--text-secondary, #94a3b8);
   background: transparent;
-  border: none;
+  border: 1px solid transparent;
 }
 
 .kiosk-key-btn.icon-action:hover {
-  color: #ffffff;
-  background: rgba(255, 255, 255, 0.05);
+  color: var(--text-primary);
+  background: var(--bg-card-alt);
+  border-color: var(--border-subtle);
 }
 
 .shake {
