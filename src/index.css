@@ -2016,6 +2016,61 @@ input:focus, select:focus, textarea:focus {
   }
 }
 
+/* FLOATING BUBBLE SIDEBAR TOGGLE */
+.posa-sidebar-bubble-toggle {
+  position: fixed;
+  top: 80px;
+  z-index: 55;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background-color: var(--bg-card, #0f1523);
+  border: 1.5px solid var(--border-subtle, rgba(255, 255, 255, 0.12));
+  color: var(--text-secondary, #cbd5e1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4), 0 0 10px var(--accent-blue-subtle, rgba(16, 185, 129, 0.15));
+  transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+              background-color 0.2s ease,
+              border-color 0.2s ease,
+              transform 0.2s ease,
+              box-shadow 0.2s ease;
+}
+
+.posa-sidebar-bubble-toggle:hover {
+  background-color: var(--accent-blue, #10b981);
+  color: #ffffff;
+  border-color: var(--accent-blue, #10b981);
+  transform: scale(1.15);
+  box-shadow: 0 6px 18px rgba(16, 185, 129, 0.5), 0 0 12px var(--accent-blue);
+}
+
+.posa-sidebar-bubble-toggle:active {
+  transform: scale(0.95);
+}
+
+@media (min-width: 1024px) {
+  .posa-sidebar-bubble-toggle.bubble-expanded {
+    left: 224px; /* Straddling the 240px sidebar border line */
+  }
+
+  .posa-sidebar-bubble-toggle.bubble-collapsed {
+    left: 14px; /* Floating bubble on the left edge */
+    background-color: var(--accent-blue, #10b981);
+    color: #ffffff;
+    border-color: var(--accent-blue, #10b981);
+    box-shadow: 0 4px 16px rgba(16, 185, 129, 0.45);
+  }
+}
+
+@media (max-width: 1023px) {
+  .posa-sidebar-bubble-toggle {
+    display: none !important;
+  }
+}
+
 .posa-sidebar-brand {
   display: flex;
   align-items: center;

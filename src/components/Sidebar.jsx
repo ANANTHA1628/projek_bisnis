@@ -3,6 +3,7 @@ import { usePos } from '../context/PosContext';
 import {
   ChevronDown,
   ChevronRight,
+  ChevronLeft,
   Store,
   LogOut,
   PanelLeftClose,
@@ -58,6 +59,28 @@ export default function Sidebar() {
           onClick={() => setMobileSidebarOpen(false)}
         />
       )}
+
+      {/* Floating Toggle Bubble (Untuk Buka / Tutup Sidebar Slide) */}
+      <button
+        type="button"
+        className={`posa-sidebar-bubble-toggle ${sidebarCollapsed ? 'bubble-collapsed' : 'bubble-expanded'}`}
+        onClick={() => {
+          if (window.innerWidth < 1024) {
+            setMobileSidebarOpen(!mobileSidebarOpen);
+          } else {
+            toggleSidebar();
+          }
+        }}
+        title={sidebarCollapsed ? 'Buka Sidebar' : 'Tutup Sidebar'}
+        aria-label="Toggle Sidebar Bubble"
+      >
+        {sidebarCollapsed ? (
+          <ChevronRight size={16} strokeWidth={2.8} />
+        ) : (
+          <ChevronLeft size={16} strokeWidth={2.8} />
+        )}
+      </button>
+
       <aside className={`posa-admin-sidebar ${mobileSidebarOpen ? 'mobile-open' : ''} ${sidebarCollapsed ? 'collapsed' : ''}`}>
         {/* Brand Header */}
         <div className="posa-sidebar-brand">
