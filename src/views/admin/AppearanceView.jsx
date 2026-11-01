@@ -1,6 +1,6 @@
 import React from 'react';
 import AdminHeader from '../../components/AdminHeader';
-import { Check, Palette, Volume2, Sparkles, RefreshCw } from 'lucide-react';
+import { Check, Palette, Volume2, Sparkles, RefreshCw, UserCheck } from 'lucide-react';
 import { usePos } from '../../context/PosContext';
 
 export default function AppearanceView() {
@@ -71,7 +71,20 @@ export default function AppearanceView() {
     { id: '#8b5cf6', name: 'Royal Purple', hex: '#8b5cf6' },
     { id: '#06b6d4', name: 'Cyan Neon', hex: '#06b6d4' },
     { id: '#14b8a6', name: 'Teal Jade', hex: '#14b8a6' },
-    { id: '#ec4899', name: 'Rose Pink', hex: '#ec4899' }
+    { id: '#ec4899', name: 'Rose Pink', hex: '#ec4899' },
+    { id: '#ef4444', name: 'Crimson Red', hex: '#ef4444' },
+    { id: '#3b82f6', name: 'Sky Sapphire', hex: '#3b82f6' }
+  ];
+
+  const cashierNameColors = [
+    { id: 'white', name: 'Putih Bersih', hex: '#ffffff' },
+    { id: 'emerald', name: 'Emerald Mint', hex: '#10b981' },
+    { id: 'amber', name: 'Amber Gold', hex: '#f59e0b' },
+    { id: 'cyan', name: 'Cyan Neon', hex: '#06b6d4' },
+    { id: 'purple', name: 'Purple Lilac', hex: '#c084fc' },
+    { id: 'pink', name: 'Rose Candy', hex: '#f472b6' },
+    { id: 'lime', name: 'Lime Zest', hex: '#84cc16' },
+    { id: 'orange', name: 'Tangerine Sun', hex: '#fb923c' }
   ];
 
   const handleSelectTheme = (t) => {
@@ -87,6 +100,12 @@ export default function AppearanceView() {
     updateThemeSettings({ accentColor: colorHex });
     playSound?.('beep');
     showToast('Warna aksen tombol & fokus diperbarui!', 'success');
+  };
+
+  const handleSelectCashierNameColor = (colorHex) => {
+    updateThemeSettings({ userNameColor: colorHex });
+    playSound?.('beep');
+    showToast('Warna nama kasir berhasil diperbarui!', 'success');
   };
 
   return (
@@ -172,7 +191,7 @@ export default function AppearanceView() {
           Warna sorotan untuk tombol utama, indikator aktif, dan border fokus kasir.
         </p>
 
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3">
+        <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-8 gap-3">
           {accentColors.map((ac) => {
             const isSelected = (themeSettings.accentColor || '#10b981') === ac.hex;
             return (
@@ -195,6 +214,76 @@ export default function AppearanceView() {
                   {ac.name}
                 </span>
               </div>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* 3. Desain Warna Nama Kasir (Pilihan Bulat-Bulat) */}
+      <div className="posa-admin-card">
+        <div className="flex flex-wrap items-center justify-between gap-3 mb-2">
+          <div className="flex items-center gap-2">
+            <UserCheck size={18} className="text-emerald-400" />
+            <h2 className="posa-card-title">Desain Warna Nama Kasir</h2>
+          </div>
+
+          {/* Live Preview Badge */}
+          <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-[#0b0f19] border border-white/10">
+            <span className="text-xs text-slate-400">Pratinjau Nama Kasir:</span>
+            <span
+              className="text-xs font-bold px-2 py-0.5 rounded"
+              style={{
+                color: themeSettings.userNameColor || themeSettings.accentColor || '#10b981',
+                backgroundColor: 'rgba(255,255,255,0.06)'
+              }}
+            >
+              Ahmad Rafi (Kasir)
+            </span>
+          </div>
+        </div>
+
+        <p className="posa-card-subtitle mb-4">
+          Pilih warna teks khusus untuk identitas kasir yang tampil di pojok atas layar POS Kiosk dan Top Navbar Backoffice.
+        </p>
+
+        {/* Lingkaran / Bulat-Bulat Pilihan Warna */}
+        <div className="flex flex-wrap items-center gap-4 p-4 rounded-xl bg-[#0a0e1a]/60 border border-slate-800">
+          {cashierNameColors.map((cnc) => {
+            const isSelected = (themeSettings.userNameColor || '#ffffff') === cnc.hex;
+            return (
+              <button
+                key={cnc.id}
+                type="button"
+                onClick={() => handleSelectCashierNameColor(cnc.hex)}
+                className="group relative flex flex-col items-center gap-1.5 focus:outline-none"
+                title={`${cnc.name} (${cnc.hex})`}
+              >
+                <div
+                  className={`w-11 h-11 rounded-full flex items-center justify-center transition-all duration-200 transform group-hover:scale-110 shadow-lg cursor-pointer ${
+                    isSelected
+                      ? 'ring-4 ring-offset-2 ring-offset-[#0b0e17] ring-white scale-105'
+                      : 'hover:ring-2 hover:ring-white/40'
+                  }`}
+                  style={{
+                    backgroundColor: cnc.hex,
+                    boxShadow: isSelected ? `0 0 16px ${cnc.hex}80` : 'none'
+                  }}
+                >
+                  {isSelected && (
+                    <Check
+                      size={18}
+                      className={cnc.hex === '#ffffff' ? 'text-black font-bold' : 'text-white font-bold drop-shadow'}
+                    />
+                  )}
+                </div>
+                <span
+                  className={`text-[11px] font-medium transition-colors ${
+                    isSelected ? 'text-white font-bold' : 'text-slate-400 group-hover:text-slate-200'
+                  }`}
+                >
+                  {cnc.name}
+                </span>
+              </button>
             );
           })}
         </div>

@@ -59,6 +59,7 @@ export function PosProvider({ children }) {
   const DEFAULT_THEME = {
     theme: 'dark', // 'dark' | 'oled' | 'coffee' | 'forest' | 'violet' | 'light'
     accentColor: '#10b981', // Emerald Mint
+    userNameColor: '#10b981', // Custom warna nama kasir
     fontScale: 'normal', // 'compact' | 'normal' | 'large'
     soundEnabled: true,
     animationsEnabled: true,
@@ -162,6 +163,12 @@ export function PosProvider({ children }) {
       root.style.setProperty('--accent-blue', themeSettings.accentColor);
       root.style.setProperty('--border-active', themeSettings.accentColor);
       root.style.setProperty('--shadow-glow', `0 0 15px ${themeSettings.accentColor}4d`);
+    }
+
+    if (themeSettings.userNameColor) {
+      root.style.setProperty('--cashier-name-color', themeSettings.userNameColor);
+    } else {
+      root.style.setProperty('--cashier-name-color', themeSettings.accentColor || '#10b981');
     }
 
     if (themeSettings.fontScale === 'large') {

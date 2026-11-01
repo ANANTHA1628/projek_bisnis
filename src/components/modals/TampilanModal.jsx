@@ -11,7 +11,8 @@ import {
   RotateCcw,
   CheckCircle2,
   Smartphone,
-  Layers
+  Layers,
+  UserCheck
 } from 'lucide-react';
 
 const PRESET_THEMES = [
@@ -80,6 +81,17 @@ const ACCENT_COLORS = [
   { id: '#06b6d4', name: 'Cyan Neon', color: '#06b6d4' }
 ];
 
+const CASHIER_NAME_COLORS = [
+  { id: 'white', name: 'Putih Bersih', color: '#ffffff' },
+  { id: 'emerald', name: 'Emerald Mint', color: '#10b981' },
+  { id: 'amber', name: 'Amber Gold', color: '#f59e0b' },
+  { id: 'cyan', name: 'Cyan Neon', color: '#06b6d4' },
+  { id: 'purple', name: 'Purple Lilac', color: '#c084fc' },
+  { id: 'pink', name: 'Rose Candy', color: '#f472b6' },
+  { id: 'lime', name: 'Lime Zest', color: '#84cc16' },
+  { id: 'orange', name: 'Tangerine Sun', color: '#fb923c' }
+];
+
 export default function TampilanModal() {
   const {
     showTampilanModal,
@@ -104,10 +116,17 @@ export default function TampilanModal() {
     showToast('Warna aksen POS diperbarui');
   };
 
+  const handleSelectCashierColor = (colorHex) => {
+    updateThemeSettings({ userNameColor: colorHex });
+    playSound('beep');
+    showToast('Warna nama kasir diperbarui');
+  };
+
   const handleReset = () => {
     updateThemeSettings({
       theme: 'dark',
       accentColor: '#10b981',
+      userNameColor: '#10b981',
       fontScale: 'normal',
       soundEnabled: true,
       animationsEnabled: true,
@@ -313,6 +332,76 @@ export default function TampilanModal() {
                     />
                     <span>{ac.name}</span>
                     {isSelected && <Check size={13} color={ac.color} strokeWidth={3} />}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Section 2B: Desain Warna Nama Kasir (Pilihan Bulat-Bulat) */}
+          <div>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '10px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <UserCheck size={16} color="var(--accent-blue, #10b981)" />
+                <span style={{ fontWeight: 700, fontSize: '13px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                  Warna Nama Kasir
+                </span>
+              </div>
+              <span
+                style={{
+                  fontSize: '11px',
+                  fontWeight: 700,
+                  color: themeSettings.userNameColor || themeSettings.accentColor || '#10b981',
+                  backgroundColor: 'rgba(255,255,255,0.06)',
+                  padding: '2px 8px',
+                  borderRadius: '6px'
+                }}
+              >
+                Pratinjau: Kasir
+              </span>
+            </div>
+
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '12px', padding: '10px', backgroundColor: 'var(--bg-card)', borderRadius: '10px', border: '1px solid var(--border-subtle)' }}>
+              {CASHIER_NAME_COLORS.map((cnc) => {
+                const isSelected = (themeSettings.userNameColor || '#ffffff') === cnc.color;
+                return (
+                  <button
+                    key={cnc.id}
+                    onClick={() => handleSelectCashierColor(cnc.color)}
+                    title={cnc.name}
+                    style={{
+                      display: 'flex',
+                      flexDirection: 'column',
+                      alignItems: 'center',
+                      gap: '4px',
+                      background: 'none',
+                      border: 'none',
+                      cursor: 'pointer',
+                      padding: '2px'
+                    }}
+                  >
+                    <div
+                      style={{
+                        width: '32px',
+                        height: '32px',
+                        borderRadius: '50%',
+                        backgroundColor: cnc.color,
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        outline: isSelected ? '3px solid #ffffff' : 'none',
+                        outlineOffset: '2px',
+                        boxShadow: isSelected ? `0 0 12px ${cnc.color}` : 'none',
+                        transition: 'transform 0.15s ease'
+                      }}
+                    >
+                      {isSelected && (
+                        <Check size={14} color={cnc.color === '#ffffff' ? '#000000' : '#ffffff'} strokeWidth={3} />
+                      )}
+                    </div>
+                    <span style={{ fontSize: '10px', color: isSelected ? '#ffffff' : 'var(--text-secondary)', fontWeight: isSelected ? 700 : 500 }}>
+                      {cnc.name.split(' ')[0]}
+                    </span>
                   </button>
                 );
               })}

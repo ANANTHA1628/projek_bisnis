@@ -438,8 +438,9 @@ input:focus, select:focus, textarea:focus {
 .user-profile-name {
   font-size: 13px;
   font-weight: 700;
-  color: var(--text-primary);
+  color: var(--cashier-name-color, var(--text-primary));
   line-height: 1.2;
+  transition: color 0.2s ease;
 }
 
 .user-profile-role {
@@ -2302,8 +2303,9 @@ input:focus, select:focus, textarea:focus {
 .posa-user-info-text .posa-user-name {
   font-size: 12px;
   font-weight: 700;
-  color: #ffffff;
+  color: var(--cashier-name-color, #ffffff);
   line-height: 1.2;
+  transition: color 0.2s ease;
 }
 
 .posa-user-info-text .posa-user-role-tag {
@@ -4061,8 +4063,9 @@ input:focus, select:focus, textarea:focus {
 .posa-user-name {
   font-size: 12.5px;
   font-weight: 600;
-  color: var(--text-primary, #ffffff);
+  color: var(--cashier-name-color, var(--text-primary, #ffffff));
   line-height: 1.2;
+  transition: color 0.2s ease;
 }
 
 .posa-user-role-tag {
