@@ -16,6 +16,14 @@ export default function AppearanceView() {
       border: '#2563eb'
     },
     {
+      id: 'cyber',
+      name: 'Cyberpunk Neon',
+      desc: 'Nuansa neon cyan futuristik khas arcade & coffee bar modern',
+      bg: '#060913',
+      card: '#0b1326',
+      border: '#06b6d4'
+    },
+    {
       id: 'oled',
       name: 'Pitch Black OLED',
       desc: 'Hitam pekat hemat baterai tablet & kontras maksimal',
@@ -27,24 +35,24 @@ export default function AppearanceView() {
       id: 'coffee',
       name: 'Artisan Coffee',
       desc: 'Nuansa hangat biji kopi & karamel khas café barista',
-      bg: '#120d0a',
-      card: '#1f1712',
+      bg: '#140d09',
+      card: '#201610',
       border: '#d97706'
     },
     {
       id: 'forest',
       name: 'Emerald Forest',
       desc: 'Hijau botani segar menyejukkan mata kasir seharian',
-      bg: '#07130f',
-      card: '#0e221b',
+      bg: '#061510',
+      card: '#0d251d',
       border: '#10b981'
     },
     {
       id: 'violet',
       name: 'Royal Violet',
       desc: 'Warna ungu elegan khas lounge & kafe malam',
-      bg: '#0e0b17',
-      card: '#19142b',
+      bg: '#0d0918',
+      card: '#17112b',
       border: '#8b5cf6'
     },
     {
