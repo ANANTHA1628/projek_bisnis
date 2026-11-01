@@ -8,7 +8,7 @@ export const INITIAL_SETTINGS = {
   receipt_printer_size: '58mm',
   admin_pin: '1234',
   cashier_pin: '0000',
-  store_name: 'Posa Store',
+  store_name: 'posa',
   store_tagline: 'Modern Cafe & POS System',
   store_address: 'Alamat Toko Anda',
   store_phone: '081234567890',

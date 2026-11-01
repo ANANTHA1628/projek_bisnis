@@ -16,6 +16,30 @@ export default function AppearanceView() {
       border: '#10b981'
     },
     {
+      id: 'sapphire',
+      name: 'Midnight Sapphire',
+      desc: 'Biru laut dalam mewah & elegan dengan aksen royal blue bercahaya',
+      bg: '#060e1d',
+      card: '#0d1e3a',
+      border: '#3b82f6'
+    },
+    {
+      id: 'sunset',
+      name: 'Sunset Amber & Coral',
+      desc: 'Gradasi hangat jingga senja dan koral yang ceria dan berenergi',
+      bg: '#140b0f',
+      card: '#221219',
+      border: '#f97316'
+    },
+    {
+      id: 'matcha',
+      name: 'Nordic Sage & Matcha',
+      desc: 'Hijau teh matcha khas Jepang yang tenang, rapi dan estetik',
+      bg: '#0c1411',
+      card: '#15241f',
+      border: '#84cc16'
+    },
+    {
       id: 'forest',
       name: 'Emerald Forest',
       desc: 'Hijau botani segar menyejukkan mata kasir seharian',
@@ -30,6 +54,14 @@ export default function AppearanceView() {
       bg: '#140d09',
       card: '#201610',
       border: '#d97706'
+    },
+    {
+      id: 'crimson',
+      name: 'Ruby Crimson Lounge',
+      desc: 'Merah marun anggur mewah untuk restoran eksklusif & bar',
+      bg: '#14070a',
+      card: '#240d13',
+      border: '#f43f5e'
     },
     {
       id: 'cyber',
@@ -57,8 +89,8 @@ export default function AppearanceView() {
     },
     {
       id: 'light',
-      name: 'Clean Light',
-      desc: 'Tema terang bersih cocok untuk area outdoor siang hari',
+      name: 'Clean Light (Siang Hari)',
+      desc: 'Tema terang putih bersih dengan kontras font gelap yang jelas & mudah dibaca',
       bg: '#f1f5f9',
       card: '#ffffff',
       border: '#10b981'

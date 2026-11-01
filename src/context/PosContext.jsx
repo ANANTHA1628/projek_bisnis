@@ -168,7 +168,10 @@ export function PosProvider({ children }) {
     }
 
     if (themeSettings.userNameColor) {
-      root.style.setProperty('--cashier-name-color', themeSettings.userNameColor);
+      const isLight = themeSettings.theme === 'light';
+      const isWhite = themeSettings.userNameColor.toLowerCase() === '#ffffff' || themeSettings.userNameColor.toLowerCase() === '#fff';
+      const effectiveNameColor = (isLight && isWhite) ? '#0f172a' : themeSettings.userNameColor;
+      root.style.setProperty('--cashier-name-color', effectiveNameColor);
     } else {
       root.style.setProperty('--cashier-name-color', themeSettings.accentColor || '#10b981');
     }

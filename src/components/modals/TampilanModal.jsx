@@ -26,6 +26,33 @@ const PRESET_THEMES = [
     text: '#f8fafc'
   },
   {
+    id: 'sapphire',
+    name: 'Midnight Sapphire',
+    desc: 'Biru laut dalam mewah & elegan dengan aksen royal blue bercahaya',
+    bg: '#060e1d',
+    card: '#0d1e3a',
+    accent: '#3b82f6',
+    text: '#eff6ff'
+  },
+  {
+    id: 'sunset',
+    name: 'Sunset Amber & Coral',
+    desc: 'Gradasi hangat jingga senja dan koral yang ceria dan berenergi',
+    bg: '#140b0f',
+    card: '#221219',
+    accent: '#f97316',
+    text: '#fff7ed'
+  },
+  {
+    id: 'matcha',
+    name: 'Nordic Sage & Matcha',
+    desc: 'Hijau teh matcha khas Jepang yang tenang, rapi dan estetik',
+    bg: '#0c1411',
+    card: '#15241f',
+    accent: '#84cc16',
+    text: '#f7fee7'
+  },
+  {
     id: 'forest',
     name: 'Emerald Forest (Barista)',
     desc: 'Hijau botani alami yang menyejukkan mata kasir seharian',
@@ -42,6 +69,15 @@ const PRESET_THEMES = [
     card: '#201712',
     accent: '#d97706',
     text: '#fef3c7'
+  },
+  {
+    id: 'crimson',
+    name: 'Ruby Crimson (Lounge)',
+    desc: 'Merah marun anggur mewah untuk restoran eksklusif & bar',
+    bg: '#14070a',
+    card: '#240d13',
+    accent: '#f43f5e',
+    text: '#fff1f2'
   },
   {
     id: 'violet',
@@ -64,7 +100,7 @@ const PRESET_THEMES = [
   {
     id: 'light',
     name: 'Clean Light (Siang Hari)',
-    desc: 'Mode terang bersih cocok untuk area kasir outdoor terkena matahari',
+    desc: 'Mode terang putih bersih dengan font gelap yang jelas & mudah dibaca',
     bg: '#f4f6fa',
     card: '#ffffff',
     accent: '#10b981',

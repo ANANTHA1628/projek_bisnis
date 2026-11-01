@@ -22,7 +22,8 @@ export default function Sidebar() {
     mobileSidebarOpen,
     setMobileSidebarOpen,
     sidebarCollapsed,
-    toggleSidebar
+    toggleSidebar,
+    settings
   } = usePos();
 
   // Accordion state
@@ -84,7 +85,7 @@ export default function Sidebar() {
         {/* Brand Header */}
         <div className="posa-sidebar-brand">
           <div className="posa-sidebar-brand-left">
-            <span className="posa-brand-title">posa</span>
+            <span className="posa-brand-title">{settings?.store_name || 'posa'}</span>
             <span className="posa-brand-badge">ADMIN</span>
           </div>
           <button

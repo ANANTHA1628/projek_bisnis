@@ -37,7 +37,8 @@ export default function TopNavbar() {
     mobileSidebarOpen,
     setMobileSidebarOpen,
     currentShift,
-    themeSettings
+    themeSettings,
+    settings
   } = usePos();
 
   const [activeDropdown, setActiveDropdown] = useState(null); // 'stock' | 'menu' | 'staff' | 'ops' | 'reports' | 'user' | null
@@ -101,7 +102,7 @@ export default function TopNavbar() {
           </button>
 
           <div className="posa-navbar-brand" onClick={() => navigateTo('dashboard')} role="button">
-            <span className="posa-brand-title">posa</span>
+            <span className="posa-brand-title">{settings?.store_name || 'posa'}</span>
           </div>
 
           <button

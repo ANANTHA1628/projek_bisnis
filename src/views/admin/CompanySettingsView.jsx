@@ -33,7 +33,7 @@ export default function CompanySettingsView() {
   const [supervisorPinRequired, setSupervisorPinRequired] = useState(true);
 
   // Edit states for company info
-  const [companyName, setCompanyName] = useState(settings.store_name || 'Staycy_2026');
+  const [companyName, setCompanyName] = useState(settings.store_name || 'posa');
   const [companyEmail, setCompanyEmail] = useState(settings.store_email || 'hamdirafi310@gmail.com');
   const [companyPhone, setCompanyPhone] = useState(settings.store_phone || '6283871983300');
 
@@ -55,7 +55,7 @@ export default function CompanySettingsView() {
       store_email: companyEmail,
       store_phone: companyPhone
     });
-    showToast('Informasi perusahaan berhasil diperbarui!', 'success');
+    showToast('Nama brand kasir & informasi perusahaan berhasil diperbarui!', 'success');
   };
 
   return (
@@ -81,13 +81,19 @@ export default function CompanySettingsView() {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="text-xs text-muted block mb-1">Company Name</label>
+              <label className="text-xs font-semibold text-slate-300 block mb-1">
+                Nama Usaha / Brand Kasir (POS Logo Brand)
+              </label>
               <input
                 type="text"
-                className="posa-input w-full font-semibold text-white"
+                className="posa-input w-full font-semibold"
                 value={companyName}
                 onChange={(e) => setCompanyName(e.target.value)}
+                placeholder="Contoh: posa, Kopi Senja, Resto Berkah"
               />
+              <span className="text-[11px] text-slate-400 block mt-1">
+                Nama brand ini otomatis tampil sebagai logo utama di layar Kasir POS Kiosk (menggantikan tulisan 'posa'), Top Navbar, dan struk nota.
+              </span>
             </div>
 
             <div>

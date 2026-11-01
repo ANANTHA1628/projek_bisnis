@@ -60,7 +60,8 @@ export default function KasirView() {
     setLogoutTarget,
     setIsKioskMode,
     setIsKioskLocked,
-    themeSettings
+    themeSettings,
+    settings
   } = usePos();
 
   const categories = ['Semua', 'Makanan', 'Non-Kopi', 'Kopi'];
@@ -93,7 +94,7 @@ export default function KasirView() {
       <div className="kasir-left-section">
         {/* Kasir Header */}
         <div className="kasir-header-row">
-          <div className="posa-brand">posa</div>
+          <div className="posa-brand">{settings?.store_name || 'posa'}</div>
 
           <div className="kasir-header-actions">
             <button
