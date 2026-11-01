@@ -1,8 +1,8 @@
 import React from 'react';
 import { PosProvider, usePos } from './context/PosContext';
 
-// Admin Sidebar
-import Sidebar from './components/Sidebar';
+// Admin Top Navbar
+import TopNavbar from './components/TopNavbar';
 
 // POS Kiosk views
 import KioskLockView from './views/KioskLockView';
@@ -105,11 +105,11 @@ function PosAppContent() {
     );
   }
 
-  // 3. Admin Dashboard Mode (Exact layout from example screenshots)
+  // 3. Admin Dashboard Mode (Modern Top Navigation Bar Layout)
   return (
-    <div className="posa-app-root posa-admin-layout">
-      {/* Sidebar with Navigation (Free trial removed!) */}
-      <Sidebar />
+    <div className="posa-app-root posa-admin-top-layout">
+      {/* Modern Top Navbar */}
+      <TopNavbar />
 
       {/* Main Content Area */}
       <main className="posa-admin-main-content">
