@@ -1,6 +1,6 @@
 import React from 'react';
 import AdminHeader from '../../components/AdminHeader';
-import { Check, Palette, Volume2, Sparkles, RefreshCw, UserCheck } from 'lucide-react';
+import { Check, Palette, Volume2, Sparkles, RefreshCw, UserCheck, Layout, Shield, Zap } from 'lucide-react';
 import { usePos } from '../../context/PosContext';
 
 export default function AppearanceView() {
@@ -106,6 +106,51 @@ export default function AppearanceView() {
     updateThemeSettings({ userNameColor: colorHex });
     playSound?.('beep');
     showToast('Warna nama kasir berhasil diperbarui!', 'success');
+  };
+
+  const cashierBadgeStyles = [
+    {
+      id: 'pill-avatar',
+      name: 'Pill Avatar Modern',
+      desc: 'Bentuk lonjong rounded pill dengan avatar bulat & role chip.',
+      styleClass: 'badge-style-pill-avatar'
+    },
+    {
+      id: 'glass-card',
+      name: 'Glassmorphism Kaca',
+      desc: 'Efek kaca frosted transparan dengan kilau tepi modern.',
+      styleClass: 'badge-style-glass-card'
+    },
+    {
+      id: 'cyber-neon',
+      name: 'Cyber Glow Neon',
+      desc: 'Pendaran neon futuristik dengan kilau menyala berkarakter modern.',
+      styleClass: 'badge-style-cyber-neon'
+    },
+    {
+      id: 'minimal-clean',
+      name: 'Minimalis Elegan',
+      desc: 'Garis aksen tepi bersih tanpa bingkai tebal, rapi dan ringkas.',
+      styleClass: 'badge-style-minimal-clean'
+    },
+    {
+      id: 'gradient-badge',
+      name: 'Gradasi Modern',
+      desc: 'Latar belakang gradasi halus berpadu kontras modern dan mewah.',
+      styleClass: 'badge-style-gradient-badge'
+    },
+    {
+      id: 'tag-outline',
+      name: 'Tag Outline Premium',
+      desc: 'Gaya tag kasir eksklusif dengan aksen border tegas berkarakter.',
+      styleClass: 'badge-style-tag-outline'
+    }
+  ];
+
+  const handleSelectCashierBadgeStyle = (styleId) => {
+    updateThemeSettings({ cashierBadgeStyle: styleId });
+    playSound?.('beep');
+    showToast('Desain tampilan nama kasir berhasil diperbarui!', 'success');
   };
 
   return (
@@ -219,73 +264,140 @@ export default function AppearanceView() {
         </div>
       </div>
 
-      {/* 3. Desain Warna Nama Kasir (Pilihan Bulat-Bulat) */}
+      {/* 3. Desain Tampilan & Warna Nama Kasir */}
       <div className="posa-admin-card">
-        <div className="flex flex-wrap items-center justify-between gap-3 mb-2">
+        <div className="flex flex-wrap items-center justify-between gap-3 mb-3">
           <div className="flex items-center gap-2">
             <UserCheck size={18} className="text-emerald-400" />
-            <h2 className="posa-card-title">Desain Warna Nama Kasir</h2>
+            <h2 className="posa-card-title">Desain & Gaya Tampilan Nama Kasir</h2>
           </div>
 
           {/* Live Preview Badge */}
-          <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-[#0b0f19] border border-white/10">
-            <span className="text-xs text-slate-400">Pratinjau Nama Kasir:</span>
-            <span
-              className="text-xs font-bold px-2 py-0.5 rounded"
-              style={{
-                color: themeSettings.userNameColor || themeSettings.accentColor || '#10b981',
-                backgroundColor: 'rgba(255,255,255,0.06)'
-              }}
+          <div className="flex items-center gap-3 px-4 py-2 rounded-xl bg-[#070b14] border border-white/10">
+            <span className="text-xs text-slate-400">Pratinjau Langsung:</span>
+            <div
+              className={`user-profile-badge badge-style-${themeSettings.cashierBadgeStyle || 'pill-avatar'}`}
+              style={{ margin: 0 }}
             >
-              Ahmad Rafi (Kasir)
-            </span>
+              <div className="user-profile-avatar-chip">
+                A
+              </div>
+              <div className="user-profile-info-group">
+                <span className="user-profile-name" style={{ color: themeSettings.userNameColor || '#10b981' }}>
+                  Ahmad Rafi
+                </span>
+                <span className="user-profile-role">
+                  Owner • Kasir
+                </span>
+              </div>
+            </div>
           </div>
         </div>
 
         <p className="posa-card-subtitle mb-4">
-          Pilih warna teks khusus untuk identitas kasir yang tampil di pojok atas layar POS Kiosk dan Top Navbar Backoffice.
+          Pilih gaya bentuk kartu identitas kasir serta warna teksnya yang tampil di layar POS Kiosk dan Top Navbar.
         </p>
 
-        {/* Lingkaran / Bulat-Bulat Pilihan Warna */}
-        <div className="flex flex-wrap items-center gap-4 p-4 rounded-xl bg-[#0a0e1a]/60 border border-slate-800">
-          {cashierNameColors.map((cnc) => {
-            const isSelected = (themeSettings.userNameColor || '#ffffff') === cnc.hex;
-            return (
-              <button
-                key={cnc.id}
-                type="button"
-                onClick={() => handleSelectCashierNameColor(cnc.hex)}
-                className="group relative flex flex-col items-center gap-1.5 focus:outline-none"
-                title={`${cnc.name} (${cnc.hex})`}
-              >
+        {/* Sub-Section 1: Pilihan Desain Gaya Badge Kasir */}
+        <div className="mb-5">
+          <label className="text-xs font-semibold text-slate-300 block mb-2.5 uppercase tracking-wider">
+            1. Pilihan Gaya / Desain Bentuk Badge Nama Kasir
+          </label>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+            {cashierBadgeStyles.map((style) => {
+              const isSelected = (themeSettings.cashierBadgeStyle || 'pill-avatar') === style.id;
+              return (
                 <div
-                  className={`w-11 h-11 rounded-full flex items-center justify-center transition-all duration-200 transform group-hover:scale-110 shadow-lg cursor-pointer ${
+                  key={style.id}
+                  onClick={() => handleSelectCashierBadgeStyle(style.id)}
+                  className={`p-3.5 rounded-xl border cursor-pointer transition-all flex flex-col justify-between gap-3 ${
                     isSelected
-                      ? 'ring-4 ring-offset-2 ring-offset-[#0b0e17] ring-white scale-105'
-                      : 'hover:ring-2 hover:ring-white/40'
+                      ? 'border-emerald-500/80 bg-emerald-500/10 ring-1 ring-emerald-500/30 shadow-lg shadow-emerald-500/10'
+                      : 'border-slate-800 bg-[#0a0e1a]/80 hover:border-slate-700 hover:bg-[#0f1525]'
                   }`}
-                  style={{
-                    backgroundColor: cnc.hex,
-                    boxShadow: isSelected ? `0 0 16px ${cnc.hex}80` : 'none'
-                  }}
                 >
-                  {isSelected && (
-                    <Check
-                      size={18}
-                      className={cnc.hex === '#ffffff' ? 'text-black font-bold' : 'text-white font-bold drop-shadow'}
-                    />
-                  )}
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-bold text-white flex items-center gap-1.5">
+                      {style.name}
+                    </span>
+                    {isSelected && (
+                      <span className="w-5 h-5 rounded-full bg-emerald-500 text-black flex items-center justify-center font-bold text-xs">
+                        <Check size={12} strokeWidth={3} />
+                      </span>
+                    )}
+                  </div>
+
+                  {/* Visual Render Miniature */}
+                  <div className="p-2.5 rounded-lg bg-[#070a12] border border-slate-800/80 flex items-center justify-center">
+                    <div className={`user-profile-badge ${style.styleClass}`} style={{ margin: 0 }}>
+                      <div className="user-profile-avatar-chip">
+                        K
+                      </div>
+                      <div className="user-profile-info-group">
+                        <span className="user-profile-name" style={{ color: themeSettings.userNameColor || '#10b981', fontSize: '11px' }}>
+                          Kasir Aktif
+                        </span>
+                        <span className="user-profile-role" style={{ fontSize: '9px' }}>
+                          Shift 1
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <p className="text-[11px] text-slate-400 leading-relaxed">
+                    {style.desc}
+                  </p>
                 </div>
-                <span
-                  className={`text-[11px] font-medium transition-colors ${
-                    isSelected ? 'text-white font-bold' : 'text-slate-400 group-hover:text-slate-200'
-                  }`}
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Sub-Section 2: Lingkaran / Bulat-Bulat Pilihan Warna */}
+        <div>
+          <label className="text-xs font-semibold text-slate-300 block mb-2.5 uppercase tracking-wider">
+            2. Pilihan Warna Teks Nama Kasir
+          </label>
+          <div className="flex flex-wrap items-center gap-4 p-4 rounded-xl bg-[#0a0e1a]/60 border border-slate-800">
+            {cashierNameColors.map((cnc) => {
+              const isSelected = (themeSettings.userNameColor || '#ffffff') === cnc.hex;
+              return (
+                <button
+                  key={cnc.id}
+                  type="button"
+                  onClick={() => handleSelectCashierNameColor(cnc.hex)}
+                  className="group relative flex flex-col items-center gap-1.5 focus:outline-none"
+                  title={`${cnc.name} (${cnc.hex})`}
                 >
-                  {cnc.name}
-                </span>
-              </button>
-            );
-          })}
+                  <div
+                    className={`w-11 h-11 rounded-full flex items-center justify-center transition-all duration-200 transform group-hover:scale-110 shadow-lg cursor-pointer ${
+                      isSelected
+                        ? 'ring-4 ring-offset-2 ring-offset-[#0b0e17] ring-white scale-105'
+                        : 'hover:ring-2 hover:ring-white/40'
+                    }`}
+                    style={{
+                      backgroundColor: cnc.hex,
+                      boxShadow: isSelected ? `0 0 16px ${cnc.hex}80` : 'none'
+                    }}
+                  >
+                    {isSelected && (
+                      <Check
+                        size={18}
+                        className={cnc.hex === '#ffffff' ? 'text-black font-bold' : 'text-white font-bold drop-shadow'}
+                      />
+                    )}
+                  </div>
+                  <span
+                    className={`text-[11px] font-medium transition-colors ${
+                      isSelected ? 'text-white font-bold' : 'text-slate-400 group-hover:text-slate-200'
+                    }`}
+                  >
+                    {cnc.name}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
         </div>
       </div>
 

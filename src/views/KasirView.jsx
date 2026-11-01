@@ -59,7 +59,8 @@ export default function KasirView() {
     setShowLogoutModal,
     setLogoutTarget,
     setIsKioskMode,
-    setIsKioskLocked
+    setIsKioskLocked,
+    themeSettings
   } = usePos();
 
   const categories = ['Semua', 'Makanan', 'Non-Kopi', 'Kopi'];
@@ -142,9 +143,17 @@ export default function KasirView() {
               <Maximize2 size={16} />
             </button>
 
-            <div className="user-profile-badge">
-              <span className="user-profile-name">{currentUser?.name?.split(' ')[0] || 'Budi'}</span>
-              <span className="user-profile-role">{currentUser?.role || 'Kasir'}</span>
+            <div
+              className={`user-profile-badge badge-style-${themeSettings?.cashierBadgeStyle || 'pill-avatar'}`}
+              title={`Kasir: ${currentUser?.name || 'Kasir'} (${currentUser?.role || 'Staff'})`}
+            >
+              <div className="user-profile-avatar-chip">
+                {currentUser?.name ? currentUser.name.charAt(0).toUpperCase() : 'K'}
+              </div>
+              <div className="user-profile-info-group">
+                <span className="user-profile-name">{currentUser?.name?.split(' ')[0] || 'Kasir'}</span>
+                <span className="user-profile-role">{currentUser?.role || 'Staff'}</span>
+              </div>
             </div>
 
             {/* Jika role Owner/Supervisor, bisa langsung kembali ke Admin Backoffice */}

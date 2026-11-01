@@ -60,6 +60,7 @@ export function PosProvider({ children }) {
     theme: 'dark', // 'dark' | 'oled' | 'coffee' | 'forest' | 'violet' | 'light'
     accentColor: '#10b981', // Emerald Mint
     userNameColor: '#10b981', // Custom warna nama kasir
+    cashierBadgeStyle: 'pill-avatar', // 'pill-avatar' | 'glass-card' | 'cyber-neon' | 'minimal-clean' | 'gradient-badge' | 'tag-outline'
     fontScale: 'normal', // 'compact' | 'normal' | 'large'
     soundEnabled: true,
     animationsEnabled: true,
@@ -158,6 +159,7 @@ export function PosProvider({ children }) {
   useEffect(() => {
     const root = document.documentElement;
     root.setAttribute('data-theme', themeSettings.theme || 'dark');
+    root.setAttribute('data-cashier-style', themeSettings.cashierBadgeStyle || 'pill-avatar');
 
     if (themeSettings.accentColor) {
       root.style.setProperty('--accent-blue', themeSettings.accentColor);

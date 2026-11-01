@@ -92,6 +92,15 @@ const CASHIER_NAME_COLORS = [
   { id: 'orange', name: 'Tangerine Sun', color: '#fb923c' }
 ];
 
+const CASHIER_BADGE_STYLES = [
+  { id: 'pill-avatar', name: 'Pill Avatar', desc: 'Lonjong Modern', styleClass: 'badge-style-pill-avatar' },
+  { id: 'glass-card', name: 'Glassmorphism', desc: 'Kaca Frosted', styleClass: 'badge-style-glass-card' },
+  { id: 'cyber-neon', name: 'Cyber Neon', desc: 'Pendaran Glow', styleClass: 'badge-style-cyber-neon' },
+  { id: 'minimal-clean', name: 'Minimalis', desc: 'Aksen Garis', styleClass: 'badge-style-minimal-clean' },
+  { id: 'gradient-badge', name: 'Gradasi', desc: 'Warna Halus', styleClass: 'badge-style-gradient-badge' },
+  { id: 'tag-outline', name: 'Tag Outline', desc: 'Border Tegas', styleClass: 'badge-style-tag-outline' }
+];
+
 export default function TampilanModal() {
   const {
     showTampilanModal,
@@ -122,11 +131,18 @@ export default function TampilanModal() {
     showToast('Warna nama kasir diperbarui');
   };
 
+  const handleSelectCashierBadgeStyle = (styleId) => {
+    updateThemeSettings({ cashierBadgeStyle: styleId });
+    playSound('beep');
+    showToast('Desain nama kasir diperbarui');
+  };
+
   const handleReset = () => {
     updateThemeSettings({
       theme: 'dark',
       accentColor: '#10b981',
       userNameColor: '#10b981',
+      cashierBadgeStyle: 'pill-avatar',
       fontScale: 'normal',
       soundEnabled: true,
       animationsEnabled: true,
@@ -338,73 +354,120 @@ export default function TampilanModal() {
             </div>
           </div>
 
-          {/* Section 2B: Desain Warna Nama Kasir (Pilihan Bulat-Bulat) */}
+          {/* Section 2B: Desain Tampilan & Warna Nama Kasir */}
           <div>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '10px' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                 <UserCheck size={16} color="var(--accent-blue, #10b981)" />
                 <span style={{ fontWeight: 700, fontSize: '13px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-                  Warna Nama Kasir
+                  Desain & Warna Nama Kasir
                 </span>
               </div>
-              <span
-                style={{
-                  fontSize: '11px',
-                  fontWeight: 700,
-                  color: themeSettings.userNameColor || themeSettings.accentColor || '#10b981',
-                  backgroundColor: 'rgba(255,255,255,0.06)',
-                  padding: '2px 8px',
-                  borderRadius: '6px'
-                }}
-              >
-                Pratinjau: Kasir
-              </span>
+              <div className={`user-profile-badge badge-style-${themeSettings.cashierBadgeStyle || 'pill-avatar'}`} style={{ margin: 0, padding: '3px 10px' }}>
+                <div className="user-profile-avatar-chip" style={{ width: '22px', height: '22px', fontSize: '10px' }}>
+                  K
+                </div>
+                <div className="user-profile-info-group">
+                  <span className="user-profile-name" style={{ color: themeSettings.userNameColor || themeSettings.accentColor || '#10b981', fontSize: '11px' }}>
+                    Kasir
+                  </span>
+                </div>
+              </div>
             </div>
 
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '12px', padding: '10px', backgroundColor: 'var(--bg-card)', borderRadius: '10px', border: '1px solid var(--border-subtle)' }}>
-              {CASHIER_NAME_COLORS.map((cnc) => {
-                const isSelected = (themeSettings.userNameColor || '#ffffff') === cnc.color;
-                return (
-                  <button
-                    key={cnc.id}
-                    onClick={() => handleSelectCashierColor(cnc.color)}
-                    title={cnc.name}
-                    style={{
-                      display: 'flex',
-                      flexDirection: 'column',
-                      alignItems: 'center',
-                      gap: '4px',
-                      background: 'none',
-                      border: 'none',
-                      cursor: 'pointer',
-                      padding: '2px'
-                    }}
-                  >
-                    <div
+            {/* Sub: Desain Gaya Badge */}
+            <div style={{ marginBottom: '10px' }}>
+              <div style={{ fontSize: '11px', color: 'var(--text-secondary)', marginBottom: '6px', fontWeight: 600 }}>
+                Pilihan Gaya Desain Badge Kasir:
+              </div>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '8px' }}>
+                {CASHIER_BADGE_STYLES.map((style) => {
+                  const isSelected = (themeSettings.cashierBadgeStyle || 'pill-avatar') === style.id;
+                  return (
+                    <button
+                      key={style.id}
+                      type="button"
+                      onClick={() => handleSelectCashierBadgeStyle(style.id)}
                       style={{
-                        width: '32px',
-                        height: '32px',
-                        borderRadius: '50%',
-                        backgroundColor: cnc.color,
+                        padding: '8px 10px',
+                        borderRadius: '8px',
+                        border: isSelected ? '1.5px solid var(--accent-blue, #10b981)' : '1px solid var(--border-subtle)',
+                        backgroundColor: isSelected ? 'var(--bg-card-alt)' : 'var(--bg-card)',
+                        cursor: 'pointer',
                         display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        outline: isSelected ? '3px solid #ffffff' : 'none',
-                        outlineOffset: '2px',
-                        boxShadow: isSelected ? `0 0 12px ${cnc.color}` : 'none',
-                        transition: 'transform 0.15s ease'
+                        flexDirection: 'column',
+                        alignItems: 'flex-start',
+                        gap: '2px',
+                        textAlign: 'left',
+                        boxShadow: isSelected ? '0 0 10px rgba(16,185,129,0.2)' : 'none'
                       }}
                     >
-                      {isSelected && (
-                        <Check size={14} color={cnc.color === '#ffffff' ? '#000000' : '#ffffff'} strokeWidth={3} />
-                      )}
-                    </div>
-                    <span style={{ fontSize: '10px', color: isSelected ? '#ffffff' : 'var(--text-secondary)', fontWeight: isSelected ? 700 : 500 }}>
-                      {cnc.name.split(' ')[0]}
-                    </span>
-                  </button>
-                );
-              })}
+                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%' }}>
+                        <span style={{ fontSize: '11.5px', fontWeight: 700, color: isSelected ? '#ffffff' : 'var(--text-primary)' }}>
+                          {style.name}
+                        </span>
+                        {isSelected && <Check size={12} color="var(--accent-blue, #10b981)" strokeWidth={3} />}
+                      </div>
+                      <span style={{ fontSize: '10px', color: 'var(--text-muted)' }}>
+                        {style.desc}
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Sub: Pilihan Warna Bulat */}
+            <div>
+              <div style={{ fontSize: '11px', color: 'var(--text-secondary)', marginBottom: '6px', fontWeight: 600 }}>
+                Pilihan Warna Teks Nama Kasir:
+              </div>
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px', padding: '10px', backgroundColor: 'var(--bg-card)', borderRadius: '10px', border: '1px solid var(--border-subtle)' }}>
+                {CASHIER_NAME_COLORS.map((cnc) => {
+                  const isSelected = (themeSettings.userNameColor || '#ffffff') === cnc.color;
+                  return (
+                    <button
+                      key={cnc.id}
+                      type="button"
+                      onClick={() => handleSelectCashierColor(cnc.color)}
+                      title={cnc.name}
+                      style={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                        gap: '4px',
+                        background: 'none',
+                        border: 'none',
+                        cursor: 'pointer',
+                        padding: '2px'
+                      }}
+                    >
+                      <div
+                        style={{
+                          width: '30px',
+                          height: '30px',
+                          borderRadius: '50%',
+                          backgroundColor: cnc.color,
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          outline: isSelected ? '3px solid #ffffff' : 'none',
+                          outlineOffset: '2px',
+                          boxShadow: isSelected ? `0 0 12px ${cnc.color}` : 'none',
+                          transition: 'transform 0.15s ease'
+                        }}
+                      >
+                        {isSelected && (
+                          <Check size={14} color={cnc.color === '#ffffff' ? '#000000' : '#ffffff'} strokeWidth={3} />
+                        )}
+                      </div>
+                      <span style={{ fontSize: '10px', color: isSelected ? '#ffffff' : 'var(--text-secondary)', fontWeight: isSelected ? 700 : 500 }}>
+                        {cnc.name.split(' ')[0]}
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
             </div>
           </div>
 

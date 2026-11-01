@@ -36,7 +36,8 @@ export default function TopNavbar() {
     setLanguage,
     mobileSidebarOpen,
     setMobileSidebarOpen,
-    currentShift
+    currentShift,
+    themeSettings
   } = usePos();
 
   const [activeDropdown, setActiveDropdown] = useState(null); // 'stock' | 'menu' | 'staff' | 'ops' | 'reports' | 'user' | null
@@ -347,7 +348,7 @@ export default function TopNavbar() {
           <div className="posa-nav-dropdown-wrapper">
             <button
               type="button"
-              className="posa-user-profile-pill"
+              className={`posa-user-profile-pill badge-style-${themeSettings?.cashierBadgeStyle || 'pill-avatar'}`}
               onClick={() => toggleDropdown('user')}
             >
               <div className="posa-user-avatar">
