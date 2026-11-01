@@ -434,6 +434,56 @@ export function PosProvider({ children }) {
     showToast('Sesi kasir dikunci. Masukkan PIN shift kasir.', 'info');
   };
 
+  // Hapus Akun Master & Reset Total Sistem ke Registrasi Awal
+  const deleteMasterAccountAndReset = (inputPassword) => {
+    const savedPassword = localStorage.getItem('posa_master_password') || settings.account_password;
+    if (savedPassword && inputPassword !== savedPassword) {
+      return { success: false, message: 'Kata sandi master salah. Penghapusan akun dibatalkan.' };
+    }
+
+    try {
+      // Hapus semua data akun & preferensi
+      localStorage.removeItem('posa_master_account');
+      localStorage.removeItem('posa_master_password');
+      localStorage.removeItem('posa_staff_list');
+      localStorage.removeItem('posa_settings');
+      localStorage.removeItem('posa_theme_v3');
+      localStorage.removeItem('posa_products');
+      localStorage.removeItem('posa_materials');
+      localStorage.removeItem('posa_cart');
+      localStorage.removeItem('posa_transactions');
+      localStorage.removeItem('posa_open_bills');
+      localStorage.removeItem('posa_expenses');
+      localStorage.removeItem('posa_movements');
+      localStorage.removeItem('posa_customers');
+      localStorage.removeItem('posa_staff_activity');
+      localStorage.removeItem('posa_shift');
+      localStorage.removeItem('posa_auth_v4_clean');
+      localStorage.removeItem('posa_shift_v4_closed');
+    } catch {}
+
+    // Reset state aplikasi
+    setMasterAccount(null);
+    setCurrentUser(null);
+    setStaffList([]);
+    setProducts([]);
+    setRawMaterials([]);
+    setCart([]);
+    setTransactions([]);
+    setOpenBills([]);
+    setExpenses([]);
+    setStockMovements([]);
+    setCustomerList([]);
+    setStaffActivityLogs([]);
+    setSettings(INITIAL_SETTINGS);
+    setIsKioskMode(true);
+    setIsKioskLocked(true);
+    setShowMasterAuthScreen(true);
+
+    showToast('Akun bisnis dan seluruh data berhasil dihapus. Silakan daftar akun baru.', 'info');
+    return { success: true };
+  };
+
   const addCustomer = (newCustomer) => {
     const custWithId = {
       ...newCustomer,
@@ -1334,6 +1384,7 @@ export function PosProvider({ children }) {
     loginMasterAccount,
     logoutMasterAccount,
     lockKioskToPin,
+    deleteMasterAccountAndReset,
     toast,
     showToast
   };

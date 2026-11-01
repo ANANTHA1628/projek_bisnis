@@ -27,7 +27,7 @@ import {
 import { usePos } from '../../context/PosContext';
 
 export default function CompanySettingsView() {
-  const { settings, updateSettings, clearAllSampleData, showToast } = usePos();
+  const { settings, updateSettings, clearAllSampleData, deleteMasterAccountAndReset, showToast } = usePos();
   const logoInputRef = useRef(null);
 
   const [copied, setCopied] = useState(false);
@@ -565,7 +565,14 @@ export default function CompanySettingsView() {
                 opacity: deleteConfirmText === 'CONFIRM' && deletePassword ? 1 : 0.4,
                 cursor: deleteConfirmText === 'CONFIRM' && deletePassword ? 'pointer' : 'not-allowed'
               }}
-              onClick={() => showToast('Permintaan ditolak: Akun demo/master dilindungi.', 'error')}
+              onClick={() => {
+                if (window.confirm('PERINGATAN TERAKHIR: Seluruh akun dan data bisnis akan dihapus selamanya dari perangkat ini. Lanjutkan?')) {
+                  const res = deleteMasterAccountAndReset(deletePassword);
+                  if (!res.success) {
+                    showToast(res.message, 'error');
+                  }
+                }
+              }}
             >
               Hapus Perusahaan Selamanya
             </button>
