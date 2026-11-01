@@ -17,7 +17,10 @@ import {
   Mail,
   Phone,
   ShieldAlert,
-  RotateCcw
+  RotateCcw,
+  X,
+  Eye,
+  EyeOff
 } from 'lucide-react';
 import { usePos } from '../../context/PosContext';
 
@@ -42,11 +45,38 @@ export default function CompanySettingsView() {
 
   const businessCode = settings.business_code || 'e14d33a6-e2a7-4f8c-8ce6-63a7e1f6c6d7';
 
+  // Modal Ubah Kata Sandi Master
+  const [showPasswordModal, setShowPasswordModal] = useState(false);
+  const [oldPassword, setOldPassword] = useState('');
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [passwordError, setPasswordError] = useState('');
+  const [showNewPass, setShowNewPass] = useState(false);
+
   const handleCopyCode = () => {
     navigator.clipboard?.writeText(businessCode);
     setCopied(true);
     showToast('Business Code berhasil disalin!', 'success');
     setTimeout(() => setCopied(false), 2000);
+  };
+
+  const handleSavePassword = (e) => {
+    e.preventDefault();
+    if (!newPassword || newPassword.length < 6) {
+      setPasswordError('Kata sandi baru minimal 6 karakter');
+      return;
+    }
+    if (newPassword !== confirmPassword) {
+      setPasswordError('Konfirmasi kata sandi baru tidak cocok');
+      return;
+    }
+    updateSettings({ account_password: newPassword });
+    setShowPasswordModal(false);
+    setOldPassword('');
+    setNewPassword('');
+    setConfirmPassword('');
+    setPasswordError('');
+    showToast('Kata sandi master (Account Password) berhasil diperbarui!', 'success');
   };
 
   const handleSaveInfo = () => {
@@ -172,7 +202,10 @@ export default function CompanySettingsView() {
           <button
             type="button"
             className="posa-btn-outline w-full sm:w-auto justify-center flex-shrink-0"
-            onClick={() => showToast('Dialog ubah kata sandi dibuka')}
+            onClick={() => {
+              setPasswordError('');
+              setShowPasswordModal(true);
+            }}
           >
             Change Password
           </button>
@@ -472,6 +505,116 @@ export default function CompanySettingsView() {
           </div>
         </div>
       </div>
+
+      {/* Modal Dialog: Ubah Kata Sandi Master (Account Password) */}
+      {showPasswordModal && (
+        <div className="modal-backdrop-overlay" style={{ zIndex: 1200 }}>
+          <div className="modal-dialog-box" style={{ maxWidth: '440px' }}>
+            <div className="modal-header">
+              <div className="flex items-center gap-2">
+                <KeyRound size={18} className="text-emerald-400" />
+                <span className="modal-title">Ubah Kata Sandi Master</span>
+              </div>
+              <button
+                type="button"
+                className="modal-close-btn"
+                onClick={() => setShowPasswordModal(false)}
+              >
+                <X size={18} />
+              </button>
+            </div>
+
+            <form onSubmit={handleSavePassword}>
+              <div className="modal-body space-y-4">
+                <p className="text-xs text-muted leading-relaxed">
+                  Kata sandi master digunakan untuk login otorisasi akun pemilik (Owner), menghubungkan perangkat tablet baru, dan mengubah pengaturan sensitif.
+                </p>
+
+                {passwordError && (
+                  <div className="p-2.5 rounded-lg bg-rose-500/15 border border-rose-500/30 text-rose-400 text-xs">
+                    {passwordError}
+                  </div>
+                )}
+
+                <div>
+                  <label className="text-xs text-slate-300 block mb-1">
+                    Kata Sandi Lama (Opsional untuk Reset)
+                  </label>
+                  <input
+                    type="password"
+                    className="posa-input w-full"
+                    placeholder="Masukkan kata sandi lama (jika ada)"
+                    value={oldPassword}
+                    onChange={(e) => setOldPassword(e.target.value)}
+                  />
+                </div>
+
+                <div>
+                  <div className="flex items-center justify-between mb-1">
+                    <label className="text-xs text-slate-300">
+                      Kata Sandi Baru (Min. 6 Karakter) *
+                    </label>
+                    <button
+                      type="button"
+                      className="text-[11px] text-emerald-400 flex items-center gap-1 hover:underline"
+                      onClick={() => setShowNewPass(!showNewPass)}
+                    >
+                      {showNewPass ? <EyeOff size={12} /> : <Eye size={12} />}
+                      <span>{showNewPass ? 'Sembunyikan' : 'Lihat'}</span>
+                    </button>
+                  </div>
+                  <input
+                    type={showNewPass ? 'text' : 'password'}
+                    className="posa-input w-full font-mono"
+                    placeholder="Minimal 6 karakter kombinasi"
+                    value={newPassword}
+                    onChange={(e) => {
+                      setNewPassword(e.target.value);
+                      setPasswordError('');
+                    }}
+                    required
+                    minLength={6}
+                  />
+                </div>
+
+                <div>
+                  <label className="text-xs text-slate-300 block mb-1">
+                    Ulangi Kata Sandi Baru *
+                  </label>
+                  <input
+                    type={showNewPass ? 'text' : 'password'}
+                    className="posa-input w-full font-mono"
+                    placeholder="Ketik ulang kata sandi baru"
+                    value={confirmPassword}
+                    onChange={(e) => {
+                      setConfirmPassword(e.target.value);
+                      setPasswordError('');
+                    }}
+                    required
+                  />
+                </div>
+              </div>
+
+              <div className="modal-footer">
+                <button
+                  type="button"
+                  className="posa-btn-outline"
+                  onClick={() => setShowPasswordModal(false)}
+                >
+                  Batal
+                </button>
+                <button
+                  type="submit"
+                  className="buat-laporan-btn"
+                  style={{ padding: '8px 18px', fontSize: '13px' }}
+                >
+                  Simpan Kata Sandi
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
