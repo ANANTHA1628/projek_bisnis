@@ -42,8 +42,8 @@ export default function DashboardView() {
     <div className="posa-admin-page">
       <AdminHeader title="Dashboard">
         <div className="hidden sm:flex items-center gap-2 bg-[var(--bg-card-alt)] px-3 py-1.5 rounded-full border border-[var(--border-subtle)] text-xs text-[var(--text-secondary)]">
-          <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-          <span>Shift Kasir Aktif</span>
+          <span className={`w-2 h-2 rounded-full ${currentShift.isOpen ? 'bg-emerald-500 animate-pulse' : 'bg-rose-500'}`} />
+          <span>{currentShift.isOpen ? 'Shift Kasir Aktif' : 'Kasir Tutup'}</span>
         </div>
       </AdminHeader>
 
@@ -151,8 +151,8 @@ export default function DashboardView() {
             <div className="p-3 bg-emerald-500/15 text-emerald-400 rounded-xl border border-emerald-500/30">
               <Store size={22} />
             </div>
-            <span className="text-xs font-bold text-emerald-400 bg-emerald-500/10 px-2.5 py-1 rounded-full border border-emerald-500/20">
-              Kasir Aktif
+            <span className={`text-xs font-bold px-2.5 py-1 rounded-full border ${currentShift.isOpen ? 'text-emerald-400 bg-emerald-500/10 border-emerald-500/20' : 'text-rose-400 bg-rose-500/10 border-rose-500/20'}`}>
+              {currentShift.isOpen ? 'Kasir Aktif' : 'Kasir Tutup'}
             </span>
           </div>
           <div>

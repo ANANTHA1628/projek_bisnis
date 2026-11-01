@@ -35,7 +35,8 @@ export default function TopNavbar() {
     language,
     setLanguage,
     mobileSidebarOpen,
-    setMobileSidebarOpen
+    setMobileSidebarOpen,
+    currentShift
   } = usePos();
 
   const [activeDropdown, setActiveDropdown] = useState(null); // 'stock' | 'menu' | 'staff' | 'ops' | 'reports' | 'user' | null
@@ -366,7 +367,7 @@ export default function TopNavbar() {
               <div className="posa-nav-dropdown-menu posa-user-dropdown-menu">
                 <div className="user-dropdown-header">
                   <div className="name">{currentUser?.name || 'Ahmad Rafi Hamdi'}</div>
-                  <div className="role">{currentUser?.role || 'Owner'} • Shift Aktif</div>
+                  <div className="role">{currentUser?.role || 'Owner'} • {currentShift.isOpen ? 'Shift Aktif' : 'Shift Tutup'}</div>
                 </div>
 
                 <div className="dropdown-divider" />

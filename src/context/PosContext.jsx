@@ -375,7 +375,11 @@ export function PosProvider({ children }) {
   const [currentShift, setCurrentShift] = useState(() => {
     try {
       const saved = localStorage.getItem('posa_shift');
-      if (saved) return JSON.parse(saved);
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        // Jika tidak sengaja tersimpan buka dari sesi contoh lama, kembalikan ke kondisi tutup
+        return parsed;
+      }
     } catch {}
     return INITIAL_SHIFT;
   });
