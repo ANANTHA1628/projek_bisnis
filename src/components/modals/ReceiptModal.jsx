@@ -60,12 +60,29 @@ export default function ReceiptModal() {
             style={{ width: is80mm ? '360px' : '280px', margin: '0 auto', fontSize: is80mm ? '12px' : '11px' }}
           >
             <div className="receipt-header">
-              <div style={{ fontSize: is80mm ? '18px' : '16px', fontWeight: 800 }}>posa</div>
+              {settings?.store_logo && (
+                <div style={{ textAlign: 'center', marginBottom: '6px' }}>
+                  <img
+                    src={settings.store_logo}
+                    alt="Logo Toko"
+                    style={{
+                      maxHeight: '48px',
+                      maxWidth: '120px',
+                      objectFit: 'contain',
+                      margin: '0 auto',
+                      filter: 'grayscale(100%) contrast(120%)'
+                    }}
+                  />
+                </div>
+              )}
+              <div style={{ fontSize: is80mm ? '18px' : '16px', fontWeight: 800 }}>
+                {settings?.store_name || 'posa'}
+              </div>
               <div style={{ fontSize: '11px', color: '#4b5563' }}>
-                Coffee & Eatery
+                {settings?.store_tagline || 'Modern Cafe & POS System'}
               </div>
               <div style={{ fontSize: '10px', color: '#6b7280' }}>
-                Jl. Bisnis No. 16, Jakarta Selatan
+                {settings?.store_address || 'Alamat Toko Anda'}
               </div>
             </div>
 

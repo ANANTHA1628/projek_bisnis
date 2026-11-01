@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { usePos } from '../context/PosContext';
-import { LogOut, Monitor, Maximize2, Minimize2, Delete } from 'lucide-react';
+import { LogOut, Monitor, Maximize2, Minimize2, Delete, KeyRound, Shield } from 'lucide-react';
 
 export default function KioskLockView() {
   const {
@@ -13,6 +13,8 @@ export default function KioskLockView() {
     setIsKioskLocked,
     setCurrentUser,
     staffList,
+    masterAccount,
+    setShowMasterAuthScreen,
     recordStaffActivity,
     setShowDisplayModeModal,
     setShowLogoutModal,
@@ -24,7 +26,7 @@ export default function KioskLockView() {
   const [pin, setPin] = useState('');
   const [errorShake, setErrorShake] = useState(false);
 
-  const storeName = settings.store_name || 'Staycy_2026';
+  const storeName = settings.store_name || 'posa';
 
   const handleKeyPress = (num) => {
     if (pin.length < 6) {
@@ -49,27 +51,20 @@ export default function KioskLockView() {
   };
 
   const verifyPin = (candidatePin) => {
-    // Check against real staff list
-    // 1. Staff match (e.g. Budi Barista pin: '0000', Aryaputra: '5678', Ahmad Rafi: '1234')
-    const matchedStaff = staffList.find((s) => s.pin === candidatePin || candidatePin.startsWith(s.pin));
+    // 1. Staff match from real staff list
+    const matchedStaff = staffList.find((s) => s.pin === candidatePin || (candidatePin.length >= 4 && s.pin === candidatePin));
 
-    // 2. Or fallback PINs
-    const isOwnerOrAdmin =
-      candidatePin === '123456' ||
-      candidatePin.startsWith('1234') ||
-      candidatePin === settings.admin_pin ||
-      (matchedStaff && (matchedStaff.role === 'Owner' || matchedStaff.role === 'Supervisor'));
+    // 2. Or master account match
+    const isMasterMatch = masterAccount && (masterAccount.pin === candidatePin || settings.admin_pin === candidatePin);
 
-    const isEmployee =
-      candidatePin === '000000' ||
-      candidatePin.startsWith('0000') ||
-      candidatePin === settings.cashier_pin ||
-      (matchedStaff && matchedStaff.role !== 'Owner' && matchedStaff.role !== 'Supervisor');
+    // 3. Fallback PINs if no staff exists yet
+    const isOwnerFallback = !masterAccount && (candidatePin === '123456' || candidatePin.startsWith('1234') || candidatePin === settings.admin_pin);
+    const isEmployeeFallback = candidatePin === '000000' || candidatePin.startsWith('0000') || candidatePin === settings.cashier_pin;
 
-    if (matchedStaff || isOwnerOrAdmin || isEmployee) {
-      const activeUser = matchedStaff || (isOwnerOrAdmin
-        ? { id: 'admin-temp', name: 'Ahmad Rafi Hamdi', role: 'Owner', permissions: 'Manage All' }
-        : { id: 'staff-temp', name: 'Budi Barista', role: 'Cashier', permissions: 'Cashier POS only' });
+    if (matchedStaff || isMasterMatch || isOwnerFallback || isEmployeeFallback) {
+      const activeUser = matchedStaff || masterAccount || (isOwnerFallback
+        ? { id: 'admin-owner', name: 'Owner', role: 'Owner', permissions: 'Manage All' }
+        : { id: 'staff-kiosk', name: 'Kasir', role: 'Cashier', permissions: 'Cashier POS only' });
 
       setCurrentUser(activeUser);
       recordStaffActivity(
@@ -84,19 +79,18 @@ export default function KioskLockView() {
 
       if (activeUser.role === 'Owner') {
         showToast(`Selamat datang ${activeUser.name} (Owner/Admin)`, 'success');
-        // Jika login sebagai Owner / Supervisor, otomatis diarahkan ke Admin Backoffice
         setIsKioskMode(false);
         setIsKioskLocked(false);
       } else {
         showToast(`Kasir aktif: ${activeUser.name} (${activeUser.role})`, 'success');
-        // Jika login sebagai Karyawan / Kasir, langsung diarahkan ke layar Kasir POS
+        // Karyawan / Kasir: Langsung dan HANYA ke layar Kasir POS!
         setIsKioskMode(true);
         setIsKioskLocked(false);
       }
     } else {
       playSound('beep');
       setErrorShake(true);
-      showToast('PIN tidak sesuai (Coba: 123456 untuk Owner, atau 000000 untuk Kasir)', 'warning');
+      showToast('PIN tidak sesuai. Pastikan PIN sudah terdaftar di menu Staf.', 'warning');
       setTimeout(() => {
         setPin('');
         setErrorShake(false);
@@ -180,9 +174,25 @@ export default function KioskLockView() {
       <main className="kiosk-lock-body">
         {/* Left Side: Store & PIN status */}
         <div className="kiosk-lock-info">
-          <div className="kiosk-logo-text">posa</div>
+          {settings.store_logo ? (
+            <img
+              src={settings.store_logo}
+              alt="Logo"
+              style={{
+                width: '64px',
+                height: '64px',
+                objectFit: 'contain',
+                borderRadius: '12px',
+                backgroundColor: 'rgba(255,255,255,0.05)',
+                padding: '4px',
+                marginBottom: '12px'
+              }}
+            />
+          ) : (
+            <div className="kiosk-logo-text">posa</div>
+          )}
           <h1 className="kiosk-store-title">{storeName}</h1>
-          <p className="kiosk-pin-instructions">Enter your PIN (6 digits) to sign in</p>
+          <p className="kiosk-pin-instructions">Masukkan PIN (4-6 digit) untuk membuka kasir</p>
 
           <div className={`kiosk-pin-dots ${errorShake ? 'shake' : ''}`}>
             {[0, 1, 2, 3, 4, 5].map((index) => (
@@ -191,6 +201,41 @@ export default function KioskLockView() {
                 className={`pin-dot ${index < pin.length ? 'filled' : ''}`}
               />
             ))}
+          </div>
+
+          {/* Shortcut ke Login Master Akun Email / Password */}
+          <div style={{ marginTop: '24px' }}>
+            <button
+              type="button"
+              onClick={() => setShowMasterAuthScreen(true)}
+              style={{
+                background: 'rgba(255,255,255,0.06)',
+                border: '1px solid rgba(255,255,255,0.12)',
+                borderRadius: '10px',
+                padding: '8px 14px',
+                color: '#cbd5e1',
+                fontSize: '12px',
+                fontWeight: 600,
+                cursor: 'pointer',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '6px',
+                transition: 'all 0.2s ease'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.backgroundColor = 'rgba(16, 185, 129, 0.15)';
+                e.currentTarget.style.borderColor = 'rgba(16, 185, 129, 0.3)';
+                e.currentTarget.style.color = '#10b981';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.06)';
+                e.currentTarget.style.borderColor = 'rgba(255,255,255,0.12)';
+                e.currentTarget.style.color = '#cbd5e1';
+              }}
+            >
+              <Shield size={14} />
+              <span>Login Akun Master Pemilik (Email / Password)</span>
+            </button>
           </div>
         </div>
 

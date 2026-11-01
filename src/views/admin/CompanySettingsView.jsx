@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import AdminHeader from '../../components/AdminHeader';
 import {
   Building2,
@@ -20,12 +20,15 @@ import {
   RotateCcw,
   X,
   Eye,
-  EyeOff
+  EyeOff,
+  Image,
+  Trash2
 } from 'lucide-react';
 import { usePos } from '../../context/PosContext';
 
 export default function CompanySettingsView() {
   const { settings, updateSettings, clearAllSampleData, showToast } = usePos();
+  const logoInputRef = useRef(null);
 
   const [copied, setCopied] = useState(false);
   const [queueNumbers, setQueueNumbers] = useState(settings.queue_numbers || false);
@@ -110,6 +113,70 @@ export default function CompanySettingsView() {
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            {/* Upload Logo Toko */}
+            <div className="sm:col-span-2 p-3.5 rounded-xl border border-slate-800 bg-[#0f1422] flex flex-col sm:flex-row items-center gap-4">
+              <div className="w-16 h-16 rounded-xl border border-slate-700 bg-slate-900 flex items-center justify-center overflow-hidden shrink-0">
+                {settings.store_logo ? (
+                  <img src={settings.store_logo} alt="Logo Toko" className="w-full h-full object-contain p-1" />
+                ) : (
+                  <Image size={24} className="text-slate-600" />
+                )}
+              </div>
+              <div className="flex-1 text-center sm:text-left">
+                <div className="text-xs font-bold text-white mb-0.5">Logo Brand & Struk Kasir</div>
+                <div className="text-[11px] text-slate-400">
+                  {settings.store_logo ? 'Logo terpasang. Tampil di Kasir Kiosk, Struk Nota, & Navbar.' : 'Unggah logo untuk menampilkan brand visual di kasir dan struk thermal.'}
+                </div>
+              </div>
+              <div className="flex items-center gap-2">
+                <input
+                  type="file"
+                  ref={logoInputRef}
+                  accept="image/*"
+                  className="hidden"
+                  onChange={(e) => {
+                    const file = e.target.files?.[0];
+                    if (file) {
+                      if (file.size > 2 * 1024 * 1024) {
+                        showToast('Ukuran gambar maksimal 2MB', 'warning');
+                        return;
+                      }
+                      const reader = new FileReader();
+                      reader.onload = (uploadEvent) => {
+                        const base64 = uploadEvent.target?.result;
+                        if (base64) {
+                          updateSettings({ store_logo: base64 });
+                          showToast('Logo berhasil diperbarui', 'success');
+                        }
+                      };
+                      reader.readAsDataURL(file);
+                    }
+                  }}
+                />
+                <button
+                  type="button"
+                  className="posa-btn-outline text-xs py-1.5 px-3 flex items-center gap-1.5"
+                  onClick={() => logoInputRef.current?.click()}
+                >
+                  <Upload size={13} />
+                  <span>{settings.store_logo ? 'Ganti' : 'Unggah Logo'}</span>
+                </button>
+                {settings.store_logo && (
+                  <button
+                    type="button"
+                    className="p-1.5 text-rose-400 hover:text-rose-300 rounded hover:bg-rose-500/10"
+                    title="Hapus Logo"
+                    onClick={() => {
+                      updateSettings({ store_logo: '' });
+                      showToast('Logo dihapus', 'info');
+                    }}
+                  >
+                    <Trash2 size={14} />
+                  </button>
+                )}
+              </div>
+            </div>
+
             <div>
               <label className="text-xs font-semibold text-slate-300 block mb-1">
                 Nama Usaha / Brand Kasir (POS Logo Brand)

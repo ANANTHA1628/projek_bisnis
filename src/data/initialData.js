@@ -9,6 +9,7 @@ export const INITIAL_SETTINGS = {
   admin_pin: '1234',
   cashier_pin: '0000',
   store_name: 'posa',
+  store_logo: '', // Base64 data URL foto logo toko
   store_tagline: 'Modern Cafe & POS System',
   store_address: 'Alamat Toko Anda',
   store_phone: '081234567890',
@@ -49,7 +50,7 @@ export const INITIAL_SHIFT = {
   isOpen: false,
   openedAt: null,
   closedAt: null,
-  cashierName: 'Ahmad Rafi (Owner)',
+  cashierName: 'Owner',
   openingCash: 0,
   expectedCash: 0,
   actualCash: null,
@@ -62,22 +63,8 @@ export const INITIAL_EXPENSES = [];
 // Riwayat Mutasi Stok Kosongan
 export const INITIAL_STOCK_MOVEMENTS = [];
 
-// Akun Staf Utama (Owner) untuk Login
-export const INITIAL_STAFF = [
-  {
-    id: 'staff-owner',
-    name: 'Ahmad Rafi Hamdi',
-    email: 'hamdirafi310@gmail.com',
-    role: 'Owner',
-    pin: '1234',
-    phone: '6283871983300',
-    status: 'Aktif',
-    active: 'Yes',
-    permissions: 'Manage All',
-    shift: 'Semua Shift',
-    joinedDate: new Date().toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric' })
-  }
-];
+// Akun Staf Bersih Kosongan (Akan diisi saat pertama kali Register Master Akun)
+export const INITIAL_STAFF = [];
 
 // Log Aktivitas Kosongan
 export const INITIAL_STAFF_ACTIVITY = [];

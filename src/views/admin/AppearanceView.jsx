@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import AdminHeader from '../../components/AdminHeader';
-import { Check, Palette, Volume2, Sparkles, RefreshCw, UserCheck, Layout, Shield, Zap } from 'lucide-react';
+import { Check, Palette, Volume2, Sparkles, RefreshCw, UserCheck, Layout, Shield, Zap, Image, Upload, Trash2 } from 'lucide-react';
 import { usePos } from '../../context/PosContext';
 
 export default function AppearanceView() {
-  const { themeSettings, updateThemeSettings, showToast, playSound } = usePos();
+  const { themeSettings, updateThemeSettings, settings, updateSettings, showToast, playSound } = usePos();
+  const fileInputRef = useRef(null);
 
   const themes = [
     {
@@ -458,6 +459,88 @@ export default function AppearanceView() {
             />
             <span className="posa-slider" />
           </label>
+        </div>
+      </div>
+
+      {/* 5. Logo Usaha / Brand Visual */}
+      <div className="posa-admin-card">
+        <div className="flex items-center justify-between mb-1">
+          <div className="flex items-center gap-2">
+            <Image size={18} className="text-emerald-400" />
+            <h2 className="posa-card-title">Logo Brand & Struk Usaha</h2>
+          </div>
+          {settings.store_logo && (
+            <button
+              type="button"
+              className="text-xs text-rose-400 hover:text-rose-300 flex items-center gap-1 font-semibold"
+              onClick={() => {
+                updateSettings({ store_logo: '' });
+                showToast('Logo berhasil dihapus', 'info');
+              }}
+            >
+              <Trash2 size={13} />
+              <span>Hapus Logo</span>
+            </button>
+          )}
+        </div>
+        <p className="posa-card-subtitle mb-4">
+          Unggah logo bisnis Anda (PNG / JPG / SVG). Logo ini akan ditampilkan secara otomatis di Header Kasir Kiosk POS, Top Navbar Admin, Layar Kunci Kiosk, dan Kepala Cetak Nota Struk Kasir.
+        </p>
+
+        <div className="flex flex-col sm:flex-row items-center gap-6 p-4 rounded-xl border border-slate-800 bg-[#0f1422]">
+          <div className="w-24 h-24 rounded-2xl border-2 border-dashed border-slate-700 bg-slate-900 flex items-center justify-center overflow-hidden shrink-0 shadow-inner">
+            {settings.store_logo ? (
+              <img
+                src={settings.store_logo}
+                alt="Logo Toko"
+                className="w-full h-full object-contain p-2"
+              />
+            ) : (
+              <div className="text-center p-2 text-slate-500">
+                <Image size={24} className="mx-auto mb-1 opacity-50" />
+                <span className="text-[10px] block">Belum ada logo</span>
+              </div>
+            )}
+          </div>
+
+          <div className="flex-1 w-full text-center sm:text-left">
+            <input
+              type="file"
+              ref={fileInputRef}
+              accept="image/*"
+              className="hidden"
+              onChange={(e) => {
+                const file = e.target.files?.[0];
+                if (file) {
+                  if (file.size > 2 * 1024 * 1024) {
+                    showToast('Ukuran gambar maksimal 2MB', 'warning');
+                    return;
+                  }
+                  const reader = new FileReader();
+                  reader.onload = (uploadEvent) => {
+                    const base64 = uploadEvent.target?.result;
+                    if (base64) {
+                      updateSettings({ store_logo: base64 });
+                      showToast('Logo bisnis berhasil diunggah & disimpan!', 'success');
+                    }
+                  };
+                  reader.readAsDataURL(file);
+                }
+              }}
+            />
+
+            <button
+              type="button"
+              className="buat-laporan-btn inline-flex items-center gap-2 text-xs py-2 px-4 font-bold"
+              onClick={() => fileInputRef.current?.click()}
+            >
+              <Upload size={14} />
+              <span>{settings.store_logo ? 'Ganti Foto Logo' : 'Unggah Foto Logo Toko'}</span>
+            </button>
+            <span className="text-[11px] text-slate-400 block mt-2">
+              Format yang didukung: PNG, JPG, WebP, SVG. Disarankan berukuran persegi / transparan (Maks. 2MB).
+            </span>
+          </div>
         </div>
       </div>
     </div>

@@ -25,6 +25,21 @@ export function PosProvider({ children }) {
   const [isKioskMode, setIsKioskMode] = useState(true);
   const [isKioskLocked, setIsKioskLocked] = useState(true);
   const [currentUser, setCurrentUser] = useState(null); // Terkunci sebelum input PIN
+  const [masterAccount, setMasterAccount] = useState(() => {
+    try {
+      const saved = localStorage.getItem('posa_master_account');
+      if (saved) return JSON.parse(saved);
+    } catch {}
+    return null;
+  });
+  const [showMasterAuthScreen, setShowMasterAuthScreen] = useState(() => {
+    try {
+      const saved = localStorage.getItem('posa_master_account');
+      return !saved; // Jika belum pernah ada master account, buka layar register master pertama
+    } catch {
+      return true;
+    }
+  });
   const [displayMode, setDisplayMode] = useState('none'); // 'none' | 'kitchen' | 'customer'
   const [showDisplayModeModal, setShowDisplayModeModal] = useState(false);
   const [showLeaveDisplayModal, setShowLeaveDisplayModal] = useState(false);
@@ -227,10 +242,15 @@ export function PosProvider({ children }) {
 
   const [staffList, setStaffList] = useState(() => {
     try {
+      if (!localStorage.getItem('posa_auth_v4_clean')) {
+        localStorage.removeItem('posa_staff_list');
+        localStorage.setItem('posa_auth_v4_clean', 'true');
+        return INITIAL_STAFF; // []
+      }
       const saved = localStorage.getItem('posa_staff_list');
       if (saved) return JSON.parse(saved);
     } catch {}
-    return INITIAL_STAFF;
+    return INITIAL_STAFF; // []
   });
 
   const [customerList, setCustomerList] = useState(() => {
@@ -335,6 +355,83 @@ export function PosProvider({ children }) {
     }
     setStaffList((prev) => prev.filter((s) => s.id !== id));
     showToast('Staf berhasil dihapus');
+  };
+
+  // Master Account Handlers (Owner Register, Login, & Logout)
+  const registerMasterAccount = ({ name, storeName, email, password, pin }) => {
+    const newMaster = {
+      id: 'staff-owner-' + Date.now(),
+      name,
+      email,
+      role: 'Owner',
+      pin,
+      phone: '',
+      status: 'Aktif',
+      active: 'Yes',
+      permissions: 'Manage All',
+      shift: 'Semua Shift',
+      joinedDate: new Date().toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric' })
+    };
+
+    setMasterAccount(newMaster);
+    try {
+      localStorage.setItem('posa_master_account', JSON.stringify(newMaster));
+      localStorage.setItem('posa_master_password', password);
+    } catch {}
+
+    const updatedStaff = [newMaster];
+    setStaffList(updatedStaff);
+    try {
+      localStorage.setItem('posa_staff_list', JSON.stringify(updatedStaff));
+    } catch {}
+
+    updateSettings({
+      store_name: storeName || 'posa',
+      store_email: email,
+      admin_pin: pin,
+      account_password: password
+    });
+
+    setCurrentUser(newMaster);
+    setIsKioskMode(false);
+    setIsKioskLocked(false);
+    setShowMasterAuthScreen(false);
+    showToast(`Selamat datang ${name}! Akun bisnis Anda berhasil didaftarkan.`, 'success');
+  };
+
+  const loginMasterAccount = (email, password) => {
+    const savedPassword = localStorage.getItem('posa_master_password') || settings.account_password;
+    if (!masterAccount) {
+      return { success: false, message: 'Belum ada akun master yang terdaftar di perangkat ini. Silakan daftar terlebih dahulu.' };
+    }
+    if (
+      masterAccount.email?.toLowerCase() === email?.trim().toLowerCase() &&
+      (!savedPassword || savedPassword === password)
+    ) {
+      setCurrentUser(masterAccount);
+      setIsKioskMode(false);
+      setIsKioskLocked(false);
+      setShowMasterAuthScreen(false);
+      showToast(`Login berhasil sebagai Owner: ${masterAccount.name}`, 'success');
+      return { success: true };
+    }
+    return { success: false, message: 'Email atau kata sandi master tidak cocok.' };
+  };
+
+  const logoutMasterAccount = () => {
+    setCurrentUser(null);
+    setIsKioskMode(true);
+    setIsKioskLocked(true);
+    setShowMasterAuthScreen(true);
+    showToast('Anda telah keluar dari Akun Master.', 'info');
+  };
+
+  const lockKioskToPin = () => {
+    setCurrentUser(null);
+    setIsKioskMode(true);
+    setIsKioskLocked(true);
+    setShowMasterAuthScreen(false);
+    showToast('Sesi kasir dikunci. Masukkan PIN shift kasir.', 'info');
   };
 
   const addCustomer = (newCustomer) => {
@@ -1229,6 +1326,14 @@ export function PosProvider({ children }) {
     addCustomer,
     updateCustomer,
     deleteCustomer,
+    masterAccount,
+    setMasterAccount,
+    showMasterAuthScreen,
+    setShowMasterAuthScreen,
+    registerMasterAccount,
+    loginMasterAccount,
+    logoutMasterAccount,
+    lockKioskToPin,
     toast,
     showToast
   };

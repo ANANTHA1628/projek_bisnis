@@ -94,7 +94,21 @@ export default function KasirView() {
       <div className="kasir-left-section">
         {/* Kasir Header */}
         <div className="kasir-header-row">
-          <div className="posa-brand">{settings?.store_name || 'posa'}</div>
+          <div className="posa-brand" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            {settings?.store_logo && (
+              <img
+                src={settings.store_logo}
+                alt="Logo"
+                style={{
+                  width: '28px',
+                  height: '28px',
+                  objectFit: 'contain',
+                  borderRadius: '6px'
+                }}
+              />
+            )}
+            <span>{settings?.store_name || 'posa'}</span>
+          </div>
 
           <div className="kasir-header-actions">
             <button

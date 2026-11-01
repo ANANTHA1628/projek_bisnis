@@ -7,6 +7,7 @@ import TopNavbar from './components/TopNavbar';
 // POS Kiosk views
 import KioskLockView from './views/KioskLockView';
 import KasirView from './views/KasirView';
+import AuthMasterView from './views/AuthMasterView';
 
 // Display mode screens (From example/ screenshots)
 import KitchenScreenView from './views/display/KitchenScreenView';
@@ -54,8 +55,24 @@ function PosAppContent() {
     isKioskLocked,
     displayMode,
     adminView,
+    masterAccount,
+    showMasterAuthScreen,
+    setShowMasterAuthScreen,
     toast
   } = usePos();
+
+  // 0. If Master Account is not yet created or user explicitly opened Master Auth screen
+  if (showMasterAuthScreen || !masterAccount) {
+    return (
+      <div className="posa-app-root">
+        <AuthMasterView
+          defaultMode={masterAccount ? 'login' : 'register'}
+          onSwitchToPin={masterAccount ? () => setShowMasterAuthScreen(false) : undefined}
+        />
+        {toast && <div className="toast-floating-container">{toast.message}</div>}
+      </div>
+    );
+  }
 
   // 1. If in Dedicated Display Mode (Kitchen Screen / Customer Screen TV)
   if (displayMode === 'kitchen') {

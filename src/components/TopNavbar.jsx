@@ -101,7 +101,19 @@ export default function TopNavbar() {
             {mobileSidebarOpen ? <X size={20} /> : <Menu size={20} />}
           </button>
 
-          <div className="posa-navbar-brand" onClick={() => navigateTo('dashboard')} role="button">
+          <div className="posa-navbar-brand" onClick={() => navigateTo('dashboard')} role="button" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            {settings?.store_logo && (
+              <img
+                src={settings.store_logo}
+                alt="Logo"
+                style={{
+                  width: '26px',
+                  height: '26px',
+                  objectFit: 'contain',
+                  borderRadius: '6px'
+                }}
+              />
+            )}
             <span className="posa-brand-title">{settings?.store_name || 'posa'}</span>
           </div>
 
