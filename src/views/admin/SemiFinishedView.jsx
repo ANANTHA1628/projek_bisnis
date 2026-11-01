@@ -13,7 +13,7 @@ export default function SemiFinishedView() {
       <AdminHeader title="Semi-Finished Goods" />
 
       <div className="posa-admin-card">
-        <p className="posa-card-subtitle">
+        <p className="posa-card-subtitle mb-4">
           Things you make in the kitchen from raw materials, like cooked rice or milk mix. Make a batch here first, then menus that use it can be sold.
         </p>
 

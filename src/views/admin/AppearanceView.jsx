@@ -1,6 +1,6 @@
 import React from 'react';
 import AdminHeader from '../../components/AdminHeader';
-import { Palette, Check } from 'lucide-react';
+import { Check } from 'lucide-react';
 import { usePos } from '../../context/PosContext';
 
 export default function AppearanceView() {

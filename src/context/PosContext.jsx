@@ -36,6 +36,7 @@ export function PosProvider({ children }) {
   const [language, setLanguage] = useState('EN'); // Matches example screenshots
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [printerSize, setPrinterSize] = useState('58mm'); // '58mm' | '80mm' (D6)
+  const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
 
   // Default Theme Configuration
   const DEFAULT_THEME = {
@@ -857,6 +858,8 @@ export function PosProvider({ children }) {
     toggleFullscreen,
     printerSize,
     setPrinterSize,
+    mobileSidebarOpen,
+    setMobileSidebarOpen,
     settings,
     setSettings,
     products,

@@ -40,7 +40,7 @@ export default function TaxServiceView() {
       <AdminHeader title="Tax & Service Charge" />
 
       <div className="posa-admin-card">
-        <div className="flex items-center justify-between mb-4">
+        <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
           <p className="posa-card-subtitle m-0">
             Restaurant Tax (PB1) & Service Charge
           </p>
@@ -48,10 +48,11 @@ export default function TaxServiceView() {
           <button
             type="button"
             className="posa-btn-primary"
+            style={{ width: 'auto' }}
             onClick={handleAdd}
           >
             <Plus size={16} />
-            <span>Add</span>
+            <span>Add Tax/Fee</span>
           </button>
         </div>
 

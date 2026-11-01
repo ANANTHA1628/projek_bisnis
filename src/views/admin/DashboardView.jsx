@@ -93,7 +93,7 @@ export default function DashboardView() {
           className="posa-admin-card cursor-pointer hover:border-blue-500/50 transition-colors bg-gradient-to-r from-blue-950/30 to-[#121622]"
           onClick={() => {
             setIsKioskMode(true);
-            setIsKioskLocked(true);
+            setIsKioskLocked(false);
           }}
         >
           <div className="flex justify-between items-center">

@@ -192,11 +192,6 @@ export default function KioskLockView() {
               />
             ))}
           </div>
-
-          <div className="kiosk-quick-hint">
-            <div>Owner/Admin: <code>123456</code> (atau <code>1234</code>)</div>
-            <div className="mt-1">Karyawan/Kasir: <code>000000</code> (atau <code>0000</code>)</div>
-          </div>
         </div>
 
         {/* Right Side: Keypad */}

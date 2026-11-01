@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import AdminHeader from '../../components/AdminHeader';
-import { Search, Plus, FileSpreadsheet, ChevronDown, Edit2, Trash2 } from 'lucide-react';
+import { Search, Plus, FileSpreadsheet, Edit2, Trash2 } from 'lucide-react';
 import { usePos } from '../../context/PosContext';
 
 export default function MenusView() {

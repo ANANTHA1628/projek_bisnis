@@ -284,7 +284,7 @@ export default function StaffView() {
             {/* Modal Form */}
             <form onSubmit={handleSubmit} className="space-y-3.5">
               {/* Row 1: Nama Lengkap & Peran / Role */}
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
                   <label className="posa-label">Nama Lengkap *</label>
                   <input
@@ -317,7 +317,7 @@ export default function StaffView() {
               </div>
 
               {/* Row 2: PIN 6 Digit & Status Aktif */}
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
                   <label className="posa-label">
                     PIN Login Kiosk (4 - 6 Angka) *
@@ -325,7 +325,7 @@ export default function StaffView() {
                   <div className="relative">
                     <input
                       type="text"
-                      className="posa-input w-full font-mono text-center tracking-widest text-base"
+                      className="posa-input w-full font-mono text-center tracking-widest text-sm"
                       maxLength={6}
                       placeholder="Contoh: 0000 atau 123456"
                       value={pin}
@@ -337,9 +337,12 @@ export default function StaffView() {
                     />
                     <Key size={14} className="posa-search-icon" />
                   </div>
-                  <span className="text-[11px] text-muted mt-1 block">
-                    Digunakan saat login di layar sentuh POS Kiosk.
-                  </span>
+                  <div className="mt-1.5 flex items-center gap-1.5 px-2 py-1 bg-blue-500/10 border border-blue-500/20 rounded-md">
+                    <span className="w-1.5 h-1.5 rounded-full bg-blue-400 flex-shrink-0" />
+                    <span className="text-[10.5px] font-medium text-blue-300/90 leading-tight">
+                      Digunakan saat login di layar sentuh POS Kiosk.
+                    </span>
+                  </div>
                 </div>
 
                 <div>
@@ -356,7 +359,7 @@ export default function StaffView() {
               </div>
 
               {/* Row 3: Kontak Telepon & Email */}
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
                   <label className="posa-label">Nomor WhatsApp / HP</label>
                   <div className="relative">

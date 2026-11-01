@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import AdminHeader from '../../components/AdminHeader';
-import { Wallet, Calendar, FileSpreadsheet, Search, Filter, RefreshCw } from 'lucide-react';
+import { Wallet, FileSpreadsheet, Search } from 'lucide-react';
 import { usePos } from '../../context/PosContext';
 
 export default function StaffActivityView() {
@@ -66,10 +66,10 @@ export default function StaffActivityView() {
       <AdminHeader title="Staff Activity" />
 
       {/* Card 1: Shifts & Cash Drawer */}
-      <div className="posa-admin-card mb-4">
-        <div className="flex items-center justify-between mb-3">
+      <div className="posa-admin-card">
+        <div className="flex flex-wrap items-center justify-between gap-2 mb-4">
           <div className="flex items-center gap-2 text-blue-400 font-semibold text-sm">
-            <Wallet size={16} />
+            <Wallet size={17} />
             <span>Shifts & Cash Drawer Rekonsiliasi</span>
           </div>
           <span className="text-xs text-muted">
@@ -193,7 +193,7 @@ export default function StaffActivityView() {
         </div>
 
         {/* Search input */}
-        <div className="posa-search-wrapper mb-3 w-full">
+        <div className="posa-search-wrapper mb-4 w-full">
           <Search size={16} className="posa-search-icon" />
           <input
             type="text"

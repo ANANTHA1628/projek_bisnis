@@ -11,14 +11,15 @@ export default function PromosView() {
       <AdminHeader title="Promo Management" />
 
       <div className="posa-admin-card">
-        <p className="posa-card-subtitle">
-          Create special discounts, set conditions and claim limits.
-        </p>
+        <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
+          <p className="posa-card-subtitle m-0">
+            Create special discounts, set conditions and claim limits.
+          </p>
 
-        <div className="flex justify-end mb-4">
           <button
             type="button"
             className="posa-btn-primary"
+            style={{ width: 'auto' }}
             onClick={() => showToast('Membuka form Tambah Promo')}
           >
             <Plus size={16} />

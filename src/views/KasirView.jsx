@@ -41,6 +41,7 @@ export default function KasirView() {
     setActiveCategory,
     subtotal,
     discount,
+    setDiscount,
     subtotalAfterDiscount,
     taxPb1,
     total,
@@ -152,7 +153,7 @@ export default function KasirView() {
                 className="kasir-action-pill-btn"
                 onClick={() => {
                   setIsKioskMode(false);
-                  setIsKioskLocked(true);
+                  setIsKioskLocked(false);
                   showToast('Beralih ke Admin Backoffice');
                 }}
                 title="Buka Admin Backoffice"
@@ -294,7 +295,7 @@ export default function KasirView() {
       </div>
 
       {/* Right Cart Sidebar (Pesanan Saat Ini) */}
-      <aside className="kasir-cart-panel">
+      <aside className="kasir-cart-panel" id="kasir-cart-section">
         <div className="cart-header">
           <div className="cart-header-title">
             <ShoppingCart size={18} />
@@ -417,7 +418,20 @@ export default function KasirView() {
             </div>
             {discount > 0 && (
               <div className="summary-row" style={{ color: '#ef4444' }}>
-                <span>Diskon</span>
+                <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
+                  <span>Diskon</span>
+                  <button
+                    type="button"
+                    style={{ fontSize: '10px', color: '#94a3b8', textDecoration: 'underline', background: 'transparent' }}
+                    onClick={() => {
+                      setDiscount(0);
+                      showToast('Diskon pesanan dihapus');
+                    }}
+                    title="Hapus diskon"
+                  >
+                    (hapus)
+                  </button>
+                </span>
                 <span>-{formatRupiah(discount)}</span>
               </div>
             )}
@@ -478,6 +492,34 @@ export default function KasirView() {
           </button>
         </div>
       </aside>
+
+      {/* Mobile Sticky Floating Cart Bar */}
+      {cart.length > 0 && (
+        <div className="kasir-mobile-floating-cart">
+          <div className="kasir-floating-cart-info">
+            <span className="kasir-floating-count">{cartItemCount} item</span>
+            <span className="kasir-floating-total">{formatRupiah(total)}</span>
+          </div>
+          <div className="kasir-floating-actions">
+            <button
+              type="button"
+              className="kasir-floating-view-btn"
+              onClick={() => {
+                document.getElementById('kasir-cart-section')?.scrollIntoView({ behavior: 'smooth' });
+              }}
+            >
+              Lihat Pesanan
+            </button>
+            <button
+              type="button"
+              className="kasir-floating-pay-btn"
+              onClick={() => setShowPaymentModal(true)}
+            >
+              Bayar ➔
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

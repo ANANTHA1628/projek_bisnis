@@ -44,7 +44,7 @@ export default function OrdersVoidView() {
         </div>
 
         {/* Filters */}
-        <div className="flex flex-wrap items-center gap-4 mb-4 pb-3 border-b border-slate-800">
+        <div className="flex flex-wrap items-center gap-4 mb-4 pb-4 border-b border-slate-800">
           <div className="posa-filter-pills">
             {['All', 'Paid', 'Unpaid', 'Voided'].map((status) => (
               <button
@@ -73,9 +73,9 @@ export default function OrdersVoidView() {
         </div>
 
         {/* Counter Summary */}
-        <div className="flex items-center gap-6 text-sm text-slate-300 font-medium mb-3">
+        <div className="flex items-center gap-6 text-sm text-slate-300 font-medium mb-4 p-3 bg-[#161c2d] rounded-lg border border-slate-800/60">
           <span>Orders: <strong className="text-white">{filteredOrders.length}</strong></span>
-          <span>Collected: <strong className="text-white">Rp {totalCollected.toLocaleString('id-ID')}</strong></span>
+          <span>Collected: <strong className="text-emerald-400">Rp {totalCollected.toLocaleString('id-ID')}</strong></span>
         </div>
 
         {/* Table or Empty State */}

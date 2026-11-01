@@ -51,10 +51,14 @@ export default function SuppliersView() {
       <AdminHeader title="Suppliers" />
 
       <div className="posa-admin-card">
-        <div className="flex justify-end mb-4">
+        <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
+          <p className="posa-card-subtitle m-0">
+            Daftar rekanan supplier bahan baku & kemasan kopi.
+          </p>
           <button
             type="button"
             className="posa-btn-primary"
+            style={{ width: 'auto' }}
             onClick={handleAdd}
           >
             <Plus size={16} />

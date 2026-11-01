@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { usePos } from '../../context/PosContext';
-import { X, CheckCircle, Banknote, QrCode, CreditCard, Clock, Tag } from 'lucide-react';
+import { X, Banknote, QrCode, CreditCard, Clock, Tag } from 'lucide-react';
 
 export default function PaymentModal() {
   const {
@@ -18,10 +18,39 @@ export default function PaymentModal() {
     orderType,
     setShowAdminPinModal,
     setAdminPinConfig,
+    currentUser,
     showToast
   } = usePos();
 
   const [cashGiven, setCashGiven] = useState(total);
+  const [showDiscountPanel, setShowDiscountPanel] = useState(false);
+  const [discountMode, setDiscountMode] = useState('target_price'); // 'target_price' | 'nominal' | 'percent'
+  const [discountInputVal, setDiscountInputVal] = useState('');
+
+  // Sinkronisasi otomatis nilai pembayaran tunai setiap kali total / diskon berubah
+  useEffect(() => {
+    if (showPaymentModal) {
+      setCashGiven(total);
+    }
+  }, [total, showPaymentModal]);
+
+  const calculatedDiscount = useMemo(() => {
+    const val = Number(discountInputVal) || 0;
+    if (val <= 0) return 0;
+    if (discountMode === 'target_price') {
+      // Input harga baru / kesepakatan (contoh subtotal 50.000, input 40.000 -> diskon 10.000)
+      return Math.max(0, subtotal - val);
+    }
+    if (discountMode === 'nominal') {
+      // Input potongan nominal rupiah langsung
+      return Math.min(subtotal, val);
+    }
+    if (discountMode === 'percent') {
+      // Input persentase potongan (%)
+      return Math.round((subtotal * Math.min(100, val)) / 100);
+    }
+    return 0;
+  }, [discountInputVal, discountMode, subtotal]);
 
   if (!showPaymentModal) return null;
 
@@ -45,19 +74,29 @@ export default function PaymentModal() {
     completePayment(paymentMethod === 'tunai' ? cashGiven : total);
   };
 
-  const handleAddDiscount = () => {
-    setAdminPinConfig({
-      title: 'Otorisasi Diskon Manual (Admin)',
-      requireReason: true,
-      onSuccess: ({ reason }) => {
-        const discInput = prompt('Masukkan nominal diskon (Rp):', '5000');
-        if (discInput && Number(discInput) > 0) {
-          setDiscount(Number(discInput));
-          showToast(`Diskon Rp ${Number(discInput).toLocaleString('id-ID')} diterapkan (${reason})`);
+  const handleOpenDiscountPanel = () => {
+    // Jika Owner atau Supervisor, bisa langsung buka panel diskon tanpa PIN
+    if (currentUser?.role === 'Owner' || currentUser?.role === 'Supervisor') {
+      setShowDiscountPanel(!showDiscountPanel);
+    } else {
+      setAdminPinConfig({
+        title: 'Otorisasi Diskon Manual (Admin)',
+        requireReason: true,
+        onSuccess: () => {
+          setShowDiscountPanel(true);
         }
-      }
-    });
-    setShowAdminPinModal(true);
+      });
+      setShowAdminPinModal(true);
+    }
+  };
+
+  const handleApplyDiscount = () => {
+    if (calculatedDiscount > 0) {
+      setDiscount(calculatedDiscount);
+      setShowDiscountPanel(false);
+      setDiscountInputVal('');
+      showToast(`Diskon Rp ${calculatedDiscount.toLocaleString('id-ID')} berhasil diterapkan`);
+    }
   };
 
   return (
@@ -90,7 +129,7 @@ export default function PaymentModal() {
                 {orderType} • {selectedTable || 'Kasir'}
               </div>
               <div style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-primary)' }}>
-                Total Pembayaran
+                Total Tagihan (Setelah Diskon)
               </div>
             </div>
             <div style={{ fontSize: '20px', fontWeight: 800, color: '#60a5fa' }}>
@@ -99,14 +138,14 @@ export default function PaymentModal() {
           </div>
 
           {/* Breakdown & Diskon button */}
-          <div style={{ padding: '8px 12px', backgroundColor: '#0e1624', borderRadius: '8px', border: '1px solid var(--border-subtle)' }}>
+          <div style={{ padding: '10px 14px', backgroundColor: '#0e1624', borderRadius: '8px', border: '1px solid var(--border-subtle)' }}>
             <div className="summary-row" style={{ fontSize: '12px' }}>
-              <span>Subtotal</span>
+              <span>Harga Awal (Subtotal)</span>
               <span>{formatRupiah(subtotal)}</span>
             </div>
             {discount > 0 && (
               <div className="summary-row" style={{ fontSize: '12px', color: '#ef4444' }}>
-                <span>Diskon Manual</span>
+                <span>Diskon Diterapkan</span>
                 <span>-{formatRupiah(discount)}</span>
               </div>
             )}
@@ -114,17 +153,193 @@ export default function PaymentModal() {
               <span>PB1 (10%)</span>
               <span>{formatRupiah(taxPb1)}</span>
             </div>
-            <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '6px' }}>
+            <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '8px', marginTop: '8px' }}>
+              {discount > 0 && (
+                <button
+                  type="button"
+                  style={{
+                    fontSize: '11px',
+                    padding: '4px 10px',
+                    color: '#f87171',
+                    background: 'transparent',
+                    border: '1px solid rgba(239, 68, 68, 0.3)',
+                    borderRadius: '6px'
+                  }}
+                  onClick={() => {
+                    setDiscount(0);
+                    showToast('Diskon telah dihapus');
+                  }}
+                >
+                  Hapus Diskon
+                </button>
+              )}
               <button
                 type="button"
                 className="tambah-bahan-btn"
                 style={{ fontSize: '11px', padding: '4px 10px' }}
-                onClick={handleAddDiscount}
+                onClick={handleOpenDiscountPanel}
               >
                 <Tag size={12} />
-                <span>{discount > 0 ? 'Ubah Diskon (PIN Admin)' : 'Beri Diskon (PIN Admin)'}</span>
+                <span>{discount > 0 ? 'Ubah Diskon' : '+ Diskon / Nego Harga'}</span>
               </button>
             </div>
+
+            {/* Panel Input Diskon / Nego Harga */}
+            {showDiscountPanel && (
+              <div
+                style={{
+                  padding: '12px',
+                  backgroundColor: '#111726',
+                  border: '1.5px solid rgba(59, 130, 246, 0.4)',
+                  borderRadius: '10px',
+                  marginTop: '10px',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '10px'
+                }}
+              >
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <span style={{ fontSize: '12px', fontWeight: 700, color: '#ffffff' }}>
+                    Atur Diskon / Harga Khusus
+                  </span>
+                  <span style={{ fontSize: '11px', color: '#94a3b8' }}>
+                    Harga Awal: <strong style={{ color: '#ffffff' }}>{formatRupiah(subtotal)}</strong>
+                  </span>
+                </div>
+
+                {/* Mode Tabs */}
+                <div style={{ display: 'flex', gap: '6px', background: '#0b0f19', padding: '3px', borderRadius: '8px' }}>
+                  <button
+                    type="button"
+                    style={{
+                      flex: 1,
+                      padding: '6px 8px',
+                      fontSize: '11px',
+                      fontWeight: discountMode === 'target_price' ? 700 : 500,
+                      color: discountMode === 'target_price' ? '#ffffff' : '#94a3b8',
+                      backgroundColor: discountMode === 'target_price' ? '#2563eb' : 'transparent',
+                      borderRadius: '6px'
+                    }}
+                    onClick={() => { setDiscountMode('target_price'); setDiscountInputVal(''); }}
+                  >
+                    Target Harga Baru
+                  </button>
+                  <button
+                    type="button"
+                    style={{
+                      flex: 1,
+                      padding: '6px 8px',
+                      fontSize: '11px',
+                      fontWeight: discountMode === 'nominal' ? 700 : 500,
+                      color: discountMode === 'nominal' ? '#ffffff' : '#94a3b8',
+                      backgroundColor: discountMode === 'nominal' ? '#2563eb' : 'transparent',
+                      borderRadius: '6px'
+                    }}
+                    onClick={() => { setDiscountMode('nominal'); setDiscountInputVal(''); }}
+                  >
+                    Potongan (Rp)
+                  </button>
+                  <button
+                    type="button"
+                    style={{
+                      flex: 1,
+                      padding: '6px 8px',
+                      fontSize: '11px',
+                      fontWeight: discountMode === 'percent' ? 700 : 500,
+                      color: discountMode === 'percent' ? '#ffffff' : '#94a3b8',
+                      backgroundColor: discountMode === 'percent' ? '#2563eb' : 'transparent',
+                      borderRadius: '6px'
+                    }}
+                    onClick={() => { setDiscountMode('percent'); setDiscountInputVal(''); }}
+                  >
+                    Persen (%)
+                  </button>
+                </div>
+
+                {/* Input field */}
+                <div>
+                  <label style={{ fontSize: '11.5px', color: '#94a3b8', display: 'block', marginBottom: '4px' }}>
+                    {discountMode === 'target_price' && 'Ketik Harga Baru yang Harus Dibayar (Rp):'}
+                    {discountMode === 'nominal' && 'Ketik Nominal Potongan Diskon (Rp):'}
+                    {discountMode === 'percent' && 'Ketik Persentase Diskon (%):'}
+                  </label>
+                  <input
+                    type="number"
+                    className="kasir-search-input"
+                    style={{ width: '100%', padding: '8px 12px', fontSize: '14px', fontWeight: 600 }}
+                    placeholder={
+                      discountMode === 'target_price' ? `Contoh: ${Math.round(subtotal * 0.8)}` :
+                      discountMode === 'nominal' ? 'Contoh: 10000' : 'Contoh: 10'
+                    }
+                    value={discountInputVal}
+                    onChange={(e) => setDiscountInputVal(e.target.value)}
+                    autoFocus
+                  />
+                </div>
+
+                {/* Quick % buttons */}
+                {discountMode === 'percent' && (
+                  <div style={{ display: 'flex', gap: '6px' }}>
+                    {[5, 10, 15, 20, 25, 50].map((p) => (
+                      <button
+                        key={p}
+                        type="button"
+                        className="preset-pill"
+                        style={{ fontSize: '11px', padding: '3px 8px' }}
+                        onClick={() => setDiscountInputVal(String(p))}
+                      >
+                        {p}%
+                      </button>
+                    ))}
+                  </div>
+                )}
+
+                {/* Live Preview */}
+                {calculatedDiscount > 0 && (
+                  <div
+                    style={{
+                      padding: '8px 10px',
+                      backgroundColor: '#0a101d',
+                      borderRadius: '6px',
+                      fontSize: '12px',
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      alignItems: 'center'
+                    }}
+                  >
+                    <span style={{ color: '#94a3b8' }}>
+                      Potongan: <strong style={{ color: '#f87171' }}>-{formatRupiah(calculatedDiscount)}</strong>
+                    </span>
+                    <span style={{ color: '#94a3b8' }}>
+                      Harga Baru: <strong style={{ color: '#60a5fa' }}>{formatRupiah(Math.max(0, subtotal - calculatedDiscount))}</strong>
+                    </span>
+                  </div>
+                )}
+
+                {/* Action buttons */}
+                <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '8px', marginTop: '4px' }}>
+                  <button
+                    type="button"
+                    style={{ padding: '6px 12px', fontSize: '12px', color: '#94a3b8', background: 'transparent' }}
+                    onClick={() => {
+                      setShowDiscountPanel(false);
+                      setDiscountInputVal('');
+                    }}
+                  >
+                    Batal
+                  </button>
+                  <button
+                    type="button"
+                    className="buat-laporan-btn"
+                    style={{ padding: '6px 14px', fontSize: '12px' }}
+                    disabled={calculatedDiscount <= 0}
+                    onClick={handleApplyDiscount}
+                  >
+                    Terapkan Diskon
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
 
           {/* Payment Method Selector */}

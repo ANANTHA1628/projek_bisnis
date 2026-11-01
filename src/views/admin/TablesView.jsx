@@ -26,17 +26,17 @@ export default function TablesView() {
 
       <div className="posa-admin-card">
         {/* Floors & Add Table */}
-        <div className="flex items-center justify-between mb-4">
+        <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
           <div className="flex items-center gap-3">
             <button type="button" className="posa-pill-btn active">
               Floor 1 · {tables.length}
             </button>
             <button
               type="button"
-              className="text-xs text-blue-400 font-semibold hover:underline flex items-center gap-1"
+              className="text-xs text-blue-400 font-semibold hover:underline flex items-center gap-1.5"
               onClick={() => showToast('Tambah lantai baru')}
             >
-              <Layers size={13} />
+              <Layers size={14} />
               <span>Add a floor</span>
             </button>
           </div>
@@ -44,6 +44,7 @@ export default function TablesView() {
           <button
             type="button"
             className="posa-btn-primary"
+            style={{ width: 'auto' }}
             onClick={handleAddTable}
           >
             <Plus size={16} />
@@ -56,7 +57,7 @@ export default function TablesView() {
             No tables found. Add some tables to manage dine-in orders.
           </div>
         ) : (
-          <div className="grid grid-cols-4 gap-4 mt-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-4">
             {tables.map((t) => (
               <div
                 key={t.id}

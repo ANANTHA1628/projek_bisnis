@@ -11,14 +11,15 @@ export default function PackagesView() {
       <AdminHeader title="Menu Packages" />
 
       <div className="posa-admin-card">
-        <p className="posa-card-subtitle">
-          Manage bundle (combo) packages for customers.
-        </p>
+        <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
+          <p className="posa-card-subtitle m-0">
+            Manage bundle (combo) packages for customers.
+          </p>
 
-        <div className="flex justify-end mb-4">
           <button
             type="button"
             className="posa-btn-primary"
+            style={{ width: 'auto' }}
             onClick={() => showToast('Membuka form Buat Paket Menu')}
           >
             <Plus size={16} />

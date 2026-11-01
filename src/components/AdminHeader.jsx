@@ -1,13 +1,22 @@
 import React from 'react';
 import { usePos } from '../context/PosContext';
-import { Maximize2, Minimize2, UserCheck } from 'lucide-react';
+import { Maximize2, Minimize2, Menu } from 'lucide-react';
 
 export default function AdminHeader({ title, children }) {
-  const { language, setLanguage, isFullscreen, toggleFullscreen, currentUser } = usePos();
+  const { language, setLanguage, isFullscreen, toggleFullscreen, currentUser, setMobileSidebarOpen } = usePos();
 
   return (
     <div className="posa-admin-top-header">
       <div className="posa-header-title-box">
+        <button
+          type="button"
+          className="posa-mobile-menu-btn"
+          onClick={() => setMobileSidebarOpen(true)}
+          title="Menu Navigasi"
+          aria-label="Buka Menu"
+        >
+          <Menu size={20} />
+        </button>
         <h1 className="posa-header-title">{title}</h1>
         {children}
       </div>

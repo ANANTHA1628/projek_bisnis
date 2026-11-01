@@ -294,7 +294,7 @@ export default function CompanySettingsView() {
             Upload the QRIS code from your bank or payment provider. It's shown to customers when they pay by QRIS.
           </p>
 
-          <div className="flex items-center gap-6">
+          <div className="flex flex-wrap items-center gap-4">
             <div className="w-36 h-36 bg-white rounded-xl p-2 flex items-center justify-center shadow-lg">
               <img
                 src="/QRIS.jpeg"
