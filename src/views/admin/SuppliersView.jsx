@@ -5,29 +5,7 @@ import { usePos } from '../../context/PosContext';
 
 export default function SuppliersView() {
   const { showToast } = usePos();
-  const [suppliers, setSuppliers] = useState([
-    {
-      id: 1,
-      name: 'CV Kopi Nusantara',
-      contact: 'Pak Hendra',
-      phone: '081122334455',
-      items: 'Biji Kopi Arabika Single Origin & House Blend'
-    },
-    {
-      id: 2,
-      name: 'PT Sumber Susu Segar',
-      contact: 'Ibu Maya',
-      phone: '081233445566',
-      items: 'Susu Segar Pasteurisasi & Oat Milk'
-    },
-    {
-      id: 3,
-      name: 'Toko Kemasan Jaya',
-      contact: 'Ko Steven',
-      phone: '081344556677',
-      items: 'Cup 16oz, Paper Straw, Box Pastry'
-    }
-  ]);
+  const [suppliers, setSuppliers] = useState([]);
 
   const handleAdd = () => {
     const name = prompt('Nama Supplier Baru:');

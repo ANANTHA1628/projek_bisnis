@@ -180,13 +180,62 @@ export function PosProvider({ children }) {
     }
   }, [themeSettings]);
 
-  const [products, setProducts] = useState(INITIAL_PRODUCTS);
-  const [rawMaterials, setRawMaterials] = useState(INITIAL_RAW_MATERIALS);
-  const [modifiers] = useState(INITIAL_MODIFIERS);
-  const [expenses, setExpenses] = useState(INITIAL_EXPENSES);
-  const [stockMovements, setStockMovements] = useState(INITIAL_STOCK_MOVEMENTS);
-  const [staffList, setStaffList] = useState(INITIAL_STAFF);
-  const [customerList, setCustomerList] = useState(INITIAL_CUSTOMERS);
+  const [products, setProducts] = useState(() => {
+    try {
+      const saved = localStorage.getItem('posa_products');
+      if (saved) return JSON.parse(saved);
+    } catch {}
+    return INITIAL_PRODUCTS;
+  });
+
+  const [rawMaterials, setRawMaterials] = useState(() => {
+    try {
+      const saved = localStorage.getItem('posa_materials');
+      if (saved) return JSON.parse(saved);
+    } catch {}
+    return INITIAL_RAW_MATERIALS;
+  });
+
+  const [modifiers, setModifiers] = useState(() => {
+    try {
+      const saved = localStorage.getItem('posa_modifiers');
+      if (saved) return JSON.parse(saved);
+    } catch {}
+    return INITIAL_MODIFIERS;
+  });
+
+  const [expenses, setExpenses] = useState(() => {
+    try {
+      const saved = localStorage.getItem('posa_expenses');
+      if (saved) return JSON.parse(saved);
+    } catch {}
+    return INITIAL_EXPENSES;
+  });
+
+  const [stockMovements, setStockMovements] = useState(() => {
+    try {
+      const saved = localStorage.getItem('posa_movements');
+      if (saved) return JSON.parse(saved);
+    } catch {}
+    return INITIAL_STOCK_MOVEMENTS;
+  });
+
+  const [staffList, setStaffList] = useState(() => {
+    try {
+      const saved = localStorage.getItem('posa_staff_list');
+      if (saved) return JSON.parse(saved);
+    } catch {}
+    return INITIAL_STAFF;
+  });
+
+  const [customerList, setCustomerList] = useState(() => {
+    try {
+      const saved = localStorage.getItem('posa_customers');
+      if (saved) return JSON.parse(saved);
+    } catch {}
+    return INITIAL_CUSTOMERS;
+  });
+
   const [staffActivityLogs, setStaffActivityLogs] = useState(() => {
     try {
       const saved = localStorage.getItem('posa_staff_activity');
@@ -194,6 +243,43 @@ export function PosProvider({ children }) {
     } catch {}
     return INITIAL_STAFF_ACTIVITY;
   });
+
+  // LocalStorage sync effects for persistent changes
+  useEffect(() => {
+    try {
+      localStorage.setItem('posa_products', JSON.stringify(products));
+    } catch {}
+  }, [products]);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem('posa_materials', JSON.stringify(rawMaterials));
+    } catch {}
+  }, [rawMaterials]);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem('posa_staff_list', JSON.stringify(staffList));
+    } catch {}
+  }, [staffList]);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem('posa_customers', JSON.stringify(customerList));
+    } catch {}
+  }, [customerList]);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem('posa_expenses', JSON.stringify(expenses));
+    } catch {}
+  }, [expenses]);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem('posa_movements', JSON.stringify(stockMovements));
+    } catch {}
+  }, [stockMovements]);
 
   const recordStaffActivity = (userName, userRole, action, details) => {
     const newLog = {
@@ -276,19 +362,67 @@ export function PosProvider({ children }) {
   const [paymentMethod, setPaymentMethod] = useState('tunai');
   const [menuSearch, setMenuSearch] = useState('');
   const [activeCategory, setActiveCategory] = useState('Semua');
-  const [cart, setCart] = useState(INITIAL_CART);
+  const [cart, setCart] = useState(() => {
+    try {
+      const saved = localStorage.getItem('posa_cart');
+      if (saved) return JSON.parse(saved);
+    } catch {}
+    return INITIAL_CART;
+  });
   const [discount, setDiscount] = useState(0); // Diskon manual (rupiah)
 
   // Sesi Kasir / Shift (PRD 5.2)
-  const [currentShift, setCurrentShift] = useState(INITIAL_SHIFT);
+  const [currentShift, setCurrentShift] = useState(() => {
+    try {
+      const saved = localStorage.getItem('posa_shift');
+      if (saved) return JSON.parse(saved);
+    } catch {}
+    return INITIAL_SHIFT;
+  });
 
   // Inventory filter state
   const [materialSearch, setMaterialSearch] = useState('');
   const [materialFilter, setMaterialFilter] = useState('all'); // 'all' | 'low' | 'out'
 
   // Transactions & Bills
-  const [openBills, setOpenBills] = useState(INITIAL_OPEN_BILLS);
-  const [transactions, setTransactions] = useState(INITIAL_TRANSACTIONS);
+  const [openBills, setOpenBills] = useState(() => {
+    try {
+      const saved = localStorage.getItem('posa_open_bills');
+      if (saved) return JSON.parse(saved);
+    } catch {}
+    return INITIAL_OPEN_BILLS;
+  });
+  const [transactions, setTransactions] = useState(() => {
+    try {
+      const saved = localStorage.getItem('posa_transactions');
+      if (saved) return JSON.parse(saved);
+    } catch {}
+    return INITIAL_TRANSACTIONS;
+  });
+
+  useEffect(() => {
+    try {
+      localStorage.setItem('posa_cart', JSON.stringify(cart));
+    } catch {}
+  }, [cart]);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem('posa_shift', JSON.stringify(currentShift));
+    } catch {}
+  }, [currentShift]);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem('posa_open_bills', JSON.stringify(openBills));
+    } catch {}
+  }, [openBills]);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem('posa_transactions', JSON.stringify(transactions));
+    } catch {}
+  }, [transactions]);
 
   // Modals state
   const [customizingItem, setCustomizingItem] = useState(null);
@@ -757,6 +891,40 @@ export function PosProvider({ children }) {
     }
   };
 
+  // Products / Menus CRUD
+  const saveProduct = (productData) => {
+    if (productData.id) {
+      setProducts((prev) =>
+        prev.map((p) => (p.id === productData.id ? { ...p, ...productData } : p))
+      );
+      showToast(`Menu "${productData.name}" berhasil diperbarui`);
+    } else {
+      const newId = productData.id || productData.name.toLowerCase().replace(/\s+/g, '-') + '-' + Date.now().toString().slice(-4);
+      const newProd = {
+        ...productData,
+        id: newId,
+        channelPrices: productData.channelPrices || {
+          'Makan di sini': productData.price,
+          'Bawa pulang': productData.price,
+          'GoFood': Math.round(productData.price * 1.2),
+          'GrabFood': Math.round(productData.price * 1.2)
+        },
+        recipe: productData.recipe || []
+      };
+      setProducts((prev) => [...prev, newProd]);
+      showToast(`Menu "${productData.name}" berhasil ditambahkan`);
+    }
+  };
+
+  const deleteProduct = (id) => {
+    const item = products.find((p) => p.id === id);
+    if (!item) return;
+    if (window.confirm(`Yakin ingin menghapus menu "${item.name}"?`)) {
+      setProducts((prev) => prev.filter((p) => p.id !== id));
+      showToast(`Menu "${item.name}" telah dihapus`);
+    }
+  };
+
   // Restock dengan Moving Average Formula (INV-07 & PRD 4.3)
   const restockRawMaterial = (id, amount, unitPrice, invoiceNo = '') => {
     setRawMaterials((prev) =>
@@ -857,6 +1025,43 @@ export function PosProvider({ children }) {
     showToast('Biaya operasional berhasil dicatat');
   };
 
+  // Reset Semua Data Contoh Menjadi Kosongan Bersih
+  const clearAllSampleData = () => {
+    setProducts([]);
+    setRawMaterials([]);
+    setCart([]);
+    setTransactions([]);
+    setOpenBills([]);
+    setExpenses([]);
+    setStockMovements([]);
+    setCustomerList([]);
+    setStaffActivityLogs([]);
+    setCurrentShift({
+      isOpen: true,
+      openedAt: new Date().toISOString().replace('T', ' ').slice(0, 16),
+      cashierName: currentUser?.name || 'Ahmad Rafi (Owner)',
+      openingCash: 0,
+      expectedCash: 0,
+      actualCash: null,
+      difference: 0
+    });
+
+    try {
+      localStorage.removeItem('posa_products');
+      localStorage.removeItem('posa_materials');
+      localStorage.removeItem('posa_cart');
+      localStorage.removeItem('posa_transactions');
+      localStorage.removeItem('posa_open_bills');
+      localStorage.removeItem('posa_expenses');
+      localStorage.removeItem('posa_movements');
+      localStorage.removeItem('posa_customers');
+      localStorage.removeItem('posa_staff_activity');
+      localStorage.removeItem('posa_shift');
+    } catch {}
+
+    showToast('Seluruh data contoh berhasil dikosongkan. Sistem siap diisi data baru!', 'success');
+  };
+
   const value = {
     activeTab,
     setActiveTab,
@@ -939,9 +1144,12 @@ export function PosProvider({ children }) {
     totalStockValue,
     saveRawMaterial,
     deleteRawMaterial,
+    saveProduct,
+    deleteProduct,
     restockRawMaterial,
     recordOpname,
     recordWaste,
+    clearAllSampleData,
     openBills,
     saveAsOpenBill,
     recallOpenBill,

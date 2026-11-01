@@ -16,12 +16,13 @@ import {
   Lock,
   Mail,
   Phone,
-  ShieldAlert
+  ShieldAlert,
+  RotateCcw
 } from 'lucide-react';
 import { usePos } from '../../context/PosContext';
 
 export default function CompanySettingsView() {
-  const { settings, updateSettings, showToast } = usePos();
+  const { settings, updateSettings, clearAllSampleData, showToast } = usePos();
 
   const [copied, setCopied] = useState(false);
   const [queueNumbers, setQueueNumbers] = useState(settings.queue_numbers || false);
@@ -383,6 +384,33 @@ export default function CompanySettingsView() {
                 Format didukung: PNG, JPG, atau JPEG. Ukuran rekomendasi minimal 400x400 piksel.
               </span>
             </div>
+          </div>
+        </div>
+
+        {/* 6B. Kosongkan Data Contoh (Siap Isi Baru) */}
+        <div className="posa-admin-card" style={{ borderColor: 'rgba(245, 158, 11, 0.3)' }}>
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+            <div>
+              <div className="flex items-center gap-2 text-amber-400 font-bold mb-1">
+                <RotateCcw size={18} />
+                <span>Kosongkan Semua Data Contoh (Mulai Fresh)</span>
+              </div>
+              <p className="text-xs text-muted max-w-xl leading-relaxed">
+                Menghapus semua menu, bahan baku, transaksi, keranjang, dan laporan contoh. Database akan menjadi kosongan bersih sehingga Anda tinggal menambahkan data asli bisnis Anda tanpa harus menghapus satu persatu.
+              </p>
+            </div>
+            <button
+              type="button"
+              className="posa-btn-outline border-amber-500/50 text-amber-400 hover:bg-amber-500/10 flex-shrink-0"
+              onClick={() => {
+                if (window.confirm('Apakah Anda yakin ingin mengosongkan seluruh data contoh? Sistem akan di-reset menjadi kosongan bersih dan siap diisi data baru.')) {
+                  clearAllSampleData();
+                }
+              }}
+            >
+              <RotateCcw size={15} />
+              <span>Kosongkan Data Contoh</span>
+            </button>
           </div>
         </div>
 

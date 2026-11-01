@@ -1,22 +1,24 @@
 import React, { useState } from 'react';
 import AdminHeader from '../../components/AdminHeader';
-import { Plus, Layers } from 'lucide-react';
+import { Plus, Layers, Trash2 } from 'lucide-react';
 import { usePos } from '../../context/PosContext';
 
 export default function TablesView() {
   const { showToast } = usePos();
-  const [tables, setTables] = useState([
-    { id: 1, name: 'Meja 01', capacity: 4, status: 'available' },
-    { id: 2, name: 'Meja 02', capacity: 2, status: 'occupied' },
-    { id: 3, name: 'Meja 03', capacity: 4, status: 'available' },
-    { id: 4, name: 'Meja 04', capacity: 6, status: 'occupied' }
-  ]);
+  const [tables, setTables] = useState([]);
 
   const handleAddTable = () => {
     const name = prompt('Nomor/Nama Meja Baru:', `Meja 0${tables.length + 1}`);
     if (name) {
       setTables([...tables, { id: Date.now(), name, capacity: 4, status: 'available' }]);
       showToast(`${name} berhasil ditambahkan!`, 'success');
+    }
+  };
+
+  const handleDeleteTable = (id, name) => {
+    if (window.confirm(`Hapus ${name}?`)) {
+      setTables(tables.filter((t) => t.id !== id));
+      showToast(`${name} telah dihapus`);
     }
   };
 
@@ -65,9 +67,19 @@ export default function TablesView() {
               >
                 <div className="flex justify-between items-start">
                   <div className="text-white font-bold text-lg">{t.name}</div>
-                  <span className={`posa-badge-${t.status === 'occupied' ? 'warning' : 'success'}`}>
-                    {t.status === 'occupied' ? 'Terisi' : 'Kosong'}
-                  </span>
+                  <div className="flex items-center gap-1.5">
+                    <span className={`posa-badge-${t.status === 'occupied' ? 'warning' : 'success'}`}>
+                      {t.status === 'occupied' ? 'Terisi' : 'Kosong'}
+                    </span>
+                    <button
+                      type="button"
+                      className="text-slate-500 hover:text-red-400 p-1"
+                      onClick={() => handleDeleteTable(t.id, t.name)}
+                      title="Hapus Meja"
+                    >
+                      <Trash2 size={14} />
+                    </button>
+                  </div>
                 </div>
                 <div className="text-xs text-slate-400">
                   Kapasitas: {t.capacity} Orang

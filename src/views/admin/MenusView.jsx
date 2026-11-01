@@ -1,14 +1,58 @@
 import React, { useState } from 'react';
 import AdminHeader from '../../components/AdminHeader';
-import { Search, Plus, FileSpreadsheet, Edit2, Trash2 } from 'lucide-react';
+import { Search, Plus, FileSpreadsheet, Edit2, Trash2, X, Check } from 'lucide-react';
 import { usePos } from '../../context/PosContext';
 
 export default function MenusView() {
-  const { products, calculateMenuHpp, showToast } = usePos();
+  const { products, calculateMenuHpp, saveProduct, deleteProduct, showToast } = usePos();
   const [search, setSearch] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All categories');
+  const [showModal, setShowModal] = useState(false);
+  const [editingProduct, setEditingProduct] = useState(null);
 
-  const categories = ['All categories', 'Makanan', 'Non-Kopi', 'Kopi'];
+  // Form states
+  const [formName, setFormName] = useState('');
+  const [formSku, setFormSku] = useState('');
+  const [formCategory, setFormCategory] = useState('Makanan');
+  const [formPrice, setFormPrice] = useState(20000);
+
+  const categories = ['All categories', 'Makanan', 'Non-Kopi', 'Kopi', 'Snack', 'Dessert'];
+
+  const handleOpenAdd = () => {
+    setEditingProduct(null);
+    setFormName('');
+    setFormSku('MN-' + Math.floor(100 + Math.random() * 900));
+    setFormCategory('Makanan');
+    setFormPrice(20000);
+    setShowModal(true);
+  };
+
+  const handleOpenEdit = (p) => {
+    setEditingProduct(p);
+    setFormName(p.name);
+    setFormSku(p.sku || '');
+    setFormCategory(p.category || 'Makanan');
+    setFormPrice(p.price || 0);
+    setShowModal(true);
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (!formName.trim()) {
+      showToast('Nama menu wajib diisi!', 'warning');
+      return;
+    }
+    const payload = {
+      ...(editingProduct ? { id: editingProduct.id } : {}),
+      name: formName.trim(),
+      sku: formSku.trim() || 'MN-001',
+      category: formCategory,
+      price: Number(formPrice) || 0,
+      icon: editingProduct?.icon || 'coffee'
+    };
+    saveProduct(payload);
+    setShowModal(false);
+  };
 
   const filteredProducts = products.filter((p) => {
     const matchSearch = p.name.toLowerCase().includes(search.toLowerCase());
@@ -58,7 +102,7 @@ export default function MenusView() {
           <button
             type="button"
             className="posa-btn-primary"
-            onClick={() => showToast('Membuka form Tambah Menu Baru')}
+            onClick={handleOpenAdd}
           >
             <Plus size={16} />
             <span>Add Menu</span>
@@ -111,14 +155,16 @@ export default function MenusView() {
                           <button
                             type="button"
                             className="posa-action-icon-btn"
-                            onClick={() => showToast(`Edit menu ${p.name}`)}
+                            onClick={() => handleOpenEdit(p)}
+                            title="Edit Menu"
                           >
                             <Edit2 size={15} />
                           </button>
                           <button
                             type="button"
                             className="posa-action-icon-btn text-danger"
-                            onClick={() => showToast(`Hapus ${p.name}`)}
+                            onClick={() => deleteProduct(p.id)}
+                            title="Hapus Menu"
                           >
                             <Trash2 size={15} />
                           </button>
@@ -132,6 +178,98 @@ export default function MenusView() {
           </div>
         )}
       </div>
+
+      {/* Modal Add / Edit Menu */}
+      {showModal && (
+        <div className="posa-modal-backdrop" style={{ position: 'fixed', inset: 0, backgroundColor: 'rgba(0,0,0,0.7)', zIndex: 1200, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '16px' }}>
+          <div className="posa-admin-card" style={{ maxWidth: '480px', width: '100%', maxHeight: '90vh', overflowY: 'auto' }}>
+            <div className="flex items-center justify-between pb-3 border-b border-slate-800 mb-4">
+              <h3 className="text-lg font-bold text-white">
+                {editingProduct ? 'Edit Menu' : 'Tambah Menu Baru'}
+              </h3>
+              <button
+                type="button"
+                className="text-slate-400 hover:text-white"
+                onClick={() => setShowModal(false)}
+              >
+                <X size={20} />
+              </button>
+            </div>
+
+            <form onSubmit={handleSubmit} className="flex flex-col gap-3.5">
+              <div>
+                <label className="text-xs font-semibold text-slate-300 block mb-1">Nama Menu</label>
+                <input
+                  type="text"
+                  className="posa-search-input w-full"
+                  placeholder="Contoh: Kopi Susu Aren"
+                  value={formName}
+                  onChange={(e) => setFormName(e.target.value)}
+                  required
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="text-xs font-semibold text-slate-300 block mb-1">SKU / Kode</label>
+                  <input
+                    type="text"
+                    className="posa-search-input w-full"
+                    placeholder="KP-001"
+                    value={formSku}
+                    onChange={(e) => setFormSku(e.target.value)}
+                  />
+                </div>
+
+                <div>
+                  <label className="text-xs font-semibold text-slate-300 block mb-1">Kategori</label>
+                  <select
+                    className="posa-select w-full"
+                    value={formCategory}
+                    onChange={(e) => setFormCategory(e.target.value)}
+                  >
+                    <option value="Makanan">Makanan</option>
+                    <option value="Kopi">Kopi</option>
+                    <option value="Non-Kopi">Non-Kopi</option>
+                    <option value="Snack">Snack</option>
+                    <option value="Dessert">Dessert</option>
+                  </select>
+                </div>
+              </div>
+
+              <div>
+                <label className="text-xs font-semibold text-slate-300 block mb-1">Harga Jual Dine-in (Rp)</label>
+                <input
+                  type="number"
+                  min="0"
+                  step="500"
+                  className="posa-search-input w-full"
+                  value={formPrice}
+                  onChange={(e) => setFormPrice(e.target.value)}
+                  required
+                />
+              </div>
+
+              <div className="flex items-center justify-end gap-2 pt-3 border-t border-slate-800 mt-2">
+                <button
+                  type="button"
+                  className="posa-btn-outline"
+                  onClick={() => setShowModal(false)}
+                >
+                  Batal
+                </button>
+                <button
+                  type="submit"
+                  className="posa-btn-primary"
+                >
+                  <Check size={16} />
+                  <span>{editingProduct ? 'Simpan Perubahan' : 'Tambah Menu'}</span>
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

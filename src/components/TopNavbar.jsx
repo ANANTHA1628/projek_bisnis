@@ -100,7 +100,6 @@ export default function TopNavbar() {
 
           <div className="posa-navbar-brand" onClick={() => navigateTo('dashboard')} role="button">
             <span className="posa-brand-title">posa</span>
-            <span className="posa-brand-badge">PRO</span>
           </div>
 
           <button
