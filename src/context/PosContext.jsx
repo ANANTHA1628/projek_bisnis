@@ -374,10 +374,16 @@ export function PosProvider({ children }) {
   // Sesi Kasir / Shift (PRD 5.2)
   const [currentShift, setCurrentShift] = useState(() => {
     try {
+      // Migrasi pembersihan cache: hapus cache shift demo lama agar kasir default berstatus TUTUP
+      const migrationKey = 'posa_shift_v4_closed';
+      if (!localStorage.getItem(migrationKey)) {
+        localStorage.removeItem('posa_shift');
+        localStorage.setItem(migrationKey, 'true');
+        return INITIAL_SHIFT;
+      }
       const saved = localStorage.getItem('posa_shift');
       if (saved) {
         const parsed = JSON.parse(saved);
-        // Jika tidak sengaja tersimpan buka dari sesi contoh lama, kembalikan ke kondisi tutup
         return parsed;
       }
     } catch {}
