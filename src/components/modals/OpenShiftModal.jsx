@@ -3,8 +3,8 @@ import { usePos } from '../../context/PosContext';
 import { X, KeyRound, Banknote } from 'lucide-react';
 
 export default function OpenShiftModal() {
-  const { showOpenShiftModal, setShowOpenShiftModal, openShift } = usePos();
-  const [openingCash, setOpeningCash] = useState(500000);
+  const { showOpenShiftModal, setShowOpenShiftModal, openShift, currentUser } = usePos();
+  const [openingCash, setOpeningCash] = useState(0);
   const [notes, setNotes] = useState('Shift Pagi - Siang');
 
   if (!showOpenShiftModal) return null;
@@ -43,7 +43,7 @@ export default function OpenShiftModal() {
                 color: 'var(--text-secondary)'
               }}
             >
-              Kasir aktif: <strong>Rina (Owner)</strong>
+              Kasir aktif: <strong>{currentUser?.name || 'Ahmad Rafi (Owner)'}</strong>
               <div style={{ fontSize: '11px', color: 'var(--text-muted)', marginTop: '2px' }}>
                 Masukkan modal awal uang tunai yang berada di dalam laci kasir (Cash Drawer).
               </div>

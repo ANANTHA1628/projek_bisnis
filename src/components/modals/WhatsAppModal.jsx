@@ -6,6 +6,8 @@ export default function WhatsAppModal() {
   const {
     showWhatsAppModal,
     setShowWhatsAppModal,
+    currentUser,
+    settings,
     showToast
   } = usePos();
 
@@ -13,10 +15,10 @@ export default function WhatsAppModal() {
 
   if (!showWhatsAppModal) return null;
 
-  const reportText = `📊 *LAPORAN HARIAN POSA COFFEE*
-📅 Tanggal: 01 Okt 2026
-🏪 Outlet: posa Coffee Central
-👤 Kasir: Rina (Owner)
+  const reportText = `📊 *LAPORAN HARIAN POSA*
+📅 Tanggal: ${new Date().toLocaleDateString('id-ID')}
+🏪 Outlet: ${settings.store_name || 'Posa Store'}
+👤 Kasir: ${currentUser?.name || 'Ahmad Rafi (Owner)'}
 
 💰 *Ringkasan Keuangan:*
 • Total Diterima: Rp 1.421.200

@@ -542,6 +542,12 @@ export function PosProvider({ children }) {
 
   // Cart Management
   const addToCart = (product) => {
+    if (!currentShift.isOpen) {
+      showToast('Sesi kasir masih TUTUP! Harap Buka Kasir terlebih dahulu untuk memulai pesanan.', 'warning');
+      setShowOpenShiftModal(true);
+      return;
+    }
+
     playSound('beep');
     const basePrice = getProductPrice(product, orderType);
 
@@ -648,7 +654,7 @@ export function PosProvider({ children }) {
     const newShift = {
       isOpen: true,
       openedAt: new Date().toLocaleString('id-ID'),
-      cashierName: 'Rina (Owner)',
+      cashierName: currentUser?.name || 'Ahmad Rafi (Owner)',
       openingCash: Number(openingCash),
       expectedCash: Number(openingCash),
       actualCash: null,
@@ -1037,8 +1043,9 @@ export function PosProvider({ children }) {
     setCustomerList([]);
     setStaffActivityLogs([]);
     setCurrentShift({
-      isOpen: true,
-      openedAt: new Date().toISOString().replace('T', ' ').slice(0, 16),
+      isOpen: false,
+      openedAt: null,
+      closedAt: null,
       cashierName: currentUser?.name || 'Ahmad Rafi (Owner)',
       openingCash: 0,
       expectedCash: 0,

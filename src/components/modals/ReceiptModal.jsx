@@ -3,7 +3,7 @@ import { usePos } from '../../context/PosContext';
 import { X, Printer, CheckCircle, Sliders } from 'lucide-react';
 
 export default function ReceiptModal() {
-  const { lastReceipt, setLastReceipt, printerSize, setPrinterSize, showToast } = usePos();
+  const { lastReceipt, setLastReceipt, printerSize, setPrinterSize, currentUser, showToast } = usePos();
 
   if (!lastReceipt) return null;
 
@@ -72,7 +72,7 @@ export default function ReceiptModal() {
             <div style={{ fontSize: '10px', color: '#4b5563', marginBottom: '8px' }}>
               <div>Trx: {lastReceipt.id}</div>
               <div>Waktu: {lastReceipt.date} {lastReceipt.time}</div>
-              <div>Kasir: Rina (Owner)</div>
+              <div>Kasir: {currentUser?.name || 'Ahmad Rafi (Owner)'}</div>
               <div>Kanal: {lastReceipt.orderType} • {lastReceipt.table}</div>
             </div>
 

@@ -44,10 +44,11 @@ export const INITIAL_OPEN_BILLS = [];
 // Transaksi Kosongan (Grafik & Laporan Nol Bersih)
 export const INITIAL_TRANSACTIONS = [];
 
-// Sesi Shift Awal (Kasir Siap Pakai)
+// Sesi Shift Awal (Kasir Status Tutup - Wajib Buka Kasir Terlebih Dahulu)
 export const INITIAL_SHIFT = {
-  isOpen: true,
-  openedAt: new Date().toISOString().replace('T', ' ').slice(0, 16),
+  isOpen: false,
+  openedAt: null,
+  closedAt: null,
   cashierName: 'Ahmad Rafi (Owner)',
   openingCash: 0,
   expectedCash: 0,
