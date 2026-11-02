@@ -45,8 +45,16 @@ export default function AuthMasterView({ defaultMode = 'register', onSwitchToPin
   const [loginEmail, setLoginEmail] = useState(masterAccount?.email || '');
   const [loginPassword, setLoginPassword] = useState('');
 
-  // Developer Login state
-  const [devEmailInput, setDevEmailInput] = useState(devCredentials?.email || 'dev@posa.system');
+  // Developer Login state - Hanya otomatis terisi jika SUDAH PERNAH login sebelumnya di browser ini
+  const hasDevLoggedIn = typeof window !== 'undefined' && localStorage.getItem('posa_dev_logged_in') === 'true';
+  const [devEmailInput, setDevEmailInput] = useState(() => {
+    try {
+      if (localStorage.getItem('posa_dev_logged_in') === 'true') {
+        return localStorage.getItem('posa_last_dev_email') || '';
+      }
+    } catch {}
+    return '';
+  });
   const [devPassInput, setDevPassInput] = useState('');
 
   const handleRegisterSubmit = (e) => {
@@ -107,13 +115,11 @@ export default function AuthMasterView({ defaultMode = 'register', onSwitchToPin
       setErrorMsg(res.message || 'Kredensial Developer tidak valid.');
     } else {
       playSound('success');
+      try {
+        localStorage.setItem('posa_dev_logged_in', 'true');
+        localStorage.setItem('posa_last_dev_email', devEmailInput.trim());
+      } catch {}
     }
-  };
-
-  const handleAutofillDev = () => {
-    setDevEmailInput(devCredentials?.email || 'dev@posa.system');
-    setDevPassInput(devCredentials?.password || 'developer123');
-    playSound('click');
   };
 
   const isDevMode = mode === 'developer';
@@ -544,40 +550,24 @@ export default function AuthMasterView({ defaultMode = 'register', onSwitchToPin
           ) : (
             /* Developer Login Portal */
             <form onSubmit={handleDevLoginSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-              <div
-                style={{
-                  padding: '10px 12px',
-                  borderRadius: '10px',
-                  backgroundColor: 'rgba(168, 85, 247, 0.1)',
-                  border: '1px solid rgba(168, 85, 247, 0.25)',
-                  fontSize: '11.5px',
-                  color: '#d8b4fe',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                  gap: '8px'
-                }}
-              >
-                <div>
-                  <strong>Default:</strong> dev@posa.system / developer123
-                </div>
-                <button
-                  type="button"
-                  onClick={handleAutofillDev}
+              {hasDevLoggedIn && devEmailInput && (
+                <div
                   style={{
-                    background: 'rgba(168, 85, 247, 0.25)',
-                    border: '1px solid rgba(168, 85, 247, 0.4)',
-                    color: '#ffffff',
-                    borderRadius: '6px',
-                    padding: '3px 8px',
-                    fontSize: '10.5px',
-                    fontWeight: 700,
-                    cursor: 'pointer'
+                    padding: '8px 12px',
+                    borderRadius: '8px',
+                    backgroundColor: 'rgba(168, 85, 247, 0.1)',
+                    border: '1px solid rgba(168, 85, 247, 0.25)',
+                    fontSize: '11px',
+                    color: '#d8b4fe',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '6px'
                   }}
                 >
-                  ⚡ Isi Otomatis
-                </button>
-              </div>
+                  <CheckCircle2 size={13} color="#c084fc" />
+                  <span>Email developer terisi otomatis dari sesi login sebelumnya di browser ini.</span>
+                </div>
+              )}
 
               <div>
                 <label style={{ fontSize: '12px', fontWeight: 600, color: '#cbd5e1', display: 'block', marginBottom: '6px' }}>
@@ -586,10 +576,10 @@ export default function AuthMasterView({ defaultMode = 'register', onSwitchToPin
                 <div style={{ position: 'relative' }}>
                   <Terminal size={16} style={{ position: 'absolute', left: '12px', top: '12px', color: '#a855f7' }} />
                   <input
-                    type="text"
+                    type="email"
                     className="posa-input w-full font-mono"
                     style={{ paddingLeft: '38px', borderColor: 'rgba(168, 85, 247, 0.3)' }}
-                    placeholder="dev@posa.system"
+                    placeholder="Masukkan email developer"
                     value={devEmailInput}
                     onChange={(e) => setDevEmailInput(e.target.value)}
                     required
