@@ -11,19 +11,24 @@ import {
   EyeOff,
   ArrowRight,
   CheckCircle2,
-  Sparkles
+  Sparkles,
+  Terminal,
+  Cpu,
+  Shield
 } from 'lucide-react';
 
 export default function AuthMasterView({ defaultMode = 'register', onSwitchToPin }) {
   const {
     registerMasterAccount,
     loginMasterAccount,
+    loginDeveloperDirectly,
     masterAccount,
+    devCredentials,
     settings,
     playSound
   } = usePos();
 
-  const [mode, setMode] = useState(masterAccount ? 'login' : 'register');
+  const [mode, setMode] = useState(masterAccount ? 'login' : 'register'); // 'register' | 'login' | 'developer'
 
   // Register form state
   const [name, setName] = useState('');
@@ -37,6 +42,10 @@ export default function AuthMasterView({ defaultMode = 'register', onSwitchToPin
   // Login form state
   const [loginEmail, setLoginEmail] = useState(masterAccount?.email || '');
   const [loginPassword, setLoginPassword] = useState('');
+
+  // Developer Login state
+  const [devEmailInput, setDevEmailInput] = useState(devCredentials?.email || 'dev@posa.system');
+  const [devPassInput, setDevPassInput] = useState('');
 
   const handleRegisterSubmit = (e) => {
     e.preventDefault();
@@ -86,6 +95,27 @@ export default function AuthMasterView({ defaultMode = 'register', onSwitchToPin
     }
   };
 
+  const handleDevLoginSubmit = (e) => {
+    e.preventDefault();
+    setErrorMsg('');
+
+    const res = loginMasterAccount(devEmailInput, devPassInput);
+    if (!res.success) {
+      playSound('beep');
+      setErrorMsg(res.message || 'Kredensial Developer tidak valid.');
+    } else {
+      playSound('success');
+    }
+  };
+
+  const handleAutofillDev = () => {
+    setDevEmailInput(devCredentials?.email || 'dev@posa.system');
+    setDevPassInput(devCredentials?.password || 'developer123');
+    playSound('click');
+  };
+
+  const isDevMode = mode === 'developer';
+
   return (
     <div
       style={{
@@ -95,20 +125,28 @@ export default function AuthMasterView({ defaultMode = 'register', onSwitchToPin
         alignItems: 'center',
         justifyContent: 'center',
         backgroundColor: 'var(--bg-app, #080c14)',
-        backgroundImage: 'radial-gradient(ellipse at top, rgba(16, 185, 129, 0.12), transparent 70%)',
+        backgroundImage: isDevMode
+          ? 'radial-gradient(ellipse at top, rgba(168, 85, 247, 0.18), transparent 70%)'
+          : 'radial-gradient(ellipse at top, rgba(16, 185, 129, 0.12), transparent 70%)',
         padding: '24px 16px',
-        color: '#ffffff'
+        color: '#ffffff',
+        transition: 'background-image 0.3s ease'
       }}
     >
       <div
         style={{
           width: '100%',
-          maxWidth: '480px',
+          maxWidth: '490px',
           backgroundColor: 'var(--bg-card, #0f1523)',
-          border: '1px solid var(--border-subtle, rgba(255, 255, 255, 0.1))',
+          border: isDevMode
+            ? '1px solid rgba(168, 85, 247, 0.4)'
+            : '1px solid var(--border-subtle, rgba(255, 255, 255, 0.1))',
           borderRadius: '20px',
-          boxShadow: '0 20px 40px rgba(0, 0, 0, 0.5), 0 0 30px rgba(16, 185, 129, 0.1)',
-          overflow: 'hidden'
+          boxShadow: isDevMode
+            ? '0 20px 45px rgba(0, 0, 0, 0.6), 0 0 35px rgba(168, 85, 247, 0.2)'
+            : '0 20px 40px rgba(0, 0, 0, 0.5), 0 0 30px rgba(16, 185, 129, 0.1)',
+          overflow: 'hidden',
+          transition: 'all 0.3s ease'
         }}
       >
         {/* Brand Banner Header */}
@@ -117,7 +155,9 @@ export default function AuthMasterView({ defaultMode = 'register', onSwitchToPin
             padding: '28px 24px 20px',
             textAlign: 'center',
             borderBottom: '1px solid var(--border-subtle, rgba(255, 255, 255, 0.08))',
-            background: 'linear-gradient(180deg, rgba(16, 185, 129, 0.08) 0%, transparent 100%)'
+            background: isDevMode
+              ? 'linear-gradient(180deg, rgba(168, 85, 247, 0.12) 0%, transparent 100%)'
+              : 'linear-gradient(180deg, rgba(16, 185, 129, 0.08) 0%, transparent 100%)'
           }}
         >
           <div
@@ -125,23 +165,25 @@ export default function AuthMasterView({ defaultMode = 'register', onSwitchToPin
               width: '56px',
               height: '56px',
               borderRadius: '16px',
-              backgroundColor: 'rgba(16, 185, 129, 0.15)',
-              border: '1.5px solid rgba(16, 185, 129, 0.35)',
-              color: '#10b981',
+              backgroundColor: isDevMode ? 'rgba(168, 85, 247, 0.18)' : 'rgba(16, 185, 129, 0.15)',
+              border: isDevMode ? '1.5px solid rgba(168, 85, 247, 0.4)' : '1.5px solid rgba(16, 185, 129, 0.35)',
+              color: isDevMode ? '#c084fc' : '#10b981',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
               margin: '0 auto 12px',
-              boxShadow: '0 0 20px rgba(16, 185, 129, 0.25)'
+              boxShadow: isDevMode ? '0 0 20px rgba(168, 85, 247, 0.3)' : '0 0 20px rgba(16, 185, 129, 0.25)'
             }}
           >
-            <Store size={28} />
+            {isDevMode ? <Terminal size={28} /> : <Store size={28} />}
           </div>
           <h1 style={{ fontSize: '22px', fontWeight: 800, letterSpacing: '-0.3px', margin: '0 0 4px', color: '#ffffff' }}>
-            {settings?.store_name || 'POSA Point of Sale'}
+            {isDevMode ? 'Developer Superadmin Portal' : (settings?.store_name || 'POSA Point of Sale')}
           </h1>
           <p style={{ fontSize: '12.5px', color: 'var(--text-secondary, #94a3b8)', margin: 0 }}>
-            {mode === 'register'
+            {isDevMode
+              ? 'Akses Root Tertinggi: Kelola Seluruh Akun Master, Kasir, Password & Database'
+              : mode === 'register'
               ? 'Daftarkan akun Owner pertama untuk mulai mengelola bisnis & kasir'
               : 'Masuk dengan Akun Master Pemilik (Owner / Admin)'}
           </p>
@@ -151,8 +193,8 @@ export default function AuthMasterView({ defaultMode = 'register', onSwitchToPin
         <div
           style={{
             display: 'flex',
-            padding: '12px 24px 0',
-            gap: '8px'
+            padding: '12px 20px 0',
+            gap: '6px'
           }}
         >
           <button
@@ -163,9 +205,9 @@ export default function AuthMasterView({ defaultMode = 'register', onSwitchToPin
             }}
             style={{
               flex: 1,
-              padding: '10px 12px',
+              padding: '9px 10px',
               borderRadius: '10px',
-              fontSize: '12.5px',
+              fontSize: '12px',
               fontWeight: 700,
               cursor: 'pointer',
               border: mode === 'register' ? '1px solid #10b981' : '1px solid transparent',
@@ -174,7 +216,7 @@ export default function AuthMasterView({ defaultMode = 'register', onSwitchToPin
               transition: 'all 0.2s ease'
             }}
           >
-            Daftar Akun Baru
+            Daftar Baru
           </button>
 
           <button
@@ -185,9 +227,9 @@ export default function AuthMasterView({ defaultMode = 'register', onSwitchToPin
             }}
             style={{
               flex: 1,
-              padding: '10px 12px',
+              padding: '9px 10px',
               borderRadius: '10px',
-              fontSize: '12.5px',
+              fontSize: '12px',
               fontWeight: 700,
               cursor: 'pointer',
               border: mode === 'login' ? '1px solid #10b981' : '1px solid transparent',
@@ -196,7 +238,34 @@ export default function AuthMasterView({ defaultMode = 'register', onSwitchToPin
               transition: 'all 0.2s ease'
             }}
           >
-            Masuk Akun Master
+            Masuk Master
+          </button>
+
+          <button
+            type="button"
+            onClick={() => {
+              setMode('developer');
+              setErrorMsg('');
+            }}
+            style={{
+              flex: 1,
+              padding: '9px 10px',
+              borderRadius: '10px',
+              fontSize: '12px',
+              fontWeight: 700,
+              cursor: 'pointer',
+              border: isDevMode ? '1px solid #a855f7' : '1px solid transparent',
+              backgroundColor: isDevMode ? 'rgba(168, 85, 247, 0.2)' : 'transparent',
+              color: isDevMode ? '#c084fc' : '#a855f7',
+              transition: 'all 0.2s ease',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '4px'
+            }}
+          >
+            <Terminal size={13} />
+            <span>Developer</span>
           </button>
         </div>
 
@@ -350,7 +419,7 @@ export default function AuthMasterView({ defaultMode = 'register', onSwitchToPin
                 <ArrowRight size={16} />
               </button>
             </form>
-          ) : (
+          ) : mode === 'login' ? (
             <form onSubmit={handleLoginSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
               <div>
                 <label style={{ fontSize: '12px', fontWeight: 600, color: '#cbd5e1', display: 'block', marginBottom: '6px' }}>
@@ -414,6 +483,116 @@ export default function AuthMasterView({ defaultMode = 'register', onSwitchToPin
                 }}
               >
                 <span>Masuk sebagai Admin / Owner</span>
+                <ArrowRight size={16} />
+              </button>
+            </form>
+          ) : (
+            /* Developer Login Portal */
+            <form onSubmit={handleDevLoginSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+              <div
+                style={{
+                  padding: '10px 12px',
+                  borderRadius: '10px',
+                  backgroundColor: 'rgba(168, 85, 247, 0.1)',
+                  border: '1px solid rgba(168, 85, 247, 0.25)',
+                  fontSize: '11.5px',
+                  color: '#d8b4fe',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  gap: '8px'
+                }}
+              >
+                <div>
+                  <strong>Default:</strong> dev@posa.system / developer123
+                </div>
+                <button
+                  type="button"
+                  onClick={handleAutofillDev}
+                  style={{
+                    background: 'rgba(168, 85, 247, 0.25)',
+                    border: '1px solid rgba(168, 85, 247, 0.4)',
+                    color: '#ffffff',
+                    borderRadius: '6px',
+                    padding: '3px 8px',
+                    fontSize: '10.5px',
+                    fontWeight: 700,
+                    cursor: 'pointer'
+                  }}
+                >
+                  ⚡ Isi Otomatis
+                </button>
+              </div>
+
+              <div>
+                <label style={{ fontSize: '12px', fontWeight: 600, color: '#cbd5e1', display: 'block', marginBottom: '6px' }}>
+                  Email Developer (Superadmin)
+                </label>
+                <div style={{ position: 'relative' }}>
+                  <Terminal size={16} style={{ position: 'absolute', left: '12px', top: '12px', color: '#a855f7' }} />
+                  <input
+                    type="text"
+                    className="posa-input w-full font-mono"
+                    style={{ paddingLeft: '38px', borderColor: 'rgba(168, 85, 247, 0.3)' }}
+                    placeholder="dev@posa.system"
+                    value={devEmailInput}
+                    onChange={(e) => setDevEmailInput(e.target.value)}
+                    required
+                  />
+                </div>
+              </div>
+
+              <div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
+                  <label style={{ fontSize: '12px', fontWeight: 600, color: '#cbd5e1' }}>
+                    Kata Sandi Developer
+                  </label>
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    style={{ fontSize: '11px', color: '#c084fc', background: 'none', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px' }}
+                  >
+                    {showPassword ? <EyeOff size={12} /> : <Eye size={12} />}
+                    <span>{showPassword ? 'Tutup' : 'Lihat'}</span>
+                  </button>
+                </div>
+                <div style={{ position: 'relative' }}>
+                  <Lock size={16} style={{ position: 'absolute', left: '12px', top: '12px', color: '#a855f7' }} />
+                  <input
+                    type={showPassword ? 'text' : 'password'}
+                    className="posa-input w-full font-mono"
+                    style={{ paddingLeft: '38px', borderColor: 'rgba(168, 85, 247, 0.3)' }}
+                    placeholder="Kata sandi developer"
+                    value={devPassInput}
+                    onChange={(e) => setDevPassInput(e.target.value)}
+                    required
+                  />
+                </div>
+              </div>
+
+              <button
+                type="submit"
+                style={{
+                  width: '100%',
+                  padding: '12px',
+                  fontSize: '14px',
+                  fontWeight: 700,
+                  marginTop: '4px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '8px',
+                  borderRadius: '10px',
+                  backgroundColor: '#9333ea',
+                  color: '#ffffff',
+                  border: 'none',
+                  cursor: 'pointer',
+                  boxShadow: '0 4px 14px rgba(147, 51, 234, 0.4)',
+                  transition: 'all 0.2s ease'
+                }}
+              >
+                <Terminal size={16} />
+                <span>Buka Developer Superadmin Console</span>
                 <ArrowRight size={16} />
               </button>
             </form>

@@ -32,6 +32,7 @@ import RevenueReportView from './views/admin/RevenueReportView';
 import AppearanceView from './views/admin/AppearanceView';
 import CompanySettingsView from './views/admin/CompanySettingsView';
 import HelpView from './views/admin/HelpView';
+import DeveloperView from './views/admin/DeveloperView';
 
 // Modals
 import CustomizeModal from './components/modals/CustomizeModal';
@@ -55,14 +56,15 @@ function PosAppContent() {
     isKioskLocked,
     displayMode,
     adminView,
+    currentUser,
     masterAccount,
     showMasterAuthScreen,
     setShowMasterAuthScreen,
     toast
   } = usePos();
 
-  // 0. If Master Account is not yet created or user explicitly opened Master Auth screen
-  if (showMasterAuthScreen || !masterAccount) {
+  // 0. If Master Account is not yet created or user explicitly opened Master Auth screen (kecuali Developer)
+  if ((showMasterAuthScreen || !masterAccount) && currentUser?.role !== 'Developer') {
     return (
       <div className="posa-app-root">
         <AuthMasterView
@@ -148,6 +150,7 @@ function PosAppContent() {
         {adminView === 'appearance' && <AppearanceView />}
         {adminView === 'settings' && <CompanySettingsView />}
         {adminView === 'help' && <HelpView />}
+        {adminView === 'developer' && <DeveloperView />}
       </main>
 
       {/* Global Modals */}

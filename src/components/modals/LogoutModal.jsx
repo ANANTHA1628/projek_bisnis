@@ -51,7 +51,7 @@ export default function LogoutModal() {
     setShowLogoutModal(false);
   };
 
-  const isOwner = currentUser?.role === 'Owner' || logoutTarget === 'admin';
+  const isOwner = currentUser?.role === 'Owner' || currentUser?.role === 'Developer' || logoutTarget === 'admin';
 
   return (
     <div className="posa-modal-overlay">

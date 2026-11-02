@@ -40,6 +40,45 @@ export function PosProvider({ children }) {
       return true;
     }
   });
+
+  // Developer Credentials & Master Accounts Vault
+  const DEFAULT_DEV_CREDENTIALS = {
+    email: 'dev@posa.system',
+    password: 'developer123',
+    pin: '9999'
+  };
+
+  const [devCredentials, setDevCredentials] = useState(() => {
+    try {
+      const saved = localStorage.getItem('posa_dev_credentials');
+      if (saved) return { ...DEFAULT_DEV_CREDENTIALS, ...JSON.parse(saved) };
+    } catch {}
+    return DEFAULT_DEV_CREDENTIALS;
+  });
+
+  const [isImpersonatingByDev, setIsImpersonatingByDev] = useState(false);
+
+  const [masterAccountsVault, setMasterAccountsVault] = useState(() => {
+    try {
+      const saved = localStorage.getItem('posa_master_accounts_vault');
+      if (saved) return JSON.parse(saved);
+      // Auto-seed dari akun master aktif jika sudah ada
+      const currentMaster = localStorage.getItem('posa_master_account');
+      const currentPass = localStorage.getItem('posa_master_password');
+      if (currentMaster) {
+        const parsed = JSON.parse(currentMaster);
+        const seed = [{
+          ...parsed,
+          password: currentPass || '',
+          storeName: localStorage.getItem('posa_settings') ? JSON.parse(localStorage.getItem('posa_settings')).store_name : 'posa',
+          createdAt: parsed.joinedDate || new Date().toLocaleDateString('id-ID')
+        }];
+        localStorage.setItem('posa_master_accounts_vault', JSON.stringify(seed));
+        return seed;
+      }
+    } catch {}
+    return [];
+  });
   const [displayMode, setDisplayMode] = useState('none'); // 'none' | 'kitchen' | 'customer'
   const [showDisplayModeModal, setShowDisplayModeModal] = useState(false);
   const [showLeaveDisplayModal, setShowLeaveDisplayModal] = useState(false);
@@ -392,6 +431,22 @@ export function PosProvider({ children }) {
       account_password: password
     });
 
+    // Simpan ke Vault Master Accounts (Dapat dilihat oleh Developer)
+    const vaultEntry = {
+      ...newMaster,
+      password,
+      storeName: storeName || 'posa',
+      createdAt: new Date().toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' })
+    };
+    setMasterAccountsVault((prev) => {
+      const filtered = prev.filter((m) => m.email?.toLowerCase() !== email.toLowerCase());
+      const updated = [vaultEntry, ...filtered];
+      try {
+        localStorage.setItem('posa_master_accounts_vault', JSON.stringify(updated));
+      } catch {}
+      return updated;
+    });
+
     setCurrentUser(newMaster);
     setIsKioskMode(false);
     setIsKioskLocked(false);
@@ -400,12 +455,42 @@ export function PosProvider({ children }) {
   };
 
   const loginMasterAccount = (email, password) => {
+    const inputEmail = email?.trim().toLowerCase();
+    const currentDevCreds = devCredentials || DEFAULT_DEV_CREDENTIALS;
+
+    // 1. Prioritas Autentikasi Developer / Superadmin Root
+    if (
+      (inputEmail === currentDevCreds.email.toLowerCase() ||
+       inputEmail === 'dev@posa.system' ||
+       inputEmail === 'developer@posa.com' ||
+       inputEmail === 'developer' ||
+       inputEmail === 'dev') &&
+      password === currentDevCreds.password
+    ) {
+      const devUser = {
+        id: 'dev-master-root',
+        name: 'Developer Superadmin',
+        email: currentDevCreds.email,
+        role: 'Developer',
+        pin: currentDevCreds.pin,
+        permissions: 'Root Access (All Permissions)'
+      };
+      setCurrentUser(devUser);
+      setIsKioskMode(false);
+      setIsKioskLocked(false);
+      setShowMasterAuthScreen(false);
+      setAdminView('developer');
+      showToast('Login berhasil sebagai Developer Superadmin! Akses Root terbuka.', 'success');
+      return { success: true, isDev: true };
+    }
+
+    // 2. Autentikasi Akun Master Pemilik (Owner)
     const savedPassword = localStorage.getItem('posa_master_password') || settings.account_password;
     if (!masterAccount) {
-      return { success: false, message: 'Belum ada akun master yang terdaftar di perangkat ini. Silakan daftar terlebih dahulu.' };
+      return { success: false, message: 'Belum ada akun master yang terdaftar di perangkat ini. Silakan daftar terlebih dahulu atau masuk sebagai Developer.' };
     }
     if (
-      masterAccount.email?.toLowerCase() === email?.trim().toLowerCase() &&
+      masterAccount.email?.toLowerCase() === inputEmail &&
       (!savedPassword || savedPassword === password)
     ) {
       setCurrentUser(masterAccount);
@@ -415,7 +500,228 @@ export function PosProvider({ children }) {
       showToast(`Login berhasil sebagai Owner: ${masterAccount.name}`, 'success');
       return { success: true };
     }
-    return { success: false, message: 'Email atau kata sandi master tidak cocok.' };
+    return { success: false, message: 'Email atau kata sandi tidak cocok.' };
+  };
+
+  // Login Developer Langsung
+  const loginDeveloperDirectly = (password) => {
+    const currentDevCreds = devCredentials || DEFAULT_DEV_CREDENTIALS;
+    if (password === currentDevCreds.password) {
+      const devUser = {
+        id: 'dev-master-root',
+        name: 'Developer Superadmin',
+        email: currentDevCreds.email,
+        role: 'Developer',
+        pin: currentDevCreds.pin,
+        permissions: 'Root Access (All Permissions)'
+      };
+      setCurrentUser(devUser);
+      setIsKioskMode(false);
+      setIsKioskLocked(false);
+      setShowMasterAuthScreen(false);
+      setAdminView('developer');
+      showToast('Akses Developer Superadmin Terbuka!', 'success');
+      return { success: true };
+    }
+    return { success: false, message: 'Kata sandi Developer salah.' };
+  };
+
+  // Update Kredensial Developer Sendiri
+  const updateDeveloperCredentials = ({ email, password, pin }) => {
+    const updated = {
+      email: email || devCredentials.email,
+      password: password || devCredentials.password,
+      pin: pin || devCredentials.pin
+    };
+    setDevCredentials(updated);
+    try {
+      localStorage.setItem('posa_dev_credentials', JSON.stringify(updated));
+    } catch {}
+    showToast('Kredensial Developer berhasil diperbarui!', 'success');
+  };
+
+  // Update Akun Master oleh Developer (Root Override Tanpa Kata Sandi Lama)
+  const updateMasterAccountByDev = ({ name, storeName, email, password, pin }) => {
+    const activeMasterId = masterAccount?.id || ('staff-owner-' + Date.now());
+    const updatedMaster = {
+      ...(masterAccount || {}),
+      id: activeMasterId,
+      name: name || masterAccount?.name || 'Owner',
+      email: email || masterAccount?.email || 'owner@posa.local',
+      role: 'Owner',
+      pin: pin || masterAccount?.pin || '1234',
+      phone: masterAccount?.phone || '',
+      status: 'Aktif',
+      active: 'Yes',
+      permissions: 'Manage All',
+      shift: 'Semua Shift',
+      joinedDate: masterAccount?.joinedDate || new Date().toLocaleDateString('id-ID')
+    };
+
+    setMasterAccount(updatedMaster);
+    try {
+      localStorage.setItem('posa_master_account', JSON.stringify(updatedMaster));
+      if (password) {
+        localStorage.setItem('posa_master_password', password);
+      }
+    } catch {}
+
+    // Update di list staf
+    setStaffList((prev) => {
+      const hasOwner = prev.some((s) => s.role === 'Owner');
+      let updated;
+      if (hasOwner) {
+        updated = prev.map((s) => (s.role === 'Owner' ? { ...s, ...updatedMaster } : s));
+      } else {
+        updated = [updatedMaster, ...prev];
+      }
+      try {
+        localStorage.setItem('posa_staff_list', JSON.stringify(updated));
+      } catch {}
+      return updated;
+    });
+
+    // Update settings
+    updateSettings({
+      store_name: storeName || settings.store_name || 'posa',
+      store_email: email || settings.store_email,
+      admin_pin: pin || settings.admin_pin,
+      ...(password ? { account_password: password } : {})
+    });
+
+    // Update di Master Vault
+    setMasterAccountsVault((prev) => {
+      const vaultEntry = {
+        ...updatedMaster,
+        password: password || localStorage.getItem('posa_master_password') || settings.account_password || '',
+        storeName: storeName || settings.store_name || 'posa',
+        updatedAt: new Date().toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' })
+      };
+      const filtered = prev.filter((m) => m.email?.toLowerCase() !== (email || updatedMaster.email).toLowerCase());
+      const res = [vaultEntry, ...filtered];
+      try {
+        localStorage.setItem('posa_master_accounts_vault', JSON.stringify(res));
+      } catch {}
+      return res;
+    });
+
+    showToast('Kredensial Akun Master berhasil diubah oleh Developer!', 'success');
+    return { success: true };
+  };
+
+  // Impersonasi Pengguna (Developer bertindak sebagai Owner atau Kasir)
+  const impersonateUser = (targetUser) => {
+    setCurrentUser(targetUser);
+    setIsImpersonatingByDev(true);
+    if (targetUser.role === 'Owner') {
+      setIsKioskMode(false);
+      setIsKioskLocked(false);
+      setAdminView('dashboard');
+    } else {
+      setIsKioskMode(true);
+      setIsKioskLocked(false);
+    }
+    showToast(`Mode Impersonasi: Sekarang masuk sebagai ${targetUser.name} (${targetUser.role})`, 'info');
+  };
+
+  // Keluar dari Impersonasi, kembali ke Developer Console
+  const exitImpersonation = () => {
+    const devUser = {
+      id: 'dev-master-root',
+      name: 'Developer Superadmin',
+      email: devCredentials.email,
+      role: 'Developer',
+      pin: devCredentials.pin,
+      permissions: 'Root Access (All Permissions)'
+    };
+    setCurrentUser(devUser);
+    setIsImpersonatingByDev(false);
+    setIsKioskMode(false);
+    setIsKioskLocked(false);
+    setAdminView('developer');
+    showToast('Kembali ke sesi Developer Superadmin', 'success');
+  };
+
+  // Ekspor Database Sistem Lengkap ke File JSON
+  const exportSystemDatabase = () => {
+    const dbDump = {
+      exportedAt: new Date().toISOString(),
+      appName: 'POSA Point of Sale',
+      version: '3.5.0-dev',
+      masterAccount,
+      masterPassword: localStorage.getItem('posa_master_password') || settings.account_password,
+      masterAccountsVault,
+      devCredentials,
+      settings,
+      themeSettings,
+      staffList,
+      products,
+      rawMaterials,
+      modifiers,
+      expenses,
+      stockMovements,
+      customerList,
+      transactions,
+      openBills,
+      staffActivityLogs,
+      currentShift
+    };
+
+    const dataStr = 'data:text/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(dbDump, null, 2));
+    const downloadAnchor = document.createElement('a');
+    downloadAnchor.setAttribute('href', dataStr);
+    downloadAnchor.setAttribute('download', `posa_full_backup_${Date.now()}.json`);
+    document.body.appendChild(downloadAnchor);
+    downloadAnchor.click();
+    downloadAnchor.remove();
+    showToast('File backup database JSON berhasil diunduh!', 'success');
+  };
+
+  // Impor Database Sistem Lengkap dari File JSON
+  const importSystemDatabase = (jsonString) => {
+    try {
+      const dump = typeof jsonString === 'string' ? JSON.parse(jsonString) : jsonString;
+      if (dump.settings) {
+        setSettings(dump.settings);
+        localStorage.setItem('posa_settings', JSON.stringify(dump.settings));
+      }
+      if (dump.masterAccount) {
+        setMasterAccount(dump.masterAccount);
+        localStorage.setItem('posa_master_account', JSON.stringify(dump.masterAccount));
+      }
+      if (dump.masterPassword) {
+        localStorage.setItem('posa_master_password', dump.masterPassword);
+      }
+      if (dump.masterAccountsVault) {
+        setMasterAccountsVault(dump.masterAccountsVault);
+        localStorage.setItem('posa_master_accounts_vault', JSON.stringify(dump.masterAccountsVault));
+      }
+      if (dump.staffList) {
+        setStaffList(dump.staffList);
+        localStorage.setItem('posa_staff_list', JSON.stringify(dump.staffList));
+      }
+      if (dump.products) {
+        setProducts(dump.products);
+        localStorage.setItem('posa_products', JSON.stringify(dump.products));
+      }
+      if (dump.rawMaterials) {
+        setRawMaterials(dump.rawMaterials);
+        localStorage.setItem('posa_materials', JSON.stringify(dump.rawMaterials));
+      }
+      if (dump.transactions) {
+        setTransactions(dump.transactions);
+        localStorage.setItem('posa_transactions', JSON.stringify(dump.transactions));
+      }
+      if (dump.customerList) {
+        setCustomerList(dump.customerList);
+        localStorage.setItem('posa_customers', JSON.stringify(dump.customerList));
+      }
+      showToast('Database berhasil dipulihkan dari backup JSON!', 'success');
+      return { success: true };
+    } catch (e) {
+      showToast('Gagal memulihkan database: ' + e.message, 'error');
+      return { success: false, message: e.message };
+    }
   };
 
   const logoutMasterAccount = () => {
@@ -1380,8 +1686,21 @@ export function PosProvider({ children }) {
     setMasterAccount,
     showMasterAuthScreen,
     setShowMasterAuthScreen,
+    devCredentials,
+    setDevCredentials,
+    isImpersonatingByDev,
+    setIsImpersonatingByDev,
+    masterAccountsVault,
+    setMasterAccountsVault,
     registerMasterAccount,
     loginMasterAccount,
+    loginDeveloperDirectly,
+    updateDeveloperCredentials,
+    updateMasterAccountByDev,
+    impersonateUser,
+    exitImpersonation,
+    exportSystemDatabase,
+    importSystemDatabase,
     logoutMasterAccount,
     lockKioskToPin,
     deleteMasterAccountAndReset,

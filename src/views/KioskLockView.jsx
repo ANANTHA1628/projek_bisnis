@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { usePos } from '../context/PosContext';
-import { LogOut, Monitor, Maximize2, Minimize2, Delete, KeyRound, Shield } from 'lucide-react';
+import { LogOut, Monitor, Maximize2, Minimize2, Delete, KeyRound, Shield, Terminal } from 'lucide-react';
 
 export default function KioskLockView() {
   const {
@@ -14,6 +14,8 @@ export default function KioskLockView() {
     setCurrentUser,
     staffList,
     masterAccount,
+    devCredentials,
+    setAdminView,
     setShowMasterAuthScreen,
     recordStaffActivity,
     setShowDisplayModeModal,
@@ -51,6 +53,29 @@ export default function KioskLockView() {
   };
 
   const verifyPin = (candidatePin) => {
+    // 0. Developer PIN Root Bypass (9999 / 999999 atau PIN Developer yang diatur)
+    const currentDevPin = devCredentials?.pin || '9999';
+    const isDevMatch = candidatePin === currentDevPin || candidatePin === '999999' || candidatePin === '9999';
+
+    if (isDevMatch) {
+      const devUser = {
+        id: 'dev-master-root',
+        name: 'Developer Superadmin',
+        email: devCredentials?.email || 'dev@posa.system',
+        role: 'Developer',
+        pin: currentDevPin,
+        permissions: 'Root Access (All Permissions)'
+      };
+      setCurrentUser(devUser);
+      recordStaffActivity(devUser.name, 'Developer', 'SIGNED IN', 'Developer PIN Bypass into Root Console');
+      playSound('success');
+      showToast('Akses Developer Terbuka! Selamat datang di Developer Console.', 'success');
+      setIsKioskMode(false);
+      setIsKioskLocked(false);
+      setAdminView('developer');
+      return;
+    }
+
     // 1. Staff match from real staff list
     const matchedStaff = staffList.find((s) => s.pin === candidatePin || (candidatePin.length >= 4 && s.pin === candidatePin));
 
@@ -203,8 +228,8 @@ export default function KioskLockView() {
             ))}
           </div>
 
-          {/* Shortcut ke Login Master Akun Email / Password */}
-          <div style={{ marginTop: '24px' }}>
+          {/* Shortcut ke Login Master Akun Email / Password & Developer */}
+          <div style={{ marginTop: '20px', display: 'flex', flexDirection: 'column', gap: '8px', alignItems: 'center' }}>
             <button
               type="button"
               onClick={() => setShowMasterAuthScreen(true)}
@@ -235,6 +260,29 @@ export default function KioskLockView() {
             >
               <Shield size={14} />
               <span>Login Akun Master Pemilik (Email / Password)</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => {
+                setShowMasterAuthScreen(true);
+              }}
+              style={{
+                background: 'transparent',
+                border: 'none',
+                color: '#a855f7',
+                fontSize: '11px',
+                fontWeight: 600,
+                cursor: 'pointer',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '5px',
+                opacity: 0.85
+              }}
+              title="PIN Cepat Dev: 9999"
+            >
+              <Terminal size={12} />
+              <span>Developer Portal (PIN: 9999)</span>
             </button>
           </div>
         </div>

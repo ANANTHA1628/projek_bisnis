@@ -17,7 +17,8 @@ import {
   Minimize2,
   Menu,
   X,
-  Sparkles
+  Sparkles,
+  Terminal
 } from 'lucide-react';
 
 export default function TopNavbar() {
@@ -325,6 +326,21 @@ export default function TopNavbar() {
             <FileBarChart size={15} />
             <span>Laporan</span>
           </button>
+
+          {/* 7. Developer Superadmin Tab */}
+          <button
+            type="button"
+            className={`posa-nav-tab ${adminView === 'developer' ? 'active' : ''}`}
+            onClick={() => navigateTo('developer')}
+            style={{
+              borderColor: adminView === 'developer' ? '#a855f7' : 'rgba(168, 85, 247, 0.35)',
+              color: '#c084fc',
+              backgroundColor: adminView === 'developer' ? 'rgba(168, 85, 247, 0.2)' : 'rgba(168, 85, 247, 0.08)'
+            }}
+          >
+            <Terminal size={15} />
+            <span>Dev Console</span>
+          </button>
         </nav>
 
         {/* Right: Quick Tools & User Profile Dropdown */}
@@ -411,6 +427,16 @@ export default function TopNavbar() {
                 >
                   <HelpCircle size={15} />
                   <span>Help & Documentation</span>
+                </button>
+
+                <button
+                  type="button"
+                  className={`dropdown-item ${adminView === 'developer' ? 'active' : ''}`}
+                  onClick={() => navigateTo('developer')}
+                  style={{ color: '#c084fc' }}
+                >
+                  <Terminal size={15} />
+                  <span>Developer Console (Root)</span>
                 </button>
 
                 <div className="dropdown-divider" />
@@ -571,6 +597,15 @@ export default function TopNavbar() {
                 onClick={() => navigateTo('settings')}
               >
                 Settings
+              </button>
+              <button
+                type="button"
+                className={`drawer-link ${adminView === 'developer' ? 'active' : ''}`}
+                onClick={() => navigateTo('developer')}
+                style={{ color: '#c084fc' }}
+              >
+                <Terminal size={15} />
+                <span>Developer Console</span>
               </button>
               <button
                 type="button"

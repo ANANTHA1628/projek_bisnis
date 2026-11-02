@@ -60,6 +60,9 @@ export default function KasirView() {
     setLogoutTarget,
     setIsKioskMode,
     setIsKioskLocked,
+    setAdminView,
+    isImpersonatingByDev,
+    exitImpersonation,
     themeSettings,
     settings
   } = usePos();
@@ -171,8 +174,36 @@ export default function KasirView() {
               </div>
             </div>
 
-            {/* Jika role Owner/Supervisor, bisa langsung kembali ke Admin Backoffice */}
-            {(currentUser?.role === 'Owner' || currentUser?.role === 'Supervisor') ? (
+            {/* Jika sedang dalam mode impersonasi oleh Developer */}
+            {isImpersonatingByDev && (
+              <button
+                className="kasir-action-pill-btn"
+                style={{ borderColor: '#a855f7', color: '#c084fc', backgroundColor: 'rgba(168, 85, 247, 0.15)' }}
+                onClick={exitImpersonation}
+                title="Kembali ke Developer Console"
+              >
+                ⚡ <span>Ke Dev Console</span>
+              </button>
+            )}
+
+            {/* Jika role Developer, bisa langsung ke Dev Console */}
+            {currentUser?.role === 'Developer' && (
+              <button
+                className="kasir-action-pill-btn"
+                style={{ borderColor: '#a855f7', color: '#c084fc' }}
+                onClick={() => {
+                  setIsKioskMode(false);
+                  setIsKioskLocked(false);
+                  setAdminView('developer');
+                }}
+                title="Buka Developer Superadmin Console"
+              >
+                🛠 <span>Dev Console</span>
+              </button>
+            )}
+
+            {/* Jika role Owner/Supervisor/Developer, bisa langsung kembali ke Admin Backoffice */}
+            {(currentUser?.role === 'Owner' || currentUser?.role === 'Supervisor' || currentUser?.role === 'Developer') ? (
               <button
                 className="kasir-action-pill-btn"
                 onClick={() => {
