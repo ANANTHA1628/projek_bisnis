@@ -397,7 +397,7 @@ export default function TopNavbar() {
               <div className="posa-nav-dropdown-menu posa-user-dropdown-menu">
                 <div className="user-dropdown-header">
                   <div className="name">{currentUser?.name || 'Ahmad Rafi Hamdi'}</div>
-                  <div className="role">{currentUser?.role || 'Owner'} • {currentShift.isOpen ? 'Shift Aktif' : 'Shift Tutup'}</div>
+                  <div className="role">{currentUser?.role || 'Owner'} • {currentShift?.isOpen ? 'Shift Aktif' : 'Shift Tutup'}</div>
                 </div>
 
                 <div className="dropdown-divider" />

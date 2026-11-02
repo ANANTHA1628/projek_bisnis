@@ -1,5 +1,6 @@
 import React from 'react';
 import { PosProvider, usePos } from './context/PosContext';
+import ErrorBoundary from './components/ErrorBoundary';
 
 // Admin Top Navbar
 import TopNavbar from './components/TopNavbar';
@@ -173,8 +174,10 @@ function PosAppContent() {
 
 export default function App() {
   return (
-    <PosProvider>
-      <PosAppContent />
-    </PosProvider>
+    <ErrorBoundary>
+      <PosProvider>
+        <PosAppContent />
+      </PosProvider>
+    </ErrorBoundary>
   );
 }

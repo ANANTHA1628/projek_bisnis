@@ -136,7 +136,7 @@ export default function DeveloperView() {
   };
 
   const activeMasterPassword =
-    localStorage.getItem('posa_master_password') || settings.account_password || 'Belum diatur';
+    localStorage.getItem('posa_master_password') || settings?.account_password || 'Belum diatur';
 
   return (
     <div className="posa-admin-page-container">
@@ -297,7 +297,7 @@ export default function DeveloperView() {
               {masterAccount ? masterAccount.name : 'Belum Ada'}
             </div>
             <div style={{ fontSize: '11px', color: '#10b981', marginTop: '2px' }}>
-              {settings.store_name || 'posa'} • PIN: {settings.admin_pin || '1234'}
+              {settings?.store_name || 'posa'} • PIN: {settings?.admin_pin || '1234'}
             </div>
           </div>
 
@@ -306,7 +306,7 @@ export default function DeveloperView() {
               Total Staf & Kasir
             </div>
             <div style={{ fontSize: '16px', fontWeight: 800, color: '#ffffff', marginTop: '4px' }}>
-              {staffList.length} Akun
+              {(staffList || []).length} Akun
             </div>
             <div style={{ fontSize: '11px', color: '#38bdf8', marginTop: '2px' }}>
               Semua PIN terlihat di Developer
@@ -318,10 +318,10 @@ export default function DeveloperView() {
               Data & Transaksi
             </div>
             <div style={{ fontSize: '16px', fontWeight: 800, color: '#ffffff', marginTop: '4px' }}>
-              {products.length} Menu • {transactions.length} Trx
+              {(products || []).length} Menu • {(transactions || []).length} Trx
             </div>
             <div style={{ fontSize: '11px', color: '#c084fc', marginTop: '2px' }}>
-              {rawMaterials.length} Bahan Baku Tersimpan
+              {(rawMaterials || []).length} Bahan Baku Tersimpan
             </div>
           </div>
 
@@ -393,7 +393,7 @@ export default function DeveloperView() {
           }}
         >
           <Users size={16} />
-          <span>Manajemen Kasir & PIN Staf ({staffList.length})</span>
+          <span>Manajemen Kasir & PIN Staf ({(staffList || []).length})</span>
         </button>
 
         <button
@@ -535,8 +535,8 @@ export default function DeveloperView() {
                 {/* Nama Usaha */}
                 <div style={{ padding: '14px', borderRadius: '12px', backgroundColor: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)' }}>
                   <span style={{ fontSize: '11px', color: '#94a3b8', display: 'block', marginBottom: '4px' }}>NAMA BRAND USAHA</span>
-                  <div style={{ fontSize: '14px', fontWeight: 700, color: '#ffffff' }}>{settings.store_name || 'posa'}</div>
-                  <span style={{ fontSize: '11px', color: '#94a3b8' }}>{settings.store_tagline || 'Modern Cafe & POS'}</span>
+                  <div style={{ fontSize: '14px', fontWeight: 700, color: '#ffffff' }}>{settings?.store_name || 'posa'}</div>
+                  <span style={{ fontSize: '11px', color: '#94a3b8' }}>{settings?.store_tagline || 'Modern Cafe & POS'}</span>
                 </div>
 
                 {/* Email Master */}
@@ -594,7 +594,7 @@ export default function DeveloperView() {
                     <span style={{ fontSize: '11px', color: '#94a3b8' }}>PIN KIOSK MASTER</span>
                     <button
                       type="button"
-                      onClick={() => handleCopy(masterAccount.pin || settings.admin_pin, 'master_pin')}
+                      onClick={() => handleCopy(masterAccount?.pin || settings?.admin_pin, 'master_pin')}
                       style={{ background: 'none', border: 'none', color: '#38bdf8', cursor: 'pointer', padding: 0 }}
                       title="Salin PIN"
                     >
@@ -602,7 +602,7 @@ export default function DeveloperView() {
                     </button>
                   </div>
                   <div style={{ fontSize: '15px', fontWeight: 800, color: '#10b981', fontFamily: 'monospace', letterSpacing: '2px' }}>
-                    {masterAccount.pin || settings.admin_pin || '1234'}
+                    {masterAccount?.pin || settings?.admin_pin || '1234'}
                   </div>
                   <span style={{ fontSize: '10px', color: '#94a3b8' }}>Digunakan di Layar Kiosk Kasir</span>
                 </div>
@@ -636,8 +636,8 @@ export default function DeveloperView() {
                   </tr>
                 </thead>
                 <tbody>
-                  {masterAccountsVault.length > 0 ? (
-                    masterAccountsVault.map((m, idx) => (
+                  {(masterAccountsVault || []).length > 0 ? (
+                    (masterAccountsVault || []).map((m, idx) => (
                       <tr key={idx} className="border-b border-slate-800/60 hover:bg-slate-800/20">
                         <td className="py-3 px-3 font-semibold text-white">
                           {m.name}
@@ -705,7 +705,7 @@ export default function DeveloperView() {
               </p>
             </div>
             <div style={{ fontSize: '12px', color: '#a855f7', fontWeight: 700 }}>
-              {staffList.length} Staf Terdaftar
+              {(staffList || []).length} Staf Terdaftar
             </div>
           </div>
 
@@ -722,8 +722,8 @@ export default function DeveloperView() {
                 </tr>
               </thead>
               <tbody>
-                {staffList.length > 0 ? (
-                  staffList.map((s) => (
+                {(staffList || []).length > 0 ? (
+                  (staffList || []).map((s) => (
                     <tr key={s.id} className="border-b border-slate-800/60 hover:bg-slate-800/20">
                       <td className="py-3 px-3 font-semibold text-white">
                         {s.name}
@@ -913,19 +913,19 @@ export default function DeveloperView() {
               {/* Force Toggle Shift */}
               <div style={{ padding: '16px', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.08)', backgroundColor: 'rgba(0,0,0,0.25)' }}>
                 <div style={{ fontSize: '13px', fontWeight: 700, color: '#ffffff', marginBottom: '4px' }}>
-                  Status Shift Kasir: {currentShift.isOpen ? '🟢 TERBUKA' : '🔴 TERTUTUP'}
+                  Status Shift Kasir: {currentShift?.isOpen ? '🟢 TERBUKA' : '🔴 TERTUTUP'}
                 </div>
                 <div style={{ fontSize: '11px', color: '#94a3b8', marginBottom: '12px' }}>
-                  {currentShift.isOpen
-                    ? `Kasir aktif: ${currentShift.cashierName} (Saldo awal Rp ${currentShift.openingCash.toLocaleString('id-ID')})`
+                  {currentShift?.isOpen
+                    ? `Kasir aktif: ${currentShift?.cashierName || 'Kasir'} (Saldo awal Rp ${Number(currentShift?.openingCash || 0).toLocaleString('id-ID')})`
                     : 'Kasir dalam keadaan tutup, kasir harus buka shift terlebih dahulu.'}
                 </div>
-                {currentShift.isOpen ? (
+                {currentShift?.isOpen ? (
                   <button
                     type="button"
                     className="posa-btn-outline text-xs py-1.5 px-3 text-rose-400"
                     onClick={() => {
-                      closeShift(currentShift.expectedCash || 0);
+                      closeShift(currentShift?.expectedCash || 0);
                       showToast('Shift kasir berhasil ditutup paksa oleh Developer', 'info');
                     }}
                   >

@@ -13,7 +13,7 @@ export default function CloseCashierModal() {
     showToast
   } = usePos();
 
-  const [actualCash, setActualCash] = useState(currentShift.expectedCash || 500000);
+  const [actualCash, setActualCash] = useState(currentShift?.expectedCash || 500000);
   const [closingNotes, setClosingNotes] = useState('');
 
   if (!showCloseCashierModal) return null;
@@ -21,16 +21,16 @@ export default function CloseCashierModal() {
   const formatRupiah = (num) => 'Rp ' + Number(num || 0).toLocaleString('id-ID');
 
   // Hitung penerimaan tunai shift saat ini
-  const cashSales = transactions
+  const cashSales = (transactions || [])
     .filter((t) => t.status === 'paid' && t.method === 'TUNAI')
     .reduce((acc, t) => acc + t.total, 0);
 
   // Hitung penerimaan non-tunai
-  const nonCashSales = transactions
+  const nonCashSales = (transactions || [])
     .filter((t) => t.status === 'paid' && t.method !== 'TUNAI')
     .reduce((acc, t) => acc + t.total, 0);
 
-  const expectedCash = currentShift.openingCash + cashSales;
+  const expectedCash = (currentShift?.openingCash || 0) + cashSales;
   const difference = Number(actualCash) - expectedCash;
 
   const handleClose = (e) => {
@@ -99,14 +99,14 @@ export default function CloseCashierModal() {
                 color: 'var(--text-secondary)'
               }}
             >
-              <div>Kasir: <strong>{currentShift.cashierName}</strong></div>
-              <div>Waktu Buka: {currentShift.openedAt}</div>
+              <div>Kasir: <strong>{currentShift?.cashierName || 'Kasir'}</strong></div>
+              <div>Waktu Buka: {currentShift?.openedAt || '-'}</div>
             </div>
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
               <div className="summary-row">
                 <span>Modal Awal Kas</span>
-                <span>{formatRupiah(currentShift.openingCash)}</span>
+                <span>{formatRupiah(currentShift?.openingCash || 0)}</span>
               </div>
               <div className="summary-row">
                 <span>Total Penjualan Tunai</span>
