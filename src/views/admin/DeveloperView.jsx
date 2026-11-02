@@ -29,6 +29,7 @@ import {
   Mail,
   Phone,
   ShieldAlert,
+  ShieldCheck,
   Play
 } from 'lucide-react';
 import { usePos } from '../../context/PosContext';
