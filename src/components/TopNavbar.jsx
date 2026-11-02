@@ -39,8 +39,11 @@ export default function TopNavbar() {
     setMobileSidebarOpen,
     currentShift,
     themeSettings,
-    settings
+    settings,
+    isImpersonatingByDev
   } = usePos();
+
+  const isDevUser = currentUser?.role === 'Developer' || isImpersonatingByDev;
 
   const [activeDropdown, setActiveDropdown] = useState(null); // 'stock' | 'menu' | 'staff' | 'ops' | 'reports' | 'user' | null
   const navRef = useRef(null);
@@ -327,20 +330,22 @@ export default function TopNavbar() {
             <span>Laporan</span>
           </button>
 
-          {/* 7. Developer Superadmin Tab */}
-          <button
-            type="button"
-            className={`posa-nav-tab ${adminView === 'developer' ? 'active' : ''}`}
-            onClick={() => navigateTo('developer')}
-            style={{
-              borderColor: adminView === 'developer' ? '#a855f7' : 'rgba(168, 85, 247, 0.35)',
-              color: '#c084fc',
-              backgroundColor: adminView === 'developer' ? 'rgba(168, 85, 247, 0.2)' : 'rgba(168, 85, 247, 0.08)'
-            }}
-          >
-            <Terminal size={15} />
-            <span>Dev Console</span>
-          </button>
+          {/* 7. Developer Superadmin Tab (Hanya tampil untuk Developer) */}
+          {isDevUser && (
+            <button
+              type="button"
+              className={`posa-nav-tab ${adminView === 'developer' ? 'active' : ''}`}
+              onClick={() => navigateTo('developer')}
+              style={{
+                borderColor: adminView === 'developer' ? '#a855f7' : 'rgba(168, 85, 247, 0.35)',
+                color: '#c084fc',
+                backgroundColor: adminView === 'developer' ? 'rgba(168, 85, 247, 0.2)' : 'rgba(168, 85, 247, 0.08)'
+              }}
+            >
+              <Terminal size={15} />
+              <span>Dev Console</span>
+            </button>
+          )}
         </nav>
 
         {/* Right: Quick Tools & User Profile Dropdown */}
@@ -429,15 +434,17 @@ export default function TopNavbar() {
                   <span>Help & Documentation</span>
                 </button>
 
-                <button
-                  type="button"
-                  className={`dropdown-item ${adminView === 'developer' ? 'active' : ''}`}
-                  onClick={() => navigateTo('developer')}
-                  style={{ color: '#c084fc' }}
-                >
-                  <Terminal size={15} />
-                  <span>Developer Console (Root)</span>
-                </button>
+                {isDevUser && (
+                  <button
+                    type="button"
+                    className={`dropdown-item ${adminView === 'developer' ? 'active' : ''}`}
+                    onClick={() => navigateTo('developer')}
+                    style={{ color: '#c084fc' }}
+                  >
+                    <Terminal size={15} />
+                    <span>Developer Console (Root)</span>
+                  </button>
+                )}
 
                 <div className="dropdown-divider" />
 
@@ -598,15 +605,17 @@ export default function TopNavbar() {
               >
                 Settings
               </button>
-              <button
-                type="button"
-                className={`drawer-link ${adminView === 'developer' ? 'active' : ''}`}
-                onClick={() => navigateTo('developer')}
-                style={{ color: '#c084fc' }}
-              >
-                <Terminal size={15} />
-                <span>Developer Console</span>
-              </button>
+              {isDevUser && (
+                <button
+                  type="button"
+                  className={`drawer-link ${adminView === 'developer' ? 'active' : ''}`}
+                  onClick={() => navigateTo('developer')}
+                  style={{ color: '#c084fc' }}
+                >
+                  <Terminal size={15} />
+                  <span>Developer Console</span>
+                </button>
+              )}
               <button
                 type="button"
                 className="drawer-link text-danger"

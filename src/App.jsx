@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { PosProvider, usePos } from './context/PosContext';
 import ErrorBoundary from './components/ErrorBoundary';
 
@@ -57,12 +57,24 @@ function PosAppContent() {
     isKioskLocked,
     displayMode,
     adminView,
+    setAdminView,
     currentUser,
     masterAccount,
     showMasterAuthScreen,
     setShowMasterAuthScreen,
+    isImpersonatingByDev,
+    exitImpersonation,
+    showToast,
     toast
   } = usePos();
+
+  // Proteksi Akses Developer Console: Tolak jika bukan Developer Root
+  useEffect(() => {
+    if (adminView === 'developer' && currentUser?.role !== 'Developer' && !isImpersonatingByDev) {
+      setAdminView('dashboard');
+      showToast('Akses ditolak: Menu Developer hanya dapat diakses oleh Developer Superadmin.', 'warning');
+    }
+  }, [adminView, currentUser, isImpersonatingByDev, setAdminView, showToast]);
 
   // 0. If Master Account is not yet created or user explicitly opened Master Auth screen (kecuali Developer)
   if ((showMasterAuthScreen || !masterAccount) && currentUser?.role !== 'Developer') {
@@ -102,6 +114,49 @@ function PosAppContent() {
   if (isKioskMode) {
     return (
       <div className="posa-app-root">
+        {/* Ribbon Impersonasi Developer jika sedang menyamar sebagai staf/kasir */}
+        {isImpersonatingByDev && (
+          <div
+            style={{
+              backgroundColor: '#854d0e',
+              color: '#fef08a',
+              borderBottom: '1px solid #eab308',
+              padding: '8px 18px',
+              fontSize: '12px',
+              fontWeight: 600,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              position: 'sticky',
+              top: 0,
+              zIndex: 9999
+            }}
+          >
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <span>⚠️</span>
+              <span>
+                Mode Impersonasi Developer: Masuk sebagai <strong>{currentUser?.name}</strong> ({currentUser?.role})
+              </span>
+            </div>
+            <button
+              type="button"
+              onClick={exitImpersonation}
+              style={{
+                backgroundColor: '#eab308',
+                color: '#000000',
+                border: 'none',
+                borderRadius: '6px',
+                padding: '4px 12px',
+                fontSize: '11px',
+                fontWeight: 700,
+                cursor: 'pointer'
+              }}
+            >
+              Kembali ke Developer Console ➔
+            </button>
+          </div>
+        )}
+
         {isKioskLocked ? <KioskLockView /> : <KasirView />}
 
         {/* Cashier Modals */}
@@ -128,6 +183,49 @@ function PosAppContent() {
   // 3. Admin Dashboard Mode (Modern Top Navigation Bar Layout)
   return (
     <div className="posa-app-root posa-admin-top-layout">
+      {/* Ribbon Impersonasi Developer jika sedang menyamar sebagai Owner */}
+      {isImpersonatingByDev && (
+        <div
+          style={{
+            backgroundColor: '#854d0e',
+            color: '#fef08a',
+            borderBottom: '1px solid #eab308',
+            padding: '8px 24px',
+            fontSize: '12px',
+            fontWeight: 600,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            position: 'sticky',
+            top: 0,
+            zIndex: 99999
+          }}
+        >
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <span>👑</span>
+            <span>
+              Mode Impersonasi Developer: Sedang mengelola toko sebagai Owner <strong>{currentUser?.name}</strong>
+            </span>
+          </div>
+          <button
+            type="button"
+            onClick={exitImpersonation}
+            style={{
+              backgroundColor: '#eab308',
+              color: '#000000',
+              border: 'none',
+              borderRadius: '6px',
+              padding: '4px 14px',
+              fontSize: '11px',
+              fontWeight: 700,
+              cursor: 'pointer'
+            }}
+          >
+            Kembali ke Developer Console ➔
+          </button>
+        </div>
+      )}
+
       {/* Modern Top Navbar */}
       <TopNavbar />
 
@@ -151,7 +249,7 @@ function PosAppContent() {
         {adminView === 'appearance' && <AppearanceView />}
         {adminView === 'settings' && <CompanySettingsView />}
         {adminView === 'help' && <HelpView />}
-        {adminView === 'developer' && <DeveloperView />}
+        {adminView === 'developer' && (currentUser?.role === 'Developer' || isImpersonatingByDev) && <DeveloperView />}
       </main>
 
       {/* Global Modals */}

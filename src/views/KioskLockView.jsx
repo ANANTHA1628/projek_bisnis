@@ -279,10 +279,10 @@ export default function KioskLockView() {
                 gap: '5px',
                 opacity: 0.85
               }}
-              title="PIN Cepat Dev: 9999"
+              title="Developer Root Portal"
             >
               <Terminal size={12} />
-              <span>Developer Portal (PIN: 9999)</span>
+              <span>Developer Portal (Root Access)</span>
             </button>
           </div>
         </div>
