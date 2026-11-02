@@ -41,6 +41,8 @@ export default function DeveloperView() {
     devCredentials,
     updateDeveloperCredentials,
     updateMasterAccountByDev,
+    deleteMasterAccountByDev,
+    deleteStaffByDev,
     impersonateUser,
     isImpersonatingByDev,
     exitImpersonation,
@@ -501,6 +503,23 @@ export default function DeveloperView() {
                     <span>Masuk sebagai Owner Ini</span>
                   </button>
                 )}
+
+                {masterAccount && (
+                  <button
+                    type="button"
+                    className="posa-btn-outline text-xs py-1.5 px-3 text-rose-400 hover:text-rose-300 border-rose-500/30"
+                    onClick={() => {
+                      if (window.confirm(`PERINGATAN DEVELOPER: Hapus akun master aktif (${masterAccount.name} - ${masterAccount.email})? Tindakan ini akan mengosongkan status Owner.`)) {
+                        deleteMasterAccountByDev(masterAccount.email);
+                      }
+                    }}
+                    style={{ display: 'flex', alignItems: 'center', gap: '6px' }}
+                    title="Hapus akun owner aktif"
+                  >
+                    <Trash2 size={13} />
+                    <span>Hapus Akun Owner</span>
+                  </button>
+                )}
               </div>
             </div>
 
@@ -646,6 +665,18 @@ export default function DeveloperView() {
                           >
                             Masuk
                           </button>
+                          <button
+                            type="button"
+                            className="posa-btn-outline text-xs py-1 px-2 text-rose-400 hover:text-rose-300 border-rose-500/30"
+                            onClick={() => {
+                              if (window.confirm(`Hapus akun master ${m.name} (${m.email}) dari vault?`)) {
+                                deleteMasterAccountByDev(m.email);
+                              }
+                            }}
+                            title="Hapus akun master ini"
+                          >
+                            <Trash2 size={12} />
+                          </button>
                         </td>
                       </tr>
                     ))
@@ -749,20 +780,18 @@ export default function DeveloperView() {
                             <span>Impersonate</span>
                           </button>
 
-                          {s.role !== 'Owner' && (
-                            <button
-                              type="button"
-                              className="posa-btn-outline text-xs py-1 px-2 text-rose-400 hover:text-rose-300"
-                              onClick={() => {
-                                if (window.confirm(`Hapus staf ${s.name}?`)) {
-                                  deleteStaff(s.id);
-                                }
-                              }}
-                              title="Hapus staf"
-                            >
-                              <Trash2 size={12} />
-                            </button>
-                          )}
+                          <button
+                            type="button"
+                            className="posa-btn-outline text-xs py-1 px-2 text-rose-400 hover:text-rose-300 border-rose-500/30"
+                            onClick={() => {
+                              if (window.confirm(`Hapus akun ${s.role} ${s.name}?`)) {
+                                deleteStaffByDev(s.id);
+                              }
+                            }}
+                            title={`Hapus akun ${s.name}`}
+                          >
+                            <Trash2 size={12} />
+                          </button>
                         </div>
                       </td>
                     </tr>

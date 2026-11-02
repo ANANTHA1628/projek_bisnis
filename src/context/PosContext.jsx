@@ -609,6 +609,57 @@ export function PosProvider({ children }) {
     return { success: true };
   };
 
+  // Hapus Akun Master Tertentu oleh Developer (Root Delete)
+  const deleteMasterAccountByDev = (email) => {
+    // 1. Hapus dari vault
+    setMasterAccountsVault((prev) => {
+      const updated = prev.filter((m) => m.email?.toLowerCase() !== email?.toLowerCase());
+      try {
+        localStorage.setItem('posa_master_accounts_vault', JSON.stringify(updated));
+      } catch {}
+      return updated;
+    });
+
+    // 2. Jika merupakan akun master aktif saat ini, bersihkan data akun master aktif
+    if (masterAccount?.email?.toLowerCase() === email?.toLowerCase()) {
+      setMasterAccount(null);
+      try {
+        localStorage.removeItem('posa_master_account');
+        localStorage.removeItem('posa_master_password');
+      } catch {}
+
+      // Hapus Owner dari staffList
+      setStaffList((prev) => {
+        const updated = prev.filter((s) => s.role !== 'Owner');
+        try {
+          localStorage.setItem('posa_staff_list', JSON.stringify(updated));
+        } catch {}
+        return updated;
+      });
+    }
+
+    showToast(`Akun Master ${email} berhasil dihapus oleh Developer!`, 'success');
+  };
+
+  // Hapus Staf Manapun oleh Developer (Termasuk Kasir, Supervisor, & Owner)
+  const deleteStaffByDev = (id) => {
+    const target = staffList.find((s) => s.id === id);
+    if (!target) return;
+
+    if (target.role === 'Owner') {
+      deleteMasterAccountByDev(target.email);
+    } else {
+      setStaffList((prev) => {
+        const updated = prev.filter((s) => s.id !== id);
+        try {
+          localStorage.setItem('posa_staff_list', JSON.stringify(updated));
+        } catch {}
+        return updated;
+      });
+      showToast(`Staf ${target.name} (${target.role}) berhasil dihapus oleh Developer!`, 'success');
+    }
+  };
+
   // Impersonasi Pengguna (Developer bertindak sebagai Owner atau Kasir)
   const impersonateUser = (targetUser) => {
     setCurrentUser(targetUser);
@@ -1697,6 +1748,8 @@ export function PosProvider({ children }) {
     loginDeveloperDirectly,
     updateDeveloperCredentials,
     updateMasterAccountByDev,
+    deleteMasterAccountByDev,
+    deleteStaffByDev,
     impersonateUser,
     exitImpersonation,
     exportSystemDatabase,
