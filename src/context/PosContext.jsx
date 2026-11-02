@@ -19,12 +19,35 @@ import confetti from 'canvas-confetti';
 const PosContext = createContext();
 
 export function PosProvider({ children }) {
-  // Navigation & UI Settings - Default ke Layar Login PIN Kiosk saat web dibuka
+  // 0. Auto-Login Detection (Mendeteksi sesi aktif Admin/Owner yang pernah login)
+  const getInitialSession = () => {
+    try {
+      const activeSession = localStorage.getItem('posa_active_session');
+      if (activeSession) {
+        const parsed = JSON.parse(activeSession);
+        if (parsed?.user) return parsed;
+      }
+      const isAutoLoginDisabled = localStorage.getItem('posa_disable_autologin') === 'true';
+      const savedMaster = localStorage.getItem('posa_master_account');
+      if (savedMaster && !isAutoLoginDisabled) {
+        const parsed = JSON.parse(savedMaster);
+        return { role: 'Owner', user: parsed };
+      }
+    } catch {}
+    return null;
+  };
+
+  const initialSession = getInitialSession();
+
+  // Navigation & UI Settings
   const [activeTab, setActiveTab] = useState('kasir'); // 'admin' | 'kasir'
-  const [adminView, setAdminView] = useState('raw-materials'); // Matches example screenshots
-  const [isKioskMode, setIsKioskMode] = useState(true);
-  const [isKioskLocked, setIsKioskLocked] = useState(true);
-  const [currentUser, setCurrentUser] = useState(null); // Terkunci sebelum input PIN
+  const [adminView, setAdminView] = useState(() => {
+    if (initialSession?.role === 'Developer') return 'developer';
+    return 'dashboard';
+  });
+  const [isKioskMode, setIsKioskMode] = useState(() => !initialSession);
+  const [isKioskLocked, setIsKioskLocked] = useState(() => !initialSession);
+  const [currentUser, setCurrentUser] = useState(() => initialSession?.user || null);
   const [masterAccount, setMasterAccount] = useState(() => {
     try {
       const saved = localStorage.getItem('posa_master_account');
@@ -35,7 +58,9 @@ export function PosProvider({ children }) {
   const [showMasterAuthScreen, setShowMasterAuthScreen] = useState(() => {
     try {
       const saved = localStorage.getItem('posa_master_account');
-      return !saved; // Jika belum pernah ada master account, buka layar register master pertama
+      if (!saved) return true; // Belum pernah registrasi master
+      if (initialSession) return false;
+      return false;
     } catch {
       return true;
     }
@@ -451,6 +476,11 @@ export function PosProvider({ children }) {
     setIsKioskMode(false);
     setIsKioskLocked(false);
     setShowMasterAuthScreen(false);
+    setAdminView('dashboard');
+    try {
+      localStorage.setItem('posa_active_session', JSON.stringify({ role: 'Owner', user: newMaster, loginAt: Date.now() }));
+      localStorage.removeItem('posa_disable_autologin');
+    } catch {}
     showToast(`Selamat datang ${name}! Akun bisnis Anda berhasil didaftarkan.`, 'success');
   };
 
@@ -480,6 +510,10 @@ export function PosProvider({ children }) {
       setIsKioskLocked(false);
       setShowMasterAuthScreen(false);
       setAdminView('developer');
+      try {
+        localStorage.setItem('posa_active_session', JSON.stringify({ role: 'Developer', user: devUser, loginAt: Date.now() }));
+        localStorage.removeItem('posa_disable_autologin');
+      } catch {}
       showToast('Login berhasil sebagai Developer Superadmin! Akses Root terbuka.', 'success');
       return { success: true, isDev: true };
     }
@@ -497,10 +531,34 @@ export function PosProvider({ children }) {
       setIsKioskMode(false);
       setIsKioskLocked(false);
       setShowMasterAuthScreen(false);
+      setAdminView('dashboard');
+      try {
+        localStorage.setItem('posa_active_session', JSON.stringify({ role: 'Owner', user: masterAccount, loginAt: Date.now() }));
+        localStorage.removeItem('posa_disable_autologin');
+      } catch {}
       showToast(`Login berhasil sebagai Owner: ${masterAccount.name}`, 'success');
       return { success: true };
     }
     return { success: false, message: 'Email atau kata sandi tidak cocok.' };
+  };
+
+  // Auto-Login Instan untuk Admin yang pernah terdaftar di browser ini
+  const quickAutoLoginMaster = () => {
+    if (!masterAccount) {
+      showToast('Belum ada akun master yang tersimpan di perangkat ini.', 'warning');
+      return { success: false };
+    }
+    setCurrentUser(masterAccount);
+    setIsKioskMode(false);
+    setIsKioskLocked(false);
+    setShowMasterAuthScreen(false);
+    setAdminView('dashboard');
+    try {
+      localStorage.setItem('posa_active_session', JSON.stringify({ role: 'Owner', user: masterAccount, loginAt: Date.now() }));
+      localStorage.removeItem('posa_disable_autologin');
+    } catch {}
+    showToast(`⚡ Auto-Login berhasil! Selamat datang kembali, ${masterAccount.name}.`, 'success');
+    return { success: true };
   };
 
   // Login Developer Langsung
@@ -780,6 +838,10 @@ export function PosProvider({ children }) {
     setIsKioskMode(true);
     setIsKioskLocked(true);
     setShowMasterAuthScreen(true);
+    try {
+      localStorage.removeItem('posa_active_session');
+      localStorage.setItem('posa_disable_autologin', 'true');
+    } catch {}
     showToast('Anda telah keluar dari Akun Master.', 'info');
   };
 
@@ -1745,6 +1807,7 @@ export function PosProvider({ children }) {
     setMasterAccountsVault,
     registerMasterAccount,
     loginMasterAccount,
+    quickAutoLoginMaster,
     loginDeveloperDirectly,
     updateDeveloperCredentials,
     updateMasterAccountByDev,

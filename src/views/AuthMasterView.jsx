@@ -14,13 +14,15 @@ import {
   Sparkles,
   Terminal,
   Cpu,
-  Shield
+  Shield,
+  Zap
 } from 'lucide-react';
 
 export default function AuthMasterView({ defaultMode = 'register', onSwitchToPin }) {
   const {
     registerMasterAccount,
     loginMasterAccount,
+    quickAutoLoginMaster,
     loginDeveloperDirectly,
     masterAccount,
     devCredentials,
@@ -421,6 +423,59 @@ export default function AuthMasterView({ defaultMode = 'register', onSwitchToPin
             </form>
           ) : mode === 'login' ? (
             <form onSubmit={handleLoginSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+              {/* Kartu Auto-Login Cepat untuk Admin yang pernah mendaftar */}
+              {masterAccount && (
+                <div
+                  style={{
+                    padding: '14px 16px',
+                    borderRadius: '12px',
+                    backgroundColor: 'rgba(16, 185, 129, 0.12)',
+                    border: '1px solid rgba(16, 185, 129, 0.35)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    gap: '12px'
+                  }}
+                >
+                  <div>
+                    <div style={{ fontSize: '11px', color: '#6ee7b7', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                      Akun Tersimpan di Browser Ini
+                    </div>
+                    <div style={{ fontSize: '14px', fontWeight: 800, color: '#ffffff', marginTop: '2px' }}>
+                      {masterAccount.name}
+                    </div>
+                    <div style={{ fontSize: '11.5px', color: '#94a3b8' }}>
+                      {masterAccount.email} • {settings?.store_name || 'Owner Toko'}
+                    </div>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      playSound('success');
+                      quickAutoLoginMaster();
+                    }}
+                    style={{
+                      padding: '8px 14px',
+                      borderRadius: '8px',
+                      backgroundColor: '#10b981',
+                      color: '#000000',
+                      fontWeight: 700,
+                      fontSize: '12px',
+                      border: 'none',
+                      cursor: 'pointer',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '6px',
+                      whiteSpace: 'nowrap',
+                      boxShadow: '0 4px 12px rgba(16, 185, 129, 0.35)'
+                    }}
+                  >
+                    <Zap size={14} />
+                    <span>Auto-Login</span>
+                  </button>
+                </div>
+              )}
+
               <div>
                 <label style={{ fontSize: '12px', fontWeight: 600, color: '#cbd5e1', display: 'block', marginBottom: '6px' }}>
                   Email Master (Pemilik)

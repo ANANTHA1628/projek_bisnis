@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { usePos } from '../context/PosContext';
-import { LogOut, Monitor, Maximize2, Minimize2, Delete, KeyRound, Shield, Terminal } from 'lucide-react';
+import { LogOut, Monitor, Maximize2, Minimize2, Delete, KeyRound, Shield, Terminal, Zap } from 'lucide-react';
 
 export default function KioskLockView() {
   const {
@@ -14,6 +14,7 @@ export default function KioskLockView() {
     setCurrentUser,
     staffList,
     masterAccount,
+    quickAutoLoginMaster,
     devCredentials,
     setAdminView,
     setShowMasterAuthScreen,
@@ -261,6 +262,35 @@ export default function KioskLockView() {
               <Shield size={14} />
               <span>Login Akun Master Pemilik (Email / Password)</span>
             </button>
+
+            {/* Tombol Auto-Login Instan untuk Admin yang pernah login */}
+            {masterAccount && (
+              <button
+                type="button"
+                onClick={() => {
+                  playSound('success');
+                  quickAutoLoginMaster();
+                }}
+                style={{
+                  backgroundColor: 'rgba(16, 185, 129, 0.16)',
+                  border: '1px solid rgba(16, 185, 129, 0.4)',
+                  borderRadius: '10px',
+                  padding: '9px 16px',
+                  color: '#34d399',
+                  fontSize: '12.5px',
+                  fontWeight: 700,
+                  cursor: 'pointer',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '6px',
+                  transition: 'all 0.2s ease',
+                  boxShadow: '0 4px 14px rgba(16, 185, 129, 0.15)'
+                }}
+              >
+                <Zap size={14} />
+                <span>Masuk Cepat sebagai Admin ({masterAccount.name})</span>
+              </button>
+            )}
 
             <button
               type="button"
